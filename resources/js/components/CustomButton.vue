@@ -1,5 +1,5 @@
 <template>
   <div class="text-center">
-    <v-btn>Button</v-btn>
+    <v-btn>This is custom button</v-btn>
   </div>
 </template>

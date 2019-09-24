@@ -48174,7 +48174,7 @@ var render = function() {
   return _c(
     "div",
     { staticClass: "text-center" },
-    [_c("v-btn", [_vm._v("Button")])],
+    [_c("v-btn", [_vm._v("This is custom button")])],
     1
   )
 }

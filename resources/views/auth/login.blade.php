@@ -15,13 +15,13 @@
                         <div class="text-center">
                             <v-menu offset-y>
                                 <template v-slot:activator="{ on }">
-                                <v-btn
-                                    color="primary"
-                                    dark
-                                    v-on="on"
-                                >
-                                    Dropdown
-                                </v-btn>
+                                    <v-btn
+                                        color="primary"
+                                        dark
+                                        v-on="on"
+                                    >
+                                        Dropdown
+                                    </v-btn>
                                 </template>
                                 <v-list>
                                 <v-list-item>
