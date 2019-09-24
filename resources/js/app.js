@@ -8,7 +8,7 @@ require('./bootstrap');
 
 import 'babel-polyfill'
 
-window.Vue = require('vue');
+// window.Vue = require('vue');
 
 // import Vue from 'vue'
 // import Vuetify from 'vuetify'
@@ -19,7 +19,7 @@ window.Vue = require('vue');
 
 // export default new Vuetify(opts)
 
-// import Vue from 'vue'
+import Vue from 'vue'
 import Vuetify from 'vuetify' // path to vuetify export
 
 Vue.use(Vuetify);
