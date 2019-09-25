@@ -17,35 +17,93 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    {{-- <div id="app">
-        <v-app> --}}
+    {{-- <div id="app">--}}
         <v-app id="app">
 
-                <div>
-                        <v-toolbar>
-                          <v-toolbar-title>Title</v-toolbar-title>
+            {{-- Header --}}
+            <div>
+                <v-toolbar height="75px">
                     
-                          <div class="flex-grow-1"></div>
-                    
-                          <v-toolbar-items>
-                            <v-btn text>Link 1</v-btn>
-                            <v-btn text>Link 2</v-btn>
-                            <v-btn text>Link 3</v-btn>
-                          </v-toolbar-items>
-                    
-                          <template v-if="$vuetify.breakpoint.smAndUp">
-                            <v-btn icon>
-                              <v-icon>mdi-export-variant</v-icon>
-                            </v-btn>
-                            <v-btn icon>
-                              <v-icon>mdi-delete-circle</v-icon>
-                            </v-btn>
-                            <v-btn icon>
-                              <v-icon>mdi-plus-circle</v-icon>
-                            </v-btn>
-                          </template>
-                        </v-toolbar>
-                      </div>
+                    <template>
+                        <v-btn icon class="hidden-md-and-up">
+                            <v-icon >mdi-menu</v-icon>
+                        </v-btn>
+                    </template>
+
+                    <v-toolbar-title>
+                        <div class="logo">
+                            <a href="/" class="d-flex">
+                                <img src="https://grandiose.net/wp-content/uploads/2019/09/grandiose-v3-logo.png" alt="Grandiose Store LLC">
+                            </a>
+                        </div>  
+                    </v-toolbar-title>
+            
+                    <div class="flex-grow-1"></div>
+            
+                    <v-toolbar-items class="hidden-sm-and-down align-center g-main-nav">
+                        <a href="/promotion" class="caption px-3">Promotion</a>
+                        <a href="/promotion" class="caption px-3">Location</a>
+                        <a href="/promotion" class="caption px-3">Contact</a>
+                        <v-btn text @click.stop="drawer = !drawer"> 
+                            <span class="caption">Romel</span>
+                            <v-avatar class="ml-3">
+                                <img src="https://mel-7.com/wp-content/uploads/2019/04/romel-indemne-v1.jpg" alt="Romel Indemne">
+                            </v-avatar>
+                        </v-btn>
+                    </v-toolbar-items>
+                    <v-toolbar-items class="mr-3">
+                        <v-btn icon>
+                            <v-badge
+                                color="red"
+                            >
+                                <template v-slot:badge>0</template>
+                                <v-icon
+                                    color="text"
+                                >mdi-cart</v-icon>
+                            </v-badge>
+                        </v-btn>
+                    </v-toolbar-items>
+
+                </v-toolbar>
+            </div>
+
+            <v-navigation-drawer
+            v-model="drawer"
+            absolute
+            temporary
+          >
+            <v-list-item>
+              <v-list-item-avatar>
+                <v-img src="https://randomuser.me/api/portraits/men/78.jpg"></v-img>
+              </v-list-item-avatar>
+      
+              <v-list-item-content>
+                <v-list-item-title>John Leider</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+      
+            <v-divider></v-divider>
+      
+            <v-list dense>
+      
+              <v-list-item
+                v-for="item in items"
+                :key="item.title"
+                link
+              >
+                <v-list-item-icon>
+                  <v-icon></v-icon>
+                </v-list-item-icon>
+      
+                <v-list-item-content>
+                  <v-list-item-title></v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-navigation-drawer>
+
+            {{-- <main-navigation></main-navigation> --}}
+
 
 
             <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
@@ -103,11 +161,9 @@
                 @yield('content')
             </main>
         </v-app>
-        {{-- </v-app>
-    </div> --}}
+        {{-- </div> --}}
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
-
 </body>
 </html>

@@ -44,6 +44,7 @@ Vue.use(Vuetify);
 // Vue.component('header-navigation', require('./components/HeaderNavigation.vue').default);
 Vue.component('custom-button', require('./components/CustomButton.vue').default);
 
+// Vue.component('main-navigation', require('./components/MainNavigation.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -61,14 +62,33 @@ const app = new Vue({
     vuetify: new Vuetify({
         theme: {
     	    themes: {
-    		light: {
-    		    primary: '#1d2671',
-    		    secondary: '#E1341E'
-    		}
+                light: {
+                    primary: '#1D1D1B',
+                    secondary: '#E1341E',
+                    accent: '#82B1FF',
+                    error: '#FF5252',
+                    info: '#2196F3',
+                    success: '#4CAF50',
+                    warning: '#FFC107',
+                    
+                    // Grandiose Colors
+                    red: '#D42427',
+                    text: '#1D1D1B'
+                }
     	    }
     	},
-        icons: {
-            iconfont: 'fa4'
+        // icons: {
+        //     iconfont: 'mdi'
+        // }
+        
+    }),
+    data () {
+        return {
+          drawer: null,
+          items: [
+            { title: 'Home', icon: 'dashboard' },
+            { title: 'About', icon: 'question_answer' },
+          ],
         }
-    })
+      },
 });
