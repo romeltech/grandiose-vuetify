@@ -25,7 +25,7 @@
                 <v-toolbar height="75px">
                     
                     <template>
-                        <v-btn icon class="hidden-md-and-up">
+                        <v-btn icon class="hidden-md-and-up" @click.stop="drawer = !drawer">
                             <v-icon >mdi-menu</v-icon>
                         </v-btn>
                     </template>
@@ -44,7 +44,7 @@
                         <a href="/promotion" class="caption px-3">Promotion</a>
                         <a href="/promotion" class="caption px-3">Location</a>
                         <a href="/promotion" class="caption px-3">Contact</a>
-                        <v-btn text @click.stop="drawer = !drawer"> 
+                        <v-btn text> 
                             <span class="caption">Romel</span>
                             <v-avatar class="ml-3">
                                 <img src="https://mel-7.com/wp-content/uploads/2019/04/romel-indemne-v1.jpg" alt="Romel Indemne">
