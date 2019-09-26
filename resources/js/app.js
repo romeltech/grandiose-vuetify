@@ -85,6 +85,7 @@ const app = new Vue({
     data () {
         return {
           drawer: null,
+          cartdrawer: null,
           items: [
             { title: 'Home', icon: 'dashboard' },
             { title: 'About', icon: 'question_answer' },

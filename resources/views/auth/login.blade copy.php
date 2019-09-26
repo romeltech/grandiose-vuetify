@@ -1,23 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<v-container>
-    <v-form>
-
-        <v-col cols="12" sm="6" md="3">
-            <v-text-field
-                label="Email"
-                outlined
-            ></v-text-field>
-            <v-text-field
-            label="Password"
-            outlined
-        ></v-text-field>
-        </v-col>
-    </v-form>
-</v-container>
-
-{{-- <div class="container">
+<div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -86,6 +70,6 @@
             </div>
         </div>
     </div>
-</div> --}}
+</div>
 @endsection
 

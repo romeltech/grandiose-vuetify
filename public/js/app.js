@@ -81800,6 +81800,7 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
   data: function data() {
     return {
       drawer: null,
+      cartdrawer: null,
       items: [{
         title: 'Home',
         icon: 'dashboard'
