@@ -1,21 +1,68 @@
 @extends('layouts.app')
 
 @section('content')
-<v-container>
-    <v-form>
-
-        <v-col cols="12" sm="6" md="3">
-            <v-text-field
-                label="Email"
-                outlined
-            ></v-text-field>
-            <v-text-field
-            label="Password"
-            outlined
-        ></v-text-field>
+<v-container id="g-login">
+    <v-row class="justify-center">
+        <v-col cols="12" sm="6" md="4">
+            <v-card id="loginform">
+                <v-card-title>Login</v-card-title>
+                <v-card-text class="py-3">
+                    <v-form 
+                    method="POST" 
+                    action="{{ route('login') }}"
+                    ref="form"
+                    v-model="valid"
+                    lazy-validation>
+                        @csrf
+                        <v-text-field
+                            outlined
+                            required
+                            autocomplete="email"
+                            autofocus
+                            id="email"
+                            type="email"
+                            name="email"
+                            label="Email"
+                            v-model="email"
+                            :rules="emailrules"
+                            @error('email')
+                            {{-- value="romel@gmail.com" --}}
+                            {{-- placeholder="{{ old('email')}}" --}}
+                                value="{{ old('email') }}"
+                                {{-- error --}}
+                                {{-- error-messages="{{ old('email')}} {{ $message }}" --}}
+                            @enderror
+                        ></v-text-field>
+                        <v-text-field
+                            outlined
+                            required
+                            id="password"
+                            label="Password"
+                            type="password"
+                            name="password"
+                            v-model="password"
+                            :rules="passwordrules"
+                            @error('password')
+                                error
+                                error-messages="{{ $message }}"
+                            @enderror
+                        ></v-text-field>
+                        <v-btn 
+                            width="100%"
+                            height="55"
+                            large
+                            color="primary"
+                            type="submit"
+                            :disabled="!valid"
+                            @click="validate"
+                        >{{ __('LOGIN') }}</v-btn>
+                    </v-form>
+                </v-card-text>
+            </v-card>
         </v-col>
-    </v-form>
+    </v-row>
 </v-container>
+
 
 {{-- <div class="container">
     <div class="row justify-content-center">
@@ -89,3 +136,6 @@
 </div> --}}
 @endsection
 
+@section('scripts')
+    {{-- <script src="{{ asset('js/login.js') }}"></script> --}}
+@endsection

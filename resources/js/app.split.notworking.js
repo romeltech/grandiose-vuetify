@@ -43,7 +43,7 @@ Vue.use(Vuetify);
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 // Vue.component('header-navigation', require('./components/HeaderNavigation.vue').default);
 
-Vue.component('login-form', require('./components/LoginForm.vue').default);
+// Vue.component('login-form', require('./components/LoginForm.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -91,37 +91,39 @@ const app = new Vue({
           { title: 'About', icon: 'question_answer' },
         ],
 
-        //login
-        valid: true,
-        email: '',
-        emailrules: [
-          value => !!value || 'Required',
-          value => /.+@.+\..+/.test(value) || 'E-mail must be valid'
-            // const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            //   return pattern.test(value) || 'Invalid e-mail'
-        ],
-        password: '',
-        passwordrules: [
-          value => !!value || 'Required',
-          value => (value && value.length > 8) || 'Password must be atleast 8 characters',
-        ],
+        // //login
+        // valid: true,
+        // email: '',
+        // emailrules: [
+        //   value => !!value || 'Required',
+        //   value => /.+@.+\..+/.test(value) || 'E-mail must be valid'
+        //     // const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        //     //   return pattern.test(value) || 'Invalid e-mail'
+        // ],
+        // password: '',
+        // passwordrules: [
+        //   value => !!value || 'Required',
+        //   value => (value && value.length > 8) || 'Password must be atleast 8 characters',
+        // ],
 
 
 
       }
     },
-    methods: {
-      validate () {
-        if (this.$refs.form.validate()) {
-          this.snackbar = true;
-        }
-      }
-    },
-    // watch: {
-    //   email () {
-    //     this.errorMessages = ''
-    //   },
+    // methods: {
+    //   validate () {
+    //     if (this.$refs.form.validate()) {
+    //       this.snackbar = true
+    //     }
+    //   }
     // }
 
 
 });
+
+
+if (document.getElementById("g-login")) {
+  import("./login" /* webpackChunkName: "js/login" */ ).then(loginscript => {
+    loginscript();
+  });
+}
