@@ -5,7 +5,7 @@
     <v-row class="justify-center">
         <v-col cols="12" sm="6" md="4">
             <v-card id="loginform">
-                <v-card-title class="px-5">Login</v-card-title>
+                <v-card-title class="px-5 pt-5 pb-0">{{ __('Login') }}</v-card-title>
                 <v-card-text class="py-5 px-5">
                     <v-form 
                     method="POST" 
@@ -17,25 +17,26 @@
                         <v-text-field
                             outlined
                             required
-                            autofocus
+                            autocomplete="email"
                             id="email"
                             type="email"
                             name="email"
-                            label="Email"
+                            label="{{ __('Email') }}"
                             v-model="email"
                             :rules="emailrules"
                             @error('email')
-                            {{-- placeholder="{{ old('email')}}" --}}
+                            {{-- placeholder="{{ old('email')}}" {{ $message }} --}}
                                 value="{{ old('email') }}"
                                 error
-                                error-messages="{{ old('email')}} {{ $message }}"
-                            @enderror
-                        ></v-text-field>
+                                error-messages="{{ old('email')}} do not match in our records"
+                            @enderror>
+                        </v-text-field>
                         <v-text-field
                             outlined
                             required
+                            autocomplete="password"
                             id="password"
-                            label="Password"
+                            label="{{ __('Password') }}"
                             type="password"
                             name="password"
                             v-model="password"
@@ -43,17 +44,34 @@
                             @error('password')
                                 error
                                 error-messages="{{ $message }}"
-                            @enderror
-                        ></v-text-field>
+                            @enderror>
+                        </v-text-field>
+                        <v-checkbox
+                            type="checkbox"
+                            name="remember"
+                            id="remember"
+                            {{ old('remember') ? 'checked' : '' }}
+                            label="Remember me"
+                            color="primary"
+                            class="mt-0">
+                        </v-checkbox>
                         <v-btn 
                             width="100%"
                             height="55"
                             large
                             color="primary"
+                            class="mb-5"
                             type="submit"
                             :disabled="!valid"
                             @click="validate"
                         >{{ __('LOGIN') }}</v-btn>
+                        {{-- <hr class="mb-5"> --}}
+                        {{-- <div class="g-separator mb-5"></div> --}}
+                        <v-card-actions class="justify-center flex-column py-0">
+                            <a href="{{ route('password.request') }}" class="pb-2">{{ __('Forgot your password?') }}</a>
+                            <a href="{{ route('register') }}">{{ __('Create account') }}</a>
+                        </v-card-actions>
+                      
                     </v-form>
                 </v-card-text>
             </v-card>

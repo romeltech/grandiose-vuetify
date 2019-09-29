@@ -81644,12 +81644,13 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
       themes: {
         light: {
           primary: '#1D1D1B',
-          secondary: '#E1341E',
+          secondary: '#f5f5f5',
           accent: '#82B1FF',
           error: '#FF5252',
           info: '#2196F3',
           success: '#4CAF50',
           warning: '#FFC107',
+          // secondary: '#E1341E',
           // Grandiose Colors
           red: '#D42427',
           text: '#1D1D1B'

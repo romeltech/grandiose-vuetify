@@ -1,77 +1,100 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
-
-                <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
+<v-container id="g-login">
+    <v-row class="justify-center">
+        <v-col cols="12" sm="12" md="5">
+            <v-card id="g-register">
+                <v-card-title class="px-5 pt-5 pb-0">{{ __('Create Account') }}</v-card-title>
+                <v-card-text class="py-5 px-5">
+                    <v-form 
+                    method="POST"
+                    action="{{ route('register') }}"
+                    ref="form"
+                    v-model="valid"
+                    lazy-validation>
                         @csrf
+                        <v-text-field
+                            outlined
+                            required
+                            autocomplete="name" 
+                            id="name"
+                            type="text"
+                            name="name"
+                            label="{{ __('Name') }}"
+                            {{-- v-model="regname"
+                            :rules="regnamerules" --}}
+                            value="{{ old('name') }}"
+                            @error('name')
+                                error
+                                error-messages="{{ $message }}"
+                            @enderror>
+                        </v-text-field>
 
-                        <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
+                        <v-text-field
+                            outlined
+                            required
+                            autocomplete="email"
+                            id="email"
+                            type="email"
+                            name="email"
+                            label="{{ __('E-Mail Address') }}"
+                            {{-- v-model="regemail"
+                            :rules="regemailrules" --}}
+                            value="{{ old('email') }}"
+                            @error('email')
+                                error
+                                error-messages="{{ $message }}"
+                            @enderror>
+                        </v-text-field>
 
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                        <v-text-field
+                            outlined
+                            required
+                            autocomplete="new-password"
+                            id="password"
+                            type="password"
+                            name="password"
+                            label="{{ __('Password') }}"
+                            {{-- v-model="regpassword"
+                            :rules="regpasswordrules" --}}
+                            value="{{ old('password') }}"
+                            @error('password')
+                                error
+                                error-messages="{{ $message }}"
+                            @enderror>
+                        </v-text-field>
 
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                        <v-text-field
+                            outlined
+                            required
+                            autocomplete="new-password"
+                            id="password-confirm"
+                            type="password"
+                            name="password_confirmation"
+                            label="{{ __('Confirm Password') }}"
+                            {{-- v-model="regpassword"
+                            :rules="regpasswordrules" --}}
+                        >
+                        </v-text-field>
+                        <v-btn 
+                            width="100%"
+                            height="55"
+                            large
+                            color="primary"
+                            class="mb-2"
+                            type="submit"
+                            :disabled="!valid"
+                            @click="validate">
+                            {{ __('Register') }}
+                        </v-btn>
+                        <v-card-actions class="justify-center flex-column">
+                            <a href="{{ route('login') }}">{{ __('I already have an account') }}</a>
+                        </v-card-actions>
+                    </v-form>
+                </v-card-text>
+            </v-card>
+        </v-col>
+    </v-row>
+</v-container>
 @endsection
