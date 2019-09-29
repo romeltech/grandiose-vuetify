@@ -43,7 +43,7 @@ Vue.use(Vuetify);
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 // Vue.component('header-navigation', require('./components/HeaderNavigation.vue').default);
 
-Vue.component('login-form', require('./components/LoginForm.vue').default);
+// Vue.component('login-form', require('./components/LoginForm.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -116,7 +116,7 @@ const app = new Vue({
           this.snackbar = true;
         }
       }
-    },
+    }
     // watch: {
     //   email () {
     //     this.errorMessages = ''

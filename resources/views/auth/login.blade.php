@@ -5,8 +5,8 @@
     <v-row class="justify-center">
         <v-col cols="12" sm="6" md="4">
             <v-card id="loginform">
-                <v-card-title>Login</v-card-title>
-                <v-card-text class="py-3">
+                <v-card-title class="px-5">Login</v-card-title>
+                <v-card-text class="py-5 px-5">
                     <v-form 
                     method="POST" 
                     action="{{ route('login') }}"
@@ -17,7 +17,6 @@
                         <v-text-field
                             outlined
                             required
-                            autocomplete="email"
                             autofocus
                             id="email"
                             type="email"
@@ -26,11 +25,10 @@
                             v-model="email"
                             :rules="emailrules"
                             @error('email')
-                            {{-- value="romel@gmail.com" --}}
                             {{-- placeholder="{{ old('email')}}" --}}
                                 value="{{ old('email') }}"
-                                {{-- error --}}
-                                {{-- error-messages="{{ old('email')}} {{ $message }}" --}}
+                                error
+                                error-messages="{{ old('email')}} {{ $message }}"
                             @enderror
                         ></v-text-field>
                         <v-text-field
