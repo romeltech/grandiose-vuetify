@@ -20,6 +20,30 @@
   border-bottom: 1px solid rgba(160, 160, 160, 0.2);
 }
 
+/* width */
+
+.v-list::-webkit-scrollbar,
+.product-desc::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+
+/* Handle */
+
+.v-list::-webkit-scrollbar-thumb,
+.product-desc::-webkit-scrollbar-thumb {
+  background: #f1f1f1;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+
+.v-list::-webkit-scrollbar-thumb:hover,
+.product-desc::-webkit-scrollbar-thumb:hover {
+  opacity: 0.75;
+}
+
 header .v-toolbar__title {
   min-width: 150px;
 }
@@ -37,5 +61,28 @@ header .v-toolbar__title .logo img {
 
 .g-main-nav a {
   text-transform: uppercase;
+}
+
+.product-card {
+  min-width: 180px;
+  width: calc(16% - 10px);
+  margin: 5px;
+}
+
+.product-card .product-desc {
+  height: 80px;
+  overflow-y: scroll;
+  font-size: 13px;
+  line-height: 16px;
+}
+
+.product-card .product-action {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.product-card .product-action .product-qty {
+  max-width: 70px;
 }
 

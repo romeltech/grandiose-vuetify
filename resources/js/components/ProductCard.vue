@@ -1,76 +1,53 @@
 <template>
-
-  <v-card
-    :loading="loading"
-    class="mx-auto my-12"
-    max-width="374"
-  >
-    <v-img
-      height="250"
-      src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-    ></v-img>
-
-    <v-card-title>Cafe Badilico</v-card-title>
-    <v-card-text>
-      <v-row align="center">
-        <v-rating
-          :value="4.5"
-          color="amber"
-          half-increments
-          dense
-          size="14"
-          readonly
-        ></v-rating>
-
-        <div class="grey--text ml-4">4.5 (413)</div>
-      </v-row>
-
-      <div class="my-4 subtitle-1 black--text">
-        $ • Italian, Cafe
-      </div>
-
-      <div>Small plates, salads & sandwiches an inteimate setting with 12 indoor seats plus patio seating.</div>
-    </v-card-text>
-
-    <v-divider class="mx-4"></v-divider>
-
-    <v-card-text>
-      <div class="title text--primary">Tonight's availability</div>
-      <v-chip-group
-        v-model="selection"
-        active-class="deep-purple accent-4 white--text"
-        column
-      >
-        <v-chip>5:30PM</v-chip>
-        <v-chip>7:30PM</v-chip>
-        <v-chip>8:00PM</v-chip>
-        <v-chip>9:00PM</v-chip>
-      </v-chip-group>
-    </v-card-text>
-
-    <v-card-actions>
-      <v-btn
-        color="deep-purple accent-4"
-        text
-        @click="reserve"
-      >
-        Reserve
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+  <v-row class="justify-center">
+    <v-card v-for="product in products" v-bind:key="product.id"
+      :loading="loading" class="product-card my-5">
+      <v-img src="https://cdn.vuetifyjs.com/images/cards/cooking.png"></v-img>
+      <v-card-title>{{product.title}}</v-card-title>
+      <v-card-text>
+        <div class="my-1 subtitle-1 black--text">
+          {{product.price}}
+        </div>
+        <div class="product-desc">{{product.description}}</div>
+      </v-card-text>
+      <v-divider class="mx-4"></v-divider>
+      <v-card-actions class="product-action">
+        <v-btn
+          color="green"
+          @click="reserve"
+        >
+          Add
+        </v-btn>
+          <v-select
+          :items="quantity"
+          label="1"
+          solo
+          flat
+          class="product-qty"></v-select>
+      </v-card-actions>
+    </v-card>
+  </v-row>
 </template>
 
 <script>
   export default {
-    props: ['productsdata'],
+    props: ['products'],
     mounted () {
         // Do something useful with the data in the template
-        // console.log(this.productsData);
-        console.log('mounted');
+        console.log(this.products);
     },
+    // components:{
+    //   products
+    // },
+    // data() {
+    //   return {
+    //     prod: this.products
+    //   }
+    // },
     data: () => ({
       loading: false,
       selection: 1,
+      quantity: [1,2,3,4,5,6,7,8,9],
     }),
     methods: {
       reserve () {

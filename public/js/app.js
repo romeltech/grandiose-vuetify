@@ -1869,48 +1869,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['productsdata'],
+  props: ['products'],
   mounted: function mounted() {
     // Do something useful with the data in the template
-    // console.log(this.productsData);
-    console.log('mounted');
+    console.log(this.products);
   },
+  // components:{
+  //   products
+  // },
+  // data() {
+  //   return {
+  //     prod: this.products
+  //   }
+  // },
   data: function data() {
     return {
       loading: false,
-      selection: 1
+      selection: 1,
+      quantity: [1, 2, 3, 4, 5, 6, 7, 8, 9]
     };
   },
   methods: {
@@ -33215,113 +33192,56 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "v-card",
-    {
-      staticClass: "mx-auto my-12",
-      attrs: { loading: _vm.loading, "max-width": "374" }
-    },
-    [
-      _c("v-img", {
-        attrs: {
-          height: "250",
-          src: "https://cdn.vuetifyjs.com/images/cards/cooking.png"
-        }
-      }),
-      _vm._v(" "),
-      _c("v-card-title", [_vm._v("Cafe Badilico")]),
-      _vm._v(" "),
-      _c(
-        "v-card-text",
+    "v-row",
+    { staticClass: "justify-center" },
+    _vm._l(_vm.products, function(product) {
+      return _c(
+        "v-card",
+        {
+          key: product.id,
+          staticClass: "product-card my-5",
+          attrs: { loading: _vm.loading }
+        },
         [
-          _c(
-            "v-row",
-            { attrs: { align: "center" } },
-            [
-              _c("v-rating", {
-                attrs: {
-                  value: 4.5,
-                  color: "amber",
-                  "half-increments": "",
-                  dense: "",
-                  size: "14",
-                  readonly: ""
-                }
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "grey--text ml-4" }, [
-                _vm._v("4.5 (413)")
-              ])
-            ],
-            1
-          ),
+          _c("v-img", {
+            attrs: { src: "https://cdn.vuetifyjs.com/images/cards/cooking.png" }
+          }),
           _vm._v(" "),
-          _c("div", { staticClass: "my-4 subtitle-1 black--text" }, [
-            _vm._v("\n      $ • Italian, Cafe\n    ")
+          _c("v-card-title", [_vm._v(_vm._s(product.title))]),
+          _vm._v(" "),
+          _c("v-card-text", [
+            _c("div", { staticClass: "my-1 subtitle-1 black--text" }, [
+              _vm._v("\n        " + _vm._s(product.price) + "\n      ")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "product-desc" }, [
+              _vm._v(_vm._s(product.description))
+            ])
           ]),
           _vm._v(" "),
-          _c("div", [
-            _vm._v(
-              "Small plates, salads & sandwiches an inteimate setting with 12 indoor seats plus patio seating."
-            )
-          ])
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c("v-divider", { staticClass: "mx-4" }),
-      _vm._v(" "),
-      _c(
-        "v-card-text",
-        [
-          _c("div", { staticClass: "title text--primary" }, [
-            _vm._v("Tonight's availability")
-          ]),
+          _c("v-divider", { staticClass: "mx-4" }),
           _vm._v(" "),
           _c(
-            "v-chip-group",
-            {
-              attrs: {
-                "active-class": "deep-purple accent-4 white--text",
-                column: ""
-              },
-              model: {
-                value: _vm.selection,
-                callback: function($$v) {
-                  _vm.selection = $$v
-                },
-                expression: "selection"
-              }
-            },
+            "v-card-actions",
+            { staticClass: "product-action" },
             [
-              _c("v-chip", [_vm._v("5:30PM")]),
+              _c(
+                "v-btn",
+                { attrs: { color: "green" }, on: { click: _vm.reserve } },
+                [_vm._v("\n        Add\n      ")]
+              ),
               _vm._v(" "),
-              _c("v-chip", [_vm._v("7:30PM")]),
-              _vm._v(" "),
-              _c("v-chip", [_vm._v("8:00PM")]),
-              _vm._v(" "),
-              _c("v-chip", [_vm._v("9:00PM")])
+              _c("v-select", {
+                staticClass: "product-qty",
+                attrs: { items: _vm.quantity, label: "1", solo: "", flat: "" }
+              })
             ],
             1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-card-actions",
-        [
-          _c(
-            "v-btn",
-            {
-              attrs: { color: "deep-purple accent-4", text: "" },
-              on: { click: _vm.reserve }
-            },
-            [_vm._v("\n      Reserve\n    ")]
           )
         ],
         1
       )
-    ],
+    }),
     1
   )
 }
@@ -81984,6 +81904,7 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
           // secondary: '#E1341E',
           // Grandiose Colors
           red: '#D42427',
+          green: '#81b14d',
           text: '#1D1D1B'
         }
       }
@@ -82181,8 +82102,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\xampp7.2.19\htdocs\grandiose-vuetify\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\xampp7.2.19\htdocs\grandiose-vuetify\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! c:\xampp7.2.19\htdocs\grandiose-vuetify\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! c:\xampp7.2.19\htdocs\grandiose-vuetify\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

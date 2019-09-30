@@ -63,6 +63,7 @@ const app = new Vue({
               // secondary: '#E1341E',
               // Grandiose Colors
               red: '#D42427',
+              green: '#81b14d',
               text: '#1D1D1B'
             }
     	    }

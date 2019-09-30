@@ -1,0 +1,20 @@
+.product-card{
+    min-width: 180px;
+    // width: calc(16% - 10px);
+    width: calc(16% - 10px);
+    margin: 5px;
+    .product-desc{
+        height: 80px;
+        overflow-y:scroll;
+        font-size: 13px;
+        line-height: 16px;
+    }
+    .product-action{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        .product-qty{
+            max-width: 70px;
+        }
+    }
+}
