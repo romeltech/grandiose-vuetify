@@ -33211,7 +33211,7 @@ var render = function() {
           _vm._v(" "),
           _c("v-card-text", [
             _c("div", { staticClass: "my-1 subtitle-1 black--text" }, [
-              _vm._v("\n        " + _vm._s(product.price) + "\n      ")
+              _vm._v("\n        " + _vm._s(product.price) + " AED\n      ")
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "product-desc" }, [

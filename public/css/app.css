@@ -70,9 +70,9 @@ header .v-toolbar__title .logo img {
 }
 
 .product-card .product-desc {
-  height: 80px;
+  height: 50px;
   overflow-y: scroll;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 16px;
 }
 

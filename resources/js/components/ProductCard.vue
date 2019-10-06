@@ -6,7 +6,7 @@
       <v-card-title>{{product.title}}</v-card-title>
       <v-card-text>
         <div class="my-1 subtitle-1 black--text">
-          {{product.price}}
+          {{product.price}} AED
         </div>
         <div class="product-desc">{{product.description}}</div>
       </v-card-text>
