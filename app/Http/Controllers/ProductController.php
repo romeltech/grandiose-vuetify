@@ -84,4 +84,14 @@ class ProductController extends Controller
     {
         //
     }
+
+
+    /**
+     * Payment
+     */
+    public function checkout()
+    {
+        // return view('shop.checkout', ['products' => $products]);
+        return view('shop.checkout');
+    }
 }

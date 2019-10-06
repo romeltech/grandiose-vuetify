@@ -1,8 +1,11 @@
 .product-card{
     min-width: 180px;
     // width: calc(16% - 10px);
-    width: calc(16% - 10px);
+    width: calc(20% - 10px);
     margin: 5px;
+    .v-card__title{
+        font-size: 1.25rem;
+    }
     .product-desc{
         height: 50px;
         overflow-y: scroll;
@@ -15,6 +18,9 @@
         width: 100%;
         .product-qty{
             max-width: 70px;
+            .v-text-field__details{
+                display: none;
+            }
         }
     }
 }

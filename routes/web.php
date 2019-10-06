@@ -23,3 +23,8 @@ Route::get('/home', 'HomeController@index')->name('home');
  * Products
  */
 Route::get('/shop', 'ProductController@index')->name('shop');
+
+/**
+ * Payment
+ */
+Route::get('/checkout', 'ProductController@checkout')->name('checkout');

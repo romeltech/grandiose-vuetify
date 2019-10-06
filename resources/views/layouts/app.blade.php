@@ -87,8 +87,7 @@
                 v-model="drawer"
                 absolute
                 temporary
-                left
-            >
+                left>
                 <v-list-item>
                 <v-list-item-avatar>
                     <v-img src="https://mel-7.com/wp-content/uploads/2019/04/romel-indemne-v1.jpg"></v-img>
@@ -119,24 +118,65 @@
             <v-navigation-drawer
                 v-model="cartdrawer"
                 absolute
+                width="300px"
                 temporary
-                right
-            >
+                right>
                 <v-list-item>
-                <v-list-item-content>
-                    <v-list-item-title>Shopping Cart</v-list-item-title>
-                </v-list-item-content>
-                </v-list-item>
-                <v-divider></v-divider>
-                <v-list dense>
-                <v-list-item>
-                    <v-list-item-icon>
-                    <v-icon>mdi-cart</v-icon>
-                    </v-list-item-icon>
                     <v-list-item-content>
-                    <v-list-item-title>This is list</v-list-item-title>
+                        <v-list-item-title>SHOPPING CART</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
+                <v-divider></v-divider>
+
+                <v-list subheader>
+                    <v-list-item>
+                        <v-list-item-avatar>
+                            <img src="img/product/basmati-rice.jpg" alt="" style="width:50px;height:50px;">
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                            <v-list-item-title>10.00 AED</v-list-item-title>
+                            <v-list-item-title>Thi is the title</v-list-item-title>
+                            <v-list-item-subtitle>remove</v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                        <v-list-item-avatar>
+                            <img src="img/product/basmati-rice.jpg" alt="" style="width:50px;height:50px;">
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                            <v-list-item-title>10.00 AED</v-list-item-title>
+                            <v-list-item-title>Thi is the title</v-list-item-title>
+                            <v-list-item-subtitle>remove</v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                        <v-list-item-avatar>
+                            <img src="img/product/basmati-rice.jpg" alt="" style="width:50px;height:50px;">
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                            <v-list-item-title>10.00 AED</v-list-item-title>
+                            <v-list-item-title>Thi is the title</v-list-item-title>
+                            <v-list-item-subtitle>remove</v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                        <v-list-item-avatar>
+                            <img src="img/product/basmati-rice.jpg" alt="" style="width:50px;height:50px;">
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                            <v-list-item-title>10.00 AED</v-list-item-title>
+                            <v-list-item-title>Thi is the title</v-list-item-title>
+                            <v-list-item-subtitle>remove</v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-divider class="mb-5"></v-divider>
+                    
+                    <v-list-item>
+                        <a href="/checkout" class="mb-3 v-btn v-btn--contained theme--light v-size--large primary" style="width:100%;">Checkout</a>
+                    </v-list-item>
+                    <v-list-item color="primary">
+                        <a href="/shop" class="mb-3 v-btn v-btn--contained theme--light v-size--large secondary"  style="width:100%;color:#000000;">Continue Shopping</a>
+                    </v-list-item>
                 </v-list>
             </v-navigation-drawer>
 

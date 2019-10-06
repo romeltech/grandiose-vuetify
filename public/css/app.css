@@ -65,8 +65,12 @@ header .v-toolbar__title .logo img {
 
 .product-card {
   min-width: 180px;
-  width: calc(16% - 10px);
+  width: calc(20% - 10px);
   margin: 5px;
+}
+
+.product-card .v-card__title {
+  font-size: 1.25rem;
 }
 
 .product-card .product-desc {
@@ -84,5 +88,9 @@ header .v-toolbar__title .logo img {
 
 .product-card .product-action .product-qty {
   max-width: 70px;
+}
+
+.product-card .product-action .product-qty .v-text-field__details {
+  display: none;
 }
 
