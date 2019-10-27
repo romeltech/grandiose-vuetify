@@ -46,35 +46,37 @@
             
                     <div class="flex-grow-1"></div>
             
-                    <v-toolbar-items class="hidden-sm-and-down align-center g-main-nav">
+                    <v-toolbar-items class="hidden-sm-and-down align-center g-main-nav mr-3">
                         <a href="{{ route('dashboard') }}" class="caption px-3">{{ __('Dashboard') }}</a>
                         <a href="/promotion" class="caption px-3">Location</a>
                         <a href="/promotion" class="caption px-3">Contact</a>
+                    </v-toolbar-items>
+
+                    <v-toolbar-items class="mr-3 g-main-nav">
+                            <v-btn icon  width="70px">
                         @guest
                             <a class="caption px-3" href="{{ route('login') }}">{{ __('Login') }}</a>
                             @if (Route::has('register'))
                                 <a class="caption px-3" href="{{ route('register') }}">{{ __('Register') }}</a>
                             @endif
                         @else
+                            <user-nav-icon
+                                :auth-user="{{ Auth::user() }}">
+                            </user-nav-icon>
+                            
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
                         @endguest
-                        <v-btn text>
-                            <span class="caption">Romel</span>
-                            <v-avatar class="ml-3">
-                                <img src="https://mel-7.com/wp-content/uploads/2019/04/romel-indemne-v1.jpg" alt="Romel Indemne">
-                            </v-avatar>
-                        </v-btn>
-                    </v-toolbar-items>
-                    <v-toolbar-items class="mr-3">
-                        <v-btn icon @click.stop="cartdrawer = !cartdrawer">
-                            <v-badge
-                                color="red"
-                            >
+                    </v-btn>
+
+                        <v-btn icon @click.stop="cartdrawer = !cartdrawer" class="" width="70px">
+                            <v-badge color="red">
                                 <template v-slot:badge>0</template>
-                                <v-icon
-                                    color="text"
-                                >mdi-cart</v-icon>
+                                <v-icon color="text">mdi-cart</v-icon>
                             </v-badge>
                         </v-btn>
+
                     </v-toolbar-items>
 
                 </v-toolbar>
