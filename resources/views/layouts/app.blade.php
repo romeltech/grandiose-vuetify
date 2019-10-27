@@ -55,7 +55,6 @@
                     <v-toolbar-items class="mr-3 g-main-nav align-center">
                         
                         @guest
-                        
                             <v-toolbar-items class="mr-3 g-main-nav align-center">
                                 <a class="caption px-3" href="{{ route('login') }}">{{ __('Login') }}</a>
                                 @if (Route::has('register'))
@@ -73,7 +72,6 @@
                                 @csrf
                             </form>
                         @endguest 
-
 
                         <v-btn icon @click.stop="cartdrawer = !cartdrawer" class="" width="60px">
                             <v-badge color="red">
