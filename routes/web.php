@@ -28,3 +28,8 @@ Route::get('/shop', 'ProductController@index')->name('shop');
  * Payment
  */
 Route::get('/checkout', 'ProductController@checkout')->name('checkout');
+
+/**
+ * Dashboard
+ */
+Route::get('/dashboard', 'Pages@dashboard')->name('dashboard');
