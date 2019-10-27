@@ -47,7 +47,7 @@
                     <div class="flex-grow-1"></div>
             
                     <v-toolbar-items class="hidden-sm-and-down align-center g-main-nav">
-                        <a href="/promotion" class="caption px-3">Promotion</a>
+                        <a href="{{ route('dashboard') }}" class="caption px-3">{{ __('Dashboard') }}</a>
                         <a href="/promotion" class="caption px-3">Location</a>
                         <a href="/promotion" class="caption px-3">Contact</a>
                         @guest
