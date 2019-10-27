@@ -30,6 +30,12 @@ Route::get('/shop', 'ProductController@index')->name('shop');
 Route::get('/checkout', 'ProductController@checkout')->name('checkout');
 
 /**
- * Dashboard
+ * User Pages
  */
-Route::get('/dashboard', 'Pages@dashboard')->name('dashboard');
+Route::group(['prefix'=>'account','as'=>'account.'], function(){
+    // Route::get('/', ['as' => 'index', 'uses' => 'AccountController@index']);
+    Route::get('/dashboard', 'UserController@dashboard')->name('dashboard');
+    Route::get('/orders', 'UserController@orders')->name('orders');
+    Route::get('/Settings', 'UserController@settings')->name('settings');
+    Route::get('/Addresses', 'UserController@addresses')->name('addresses');
+});

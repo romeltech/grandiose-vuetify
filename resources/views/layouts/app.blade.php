@@ -47,7 +47,8 @@
                     <div class="flex-grow-1"></div>
             
                     <v-toolbar-items class="hidden-sm-and-down align-center mr-3">
-                        <a href="{{ route('dashboard') }}" class="caption px-3">{{ __('Dashboard') }}</a>
+                            {{-- {{ route('dashboard') }} --}}
+                        <a href="#" class="caption px-3">{{ __('Dashboard') }}</a>
                         <a href="/promotion" class="caption px-3">Location</a>
                         <a href="/promotion" class="caption px-3">Contact</a>
                     </v-toolbar-items>
@@ -136,7 +137,8 @@
                 <v-list subheader>
                     <v-list-item>
                         <v-list-item-avatar>
-                            <img src="img/product/basmati-rice.jpg" alt="" style="width:50px;height:50px;">
+
+                            <img src="{{ asset('img') }}/product/basmati-rice.jpg" alt="" style="width:50px;height:50px;">
                         </v-list-item-avatar>
                         <v-list-item-content>
                             <v-list-item-title>10.00 AED</v-list-item-title>
@@ -146,7 +148,7 @@
                     </v-list-item>
                     <v-list-item>
                         <v-list-item-avatar>
-                            <img src="img/product/basmati-rice.jpg" alt="" style="width:50px;height:50px;">
+                            <img src="{{ asset('img') }}/product/basmati-rice.jpg" alt="" style="width:50px;height:50px;">
                         </v-list-item-avatar>
                         <v-list-item-content>
                             <v-list-item-title>10.00 AED</v-list-item-title>
@@ -156,7 +158,7 @@
                     </v-list-item>
                     <v-list-item>
                         <v-list-item-avatar>
-                            <img src="img/product/basmati-rice.jpg" alt="" style="width:50px;height:50px;">
+                            <img src="{{ asset('img') }}/product/basmati-rice.jpg" alt="" style="width:50px;height:50px;">
                         </v-list-item-avatar>
                         <v-list-item-content>
                             <v-list-item-title>10.00 AED</v-list-item-title>
@@ -166,7 +168,7 @@
                     </v-list-item>
                     <v-list-item>
                         <v-list-item-avatar>
-                            <img src="img/product/basmati-rice.jpg" alt="" style="width:50px;height:50px;">
+                            <img src="{{ asset('img') }}/product/basmati-rice.jpg" alt="" style="width:50px;height:50px;">
                         </v-list-item-avatar>
                         <v-list-item-content>
                             <v-list-item-title>10.00 AED</v-list-item-title>
