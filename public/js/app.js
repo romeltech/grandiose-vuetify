@@ -2105,6 +2105,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['authUser'],
   data: function data() {
@@ -33676,10 +33677,7 @@ var render = function() {
                 return [
                   _c(
                     "v-btn",
-                    _vm._g(
-                      { staticClass: "ma-3", attrs: { text: "", icon: "" } },
-                      on
-                    ),
+                    _vm._g({ attrs: { text: "", icon: "" } }, on),
                     [
                       _c("v-avatar", [
                         _c("img", {

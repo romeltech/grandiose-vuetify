@@ -46,31 +46,36 @@
             
                     <div class="flex-grow-1"></div>
             
-                    <v-toolbar-items class="hidden-sm-and-down align-center g-main-nav mr-3">
+                    <v-toolbar-items class="hidden-sm-and-down align-center mr-3">
                         <a href="{{ route('dashboard') }}" class="caption px-3">{{ __('Dashboard') }}</a>
                         <a href="/promotion" class="caption px-3">Location</a>
                         <a href="/promotion" class="caption px-3">Contact</a>
                     </v-toolbar-items>
 
-                    <v-toolbar-items class="mr-3 g-main-nav">
-                            <v-btn icon  width="70px">
+                    <v-toolbar-items class="mr-3 g-main-nav align-center">
+                        
                         @guest
-                            <a class="caption px-3" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            @if (Route::has('register'))
+                        
+                            <v-toolbar-items class="mr-3 g-main-nav align-center">
+                                <a class="caption px-3" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                @if (Route::has('register'))
                                 <a class="caption px-3" href="{{ route('register') }}">{{ __('Register') }}</a>
-                            @endif
+                                @endif
+                            </v-toolbar-items>
                         @else
-                            <user-nav-icon
-                                :auth-user="{{ Auth::user() }}">
-                            </user-nav-icon>
-                            
+                            <v-btn text icon width="60px">     
+                                <user-nav-icon
+                                    :auth-user="{{ Auth::user() }}">
+                                </user-nav-icon>
+                            </v-btn>
+
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 @csrf
                             </form>
-                        @endguest
-                    </v-btn>
+                        @endguest 
 
-                        <v-btn icon @click.stop="cartdrawer = !cartdrawer" class="" width="70px">
+
+                        <v-btn icon @click.stop="cartdrawer = !cartdrawer" class="" width="60px">
                             <v-badge color="red">
                                 <template v-slot:badge>0</template>
                                 <v-icon color="text">mdi-cart</v-icon>
