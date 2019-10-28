@@ -33759,7 +33759,7 @@ var render = function() {
                   _c("v-list-item-group", { attrs: { color: "primary" } }, [
                     _c(
                       "a",
-                      { attrs: { href: "/u/orders/" + _vm.authUser.id } },
+                      { attrs: { href: "/u/" + _vm.authUser.id + "/orders" } },
                       [
                         _c(
                           "v-list-item",
@@ -33772,7 +33772,7 @@ var render = function() {
                     _vm._v(" "),
                     _c(
                       "a",
-                      { attrs: { href: "/u/profile/" + _vm.authUser.id } },
+                      { attrs: { href: "/u/" + _vm.authUser.id + "/profile" } },
                       [
                         _c(
                           "v-list-item",
@@ -33786,7 +33786,9 @@ var render = function() {
                     _c(
                       "a",
                       {
-                        attrs: { href: "/u/payment-methods/" + _vm.authUser.id }
+                        attrs: {
+                          href: "/u/" + _vm.authUser.id + "/payment-methods"
+                        }
                       },
                       [
                         _c(
@@ -33802,7 +33804,9 @@ var render = function() {
                     _vm._v(" "),
                     _c(
                       "a",
-                      { attrs: { href: "/u/settings/" + _vm.authUser.id } },
+                      {
+                        attrs: { href: "/u/" + _vm.authUser.id + "/settings" }
+                      },
                       [
                         _c(
                           "v-list-item",

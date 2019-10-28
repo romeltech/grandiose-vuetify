@@ -36,16 +36,16 @@
 
           <v-list dense>
             <v-list-item-group color="primary">
-              <a v-bind:href="'/u/orders/'+authUser.id">
+              <a v-bind:href="'/u/'+authUser.id+'/orders'">
                 <v-list-item><v-list-item-title>Orders</v-list-item-title></v-list-item>
               </a>
-              <a v-bind:href="'/u/profile/'+authUser.id">
+              <a v-bind:href="'/u/'+authUser.id+'/profile'">
                 <v-list-item><v-list-item-title>Profile</v-list-item-title></v-list-item>
               </a>
-              <a v-bind:href="'/u/payment-methods/'+authUser.id">
+              <a v-bind:href="'/u/'+authUser.id+'/payment-methods'">
                 <v-list-item><v-list-item-title>Payment Methods</v-list-item-title></v-list-item>
               </a>
-              <a v-bind:href="'/u/settings/'+authUser.id">
+              <a v-bind:href="'/u/'+authUser.id+'/settings'">
                 <v-list-item><v-list-item-title>Account Settings</v-list-item-title></v-list-item>
               </a>
               <!-- <v-list-item>
