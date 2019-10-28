@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -87,13 +88,30 @@ class UserController extends Controller
 
     /**
      * Customers Pages
+     * 
+     * orders
+     * profile
+     * payment methods
+     * account settings
      */
-    public function dashboard()
+    public function orders(User $user)
     {
-        return view('user.dashboard');
+        return view('user.orders', compact('user'));
     }
-    public function orders()
+
+    public function profile(User $user)
     {
-        return view('user.orders');
+        return view('user.profile', compact('user'));
     }
+
+    public function payments(User $user)
+    {
+        return view('user.payments', compact('user'));
+    }
+
+    public function settings(User $user)
+    {
+        return view('user.settings', compact('user'));
+    }
+
 }

@@ -36,25 +36,28 @@
 
           <v-list dense>
             <v-list-item-group color="primary">
-              <v-list-item>
-                <v-list-item-title><a href="/home">My Profile</a></v-list-item-title>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-title><a href="/orders">My Orders</a></v-list-item-title>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-title><a href="/orders">Account Settings</a></v-list-item-title>
-              </v-list-item>
-              <v-list-item>
+              <a v-bind:href="'/u/orders/'+authUser.id">
+                <v-list-item><v-list-item-title>Orders</v-list-item-title></v-list-item>
+              </a>
+              <a v-bind:href="'/u/profile/'+authUser.id">
+                <v-list-item><v-list-item-title>Profile</v-list-item-title></v-list-item>
+              </a>
+              <a v-bind:href="'/u/payment-methods/'+authUser.id">
+                <v-list-item><v-list-item-title>Payment Methods</v-list-item-title></v-list-item>
+              </a>
+              <a v-bind:href="'/u/settings/'+authUser.id">
+                <v-list-item><v-list-item-title>Account Settings</v-list-item-title></v-list-item>
+              </a>
+              <!-- <v-list-item>
                 <v-list-item-title v-on:click="logout">Logout</v-list-item-title>
-              </v-list-item>
+              </v-list-item> -->
             </v-list-item-group>
           </v-list>
           <v-divider></v-divider>
-          <!-- <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn text v-on:click="logout">Logout</v-btn>
-          </v-card-actions> -->
+          <v-card-actions>
+            <!-- <v-spacer></v-spacer> -->
+            <v-btn depressed v-on:click="logout" width="100%">Logout</v-btn>
+          </v-card-actions>
       
         </v-card>
       </v-menu>
@@ -74,7 +77,10 @@
       logout: function (event) {
         event.preventDefault();
         document.getElementById('logout-form').submit();
-      }
+      },
+      // url: function() {
+      //   window.location.href = '/account/';
+      // }
     }
   }
 </script>

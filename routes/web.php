@@ -32,10 +32,10 @@ Route::get('/checkout', 'ProductController@checkout')->name('checkout');
 /**
  * User Pages
  */
-Route::group(['prefix'=>'account','as'=>'account.'], function(){
+Route::group(['prefix'=>'u','as'=>'u.'], function(){
     // Route::get('/', ['as' => 'index', 'uses' => 'AccountController@index']);
-    Route::get('/dashboard', 'UserController@dashboard')->name('dashboard');
-    Route::get('/orders', 'UserController@orders')->name('orders');
-    Route::get('/Settings', 'UserController@settings')->name('settings');
-    Route::get('/Addresses', 'UserController@addresses')->name('addresses');
+    Route::get('/orders/{user}', 'UserController@orders')->name('orders');
+    Route::get('/profile/{user}', 'UserController@profile')->name('profile');
+    Route::get('/settings/{user}', 'UserController@settings')->name('settings');
+    Route::get('/payment-methods/{user}', 'UserController@payments')->name('payments');
 });

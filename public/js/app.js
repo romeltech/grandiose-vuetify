@@ -2106,6 +2106,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['authUser'],
   data: function data() {
@@ -2120,7 +2123,10 @@ __webpack_require__.r(__webpack_exports__);
     logout: function logout(event) {
       event.preventDefault();
       document.getElementById('logout-form').submit();
-    }
+    } // url: function() {
+    //   window.location.href = '/account/';
+    // }
+
   }
 });
 
@@ -33750,65 +33756,87 @@ var render = function() {
                 "v-list",
                 { attrs: { dense: "" } },
                 [
-                  _c(
-                    "v-list-item-group",
-                    { attrs: { color: "primary" } },
-                    [
-                      _c(
-                        "v-list-item",
-                        [
-                          _c("v-list-item-title", [
-                            _c("a", { attrs: { href: "/home" } }, [
-                              _vm._v("My Profile")
-                            ])
-                          ])
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "v-list-item",
-                        [
-                          _c("v-list-item-title", [
-                            _c("a", { attrs: { href: "/orders" } }, [
-                              _vm._v("My Orders")
-                            ])
-                          ])
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "v-list-item",
-                        [
-                          _c("v-list-item-title", [
-                            _c("a", { attrs: { href: "/orders" } }, [
+                  _c("v-list-item-group", { attrs: { color: "primary" } }, [
+                    _c(
+                      "a",
+                      { attrs: { href: "/u/orders/" + _vm.authUser.id } },
+                      [
+                        _c(
+                          "v-list-item",
+                          [_c("v-list-item-title", [_vm._v("Orders")])],
+                          1
+                        )
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      { attrs: { href: "/u/profile/" + _vm.authUser.id } },
+                      [
+                        _c(
+                          "v-list-item",
+                          [_c("v-list-item-title", [_vm._v("Profile")])],
+                          1
+                        )
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        attrs: { href: "/u/payment-methods/" + _vm.authUser.id }
+                      },
+                      [
+                        _c(
+                          "v-list-item",
+                          [
+                            _c("v-list-item-title", [_vm._v("Payment Methods")])
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      { attrs: { href: "/u/settings/" + _vm.authUser.id } },
+                      [
+                        _c(
+                          "v-list-item",
+                          [
+                            _c("v-list-item-title", [
                               _vm._v("Account Settings")
                             ])
-                          ])
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "v-list-item",
-                        [
-                          _c(
-                            "v-list-item-title",
-                            { on: { click: _vm.logout } },
-                            [_vm._v("Logout")]
-                          )
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  ])
                 ],
                 1
               ),
               _vm._v(" "),
-              _c("v-divider")
+              _c("v-divider"),
+              _vm._v(" "),
+              _c(
+                "v-card-actions",
+                [
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { depressed: "", width: "100%" },
+                      on: { click: _vm.logout }
+                    },
+                    [_vm._v("Logout")]
+                  )
+                ],
+                1
+              )
             ],
             1
           )
