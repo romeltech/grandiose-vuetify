@@ -57,7 +57,7 @@ class RegisterController extends Controller
     }
 
     /**
-     * Create a new user instance after a valid registration.
+     * Create a new Customer User instance after a valid registration.
      *
      * @param  array  $data
      * @return \App\User
@@ -69,7 +69,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'phone' => $data['phone'],
-            'role' => 4,
+            'role' => 5,
         ]);
     }
 }

@@ -17,21 +17,32 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
+
     <v-app id="app">
 
-        <v-sheet class="overflow-hidden" style="position:relative;height:100%;" tile>
-            
-            {{-- Navigation --}}
+        <v-sheet class="overflow-hidden" style="position:relative;height:100%;" tile>            
+
+            {{-- Admin App --}}
+
             @can('accessAdmin', App\User::class)
+
                 @include('admin.admin-app')
-            @endcan            
+
+            @endcan        
+
+            {{-- Customer App --}}
+
             @cannot('accessAdmin', App\User::class)
-                @include('user.user-nav')            
+
+                @include('user.customer-nav')            
+    
                 <main class="py-4">
+    
                     @yield('content')
+    
                 </main>        
-            @endcannot
-        
+    
+            @endcannot    
 
         </v-sheet>
 

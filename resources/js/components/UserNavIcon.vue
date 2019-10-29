@@ -31,31 +31,32 @@
 
             </v-list-item>
           </v-list>
-
           <v-divider></v-divider>
 
-          <v-list dense>
-            <v-list-item-group color="primary">
-              <a v-bind:href="'/u/'+authUser.id+'/orders'">
-                <v-list-item><v-list-item-title>Orders</v-list-item-title></v-list-item>
-              </a>
-              <a v-bind:href="'/u/'+authUser.id+'/profile'">
-                <v-list-item><v-list-item-title>Profile</v-list-item-title></v-list-item>
-              </a>
-              <a v-bind:href="'/u/'+authUser.id+'/payment-methods'">
-                <v-list-item><v-list-item-title>Payment Methods</v-list-item-title></v-list-item>
-              </a>
-              <a v-bind:href="'/u/'+authUser.id+'/settings'">
-                <v-list-item><v-list-item-title>Account Settings</v-list-item-title></v-list-item>
-              </a>
-              <!-- <v-list-item>
-                <v-list-item-title v-on:click="logout">Logout</v-list-item-title>
-              </v-list-item> -->
-            </v-list-item-group>
-          </v-list>
-          <v-divider></v-divider>
+          <template v-if="authUser.role == 5 ">
+            <v-list dense>
+              <v-list-item-group color="primary">
+                <a v-bind:href="'/u/'+authUser.id+'/orders'">
+                  <v-list-item><v-list-item-title>Orders</v-list-item-title></v-list-item>
+                </a>
+                <a v-bind:href="'/u/'+authUser.id+'/profile'">
+                  <v-list-item><v-list-item-title>Profile</v-list-item-title></v-list-item>
+                </a>
+                <a v-bind:href="'/u/'+authUser.id+'/payment-methods'">
+                  <v-list-item><v-list-item-title>Payment Methods</v-list-item-title></v-list-item>
+                </a>
+                <a v-bind:href="'/u/'+authUser.id+'/settings'">
+                  <v-list-item><v-list-item-title>Account Settings</v-list-item-title></v-list-item>
+                </a>
+                <!-- <v-list-item>
+                  <v-list-item-title v-on:click="logout">Logout</v-list-item-title>
+                </v-list-item> -->
+              </v-list-item-group>
+            </v-list>
+            <v-divider></v-divider>
+          </template>
+
           <v-card-actions>
-            <!-- <v-spacer></v-spacer> -->
             <v-btn depressed v-on:click="logout" width="100%">Logout</v-btn>
           </v-card-actions>
       

@@ -96,11 +96,14 @@ class AdminController extends Controller
     /**
      * Admin Pages
      */
-    // public function users(User $user)
-    // {
-    //     // $user = User::all();
-    //     return view('admin.users', compact('user'));
-    // }
+    public function settings(User $user)
+    {
+        // if (auth()->user()->role === 1){
+        return view('admin.settings', compact('user'));
+        // }
+        // $user = User::all();
+        // $this->authorize('accessAdmin', User::class);
+    }
     public function users(User $user)
     {
         return view('admin.users', compact('user'));

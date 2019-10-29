@@ -25,7 +25,7 @@
         "babel-polyfill": "^6.26.0",
         "css-loader": "^3.2.0",
         "postcss-loader": "^3.0.0",
-        "vuetify": "^2.0.18"
+        "vuetify": "^2.1.7"
     },
     "dependencies": {}
 }

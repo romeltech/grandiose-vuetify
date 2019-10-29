@@ -14,11 +14,11 @@ class UserPolicy
      */
     public function accessAdmin(User $user)
     {
-        return $user->role < 4;
+        return $user->role < 5;
     }
     public function accessAdminModel(User $user, User $model)
     {
-        return $user->role < 4;
+        return $user->role < 5;
     }
 
 
@@ -28,7 +28,7 @@ class UserPolicy
      */
     public function accessCustomerOnly(User $user, User $model)
     {
-        return $user->role === 4;
+        return $user->role === 5;
     }
 
 

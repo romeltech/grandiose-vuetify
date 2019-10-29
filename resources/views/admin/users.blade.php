@@ -1,10 +1,15 @@
 @extends('layouts.app')
 
-@section('content')
-    <div class="container">
-        <h1>Welcome, {{ $user->name }}</h1>
-        <h4>{{ $user->email }}</h4>
-        <h4>{{ $user->role }}</h4>
-        <h4>{{ $user->phone }}</h4>
-    </div>
+@section('admin-content')
+
+    <h2 class="mb-3">{{ _('Manage Users') }}</h2>
+
+    <v-data-table>
+        <template>
+            <td>romel</td>
+            <td>UAE</td>
+            <td>Dubai</td>
+            <td class="text-xs-right">Meh</td>
+        </template>
+    </v-data-table>
 @endsection
