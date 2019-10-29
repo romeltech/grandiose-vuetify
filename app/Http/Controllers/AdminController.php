@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class AdminController extends Controller
 {
 
     public function __construct()
@@ -14,6 +14,7 @@ class UserController extends Controller
         // $this->middleware('auth')->except(['index']);
         // $this->middleware('auth')->only(['index']);
     }
+
 
     /**
      * Display a listing of the resource.
@@ -92,34 +93,17 @@ class UserController extends Controller
     }
 
 
-
-
     /**
-     * Customers Pages
-     * 
-     * orders
-     * profile
-     * payment methods
-     * account settings
+     * Admin Pages
      */
-    public function orders(User $user)
+    // public function users(User $user)
+    // {
+    //     // $user = User::all();
+    //     return view('admin.users', compact('user'));
+    // }
+    public function users(User $user)
     {
-        return view('user.orders', compact('user'));
-    }
-
-    public function profile(User $user)
-    {
-        return view('user.profile', compact('user'));
-    }
-
-    public function payments(User $user)
-    {
-        return view('user.payments', compact('user'));
-    }
-
-    public function settings(User $user)
-    {
-        return view('user.settings', compact('user'));
+        return view('admin.users', compact('user'));
     }
 
 }

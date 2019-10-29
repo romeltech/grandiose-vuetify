@@ -30,12 +30,20 @@ Route::get('/shop', 'ProductController@index')->name('shop');
 Route::get('/checkout', 'ProductController@checkout')->name('checkout');
 
 /**
- * User Pages
+ * Customer Routes
  */
 Route::group(['prefix'=>'u','as'=>'u.'], function(){
     // Route::get('/', ['as' => 'index', 'uses' => 'AccountController@index']);
-    Route::get('{user}/orders', 'UserController@orders')->name('orders');
-    Route::get('{user}/profile', 'UserController@profile')->name('profile');
-    Route::get('{user}/settings', 'UserController@settings')->name('settings');
-    Route::get('{user}/payment-methods', 'UserController@payments')->name('payments');
+    Route::get('{user}/orders', 'UserController@orders')->middleware('can:accessCustomerOnly,user')->name('orders');
+    Route::get('{user}/profile', 'UserController@profile')->middleware('can:accessCustomerOnly,user')->name('profile');
+    Route::get('{user}/settings', 'UserController@settings')->middleware('can:accessCustomerOnly,user')->name('settings');
+    Route::get('{user}/payment-methods', 'UserController@payments')->middleware('can:accessCustomerOnly,user')->name('payments');
+});
+
+
+/**
+ * Admin Routes
+ */
+Route::group(['prefix'=>'admin','as'=>'admin.'], function(){
+    Route::get('{user}/users', 'AdminController@users')->middleware('can:accessAdminModel,user')->name('users');
 });
