@@ -51,6 +51,23 @@
                         <v-text-field
                             outlined
                             required
+                            autocomplete="phone" 
+                            id="phone"
+                            type="text"
+                            name="phone"
+                            label="{{ __('Mobile Number') }}"
+                            {{-- v-model="regname"
+                            :rules="regnamerules" --}}
+                            value="{{ old('phone') }}"
+                            @error('phone')
+                                error
+                                error-messages="{{ $message }}"
+                            @enderror>
+                        </v-text-field>
+
+                        <v-text-field
+                            outlined
+                            required
                             autocomplete="new-password"
                             id="password"
                             type="password"

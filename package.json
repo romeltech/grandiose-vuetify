@@ -12,7 +12,6 @@
     "devDependencies": {
         "@mdi/font": "^4.4.95",
         "axios": "^0.19",
-        "bootstrap": "^4.0.0",
         "cross-env": "^5.1",
         "jquery": "^3.2",
         "laravel-mix": "^4.0.7",
@@ -22,12 +21,11 @@
         "sass": "^1.20.1",
         "sass-loader": "7.*",
         "vue": "^2.5.17",
-        "vue-template-compiler": "^2.6.10"
-    },
-    "dependencies": {
+        "vue-template-compiler": "^2.6.10",
         "babel-polyfill": "^6.26.0",
         "css-loader": "^3.2.0",
         "postcss-loader": "^3.0.0",
-        "vuetify": "^2.0.18"
-    }
+        "vuetify": "^2.1.7"
+    },
+    "dependencies": {}
 }

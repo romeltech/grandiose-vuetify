@@ -34,6 +34,13 @@ Vue.use(Vuetify);
  */
 Vue.component('product-card', require('./components/ProductCard.vue').default);
 Vue.component('cart-items', require('./components/CartItems.vue').default);
+Vue.component('user-nav-icon', require('./components/UserNavIcon.vue').default);
+
+
+/**
+ * Admin Components
+ */
+Vue.component('add-user-form', require('./admin/AddUserForm.vue').default);
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
@@ -98,6 +105,7 @@ const app = new Vue({
           value => !!value || 'Required',
           value => (value && value.length > 8) || 'Password must be atleast 8 characters',
         ],
+
 
 
 
