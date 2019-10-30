@@ -34,7 +34,7 @@
 
             @cannot('accessAdmin', App\User::class)
 
-                @include('user.customer-nav')            
+                @include('customer-nav')            
     
                 <main class="py-4">
     
@@ -42,7 +42,10 @@
     
                 </main>        
     
-            @endcannot    
+            @endcannot
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
 
         </v-sheet>
 

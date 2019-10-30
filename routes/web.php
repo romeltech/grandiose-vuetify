@@ -34,10 +34,10 @@ Route::get('/checkout', 'ProductController@checkout')->name('checkout');
  */
 Route::group(['prefix'=>'u','as'=>'u.'], function(){
     // Route::get('/', ['as' => 'index', 'uses' => 'AccountController@index']);
-    Route::get('{user}/orders', 'UserController@orders')->middleware('can:accessCustomerOnly,user')->name('orders');
-    Route::get('{user}/profile', 'UserController@profile')->middleware('can:accessCustomerOnly,user')->name('profile');
-    Route::get('{user}/settings', 'UserController@settings')->middleware('can:accessCustomerOnly,user')->name('settings');
-    Route::get('{user}/payment-methods', 'UserController@payments')->middleware('can:accessCustomerOnly,user')->name('payments');
+    Route::get('{user}/orders', 'CustomerController@orders')->middleware('can:accessCustomerOnly,user')->name('orders');
+    Route::get('{user}/profile', 'CustomerController@profile')->middleware('can:accessCustomerOnly,user')->name('profile');
+    Route::get('{user}/settings', 'CustomerController@settings')->middleware('can:accessCustomerOnly,user')->name('settings');
+    Route::get('{user}/payment-methods', 'CustomerController@payments')->middleware('can:accessCustomerOnly,user')->name('payments');
 });
 
 
@@ -46,5 +46,6 @@ Route::group(['prefix'=>'u','as'=>'u.'], function(){
  */
 Route::group(['prefix'=>'admin','as'=>'admin.'], function(){
     Route::get('{user}/users', 'AdminController@users')->middleware('can:accessAdminModel,user')->name('users');
+    Route::get('{user}/users/add', 'AdminController@adduser')->middleware('can:accessAdminModel,user')->name('adduser');
     Route::get('{user}/settings', 'AdminController@settings')->middleware('can:accessAdminModel,user')->name('settings');
 });

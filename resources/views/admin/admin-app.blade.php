@@ -62,23 +62,46 @@ color="grey lighten-4"
 </v-list-group>
 <v-divider dark></v-divider>
 
+
 {{-- Label  --}}
+{{-- auth()->user()->id --}}
 <v-row align="center">
   <v-col cols="6">
     <v-subheader>Administrator</v-subheader>
   </v-col>
 </v-row>
 
-<v-list-item href="{{ route('admin.users', $user) }}">
-  <v-list-item-action>
-    <v-icon>mdi-account-multiple</v-icon>
-  </v-list-item-action>
-  <v-list-item-content>
-    <v-list-item-title class="grey--text">{{ __('Users') }}</v-list-item-title>
-  </v-list-item-content>
-</v-list-item>
+<v-list-group>
 
-<v-list-item href="{{ route('admin.settings', $user) }}">
+  <template v-slot:activator>
+    <v-list-item-icon>
+      <v-icon>mdi-account-multiple</v-icon>
+    </v-list-item-icon>
+    <v-list-item-title class="grey--text">Users</v-list-item-title>
+  </template>
+
+  <v-list dense class="grey lighten-3">
+    <v-list-item href="{{ route('admin.users', auth()->user()->id ) }}">
+      <v-list-item-action>
+        <v-icon small>mdi-account-multiple-outline</v-icon>
+      </v-list-item-action>
+      <v-list-item-content>
+        <v-list-item-title class="grey--text">{{ __('User List') }}</v-list-item-title>
+      </v-list-item-content>
+    </v-list-item>
+    <v-list-item href="{{ route('admin.adduser', auth()->user()->id ) }}">
+      <v-list-item-action>
+        <v-icon small>mdi-account-plus</v-icon>
+      </v-list-item-action>
+      <v-list-item-content>
+        <v-list-item-title class="grey--text">{{ __('Add User') }}</v-list-item-title>
+      </v-list-item-content>
+    </v-list-item>
+  </v-list>
+
+</v-list-group>
+
+<v-list-item href="{{ route('admin.settings', auth()->user()->id ) }}">
   <v-list-item-action>
     <v-icon>mdi-settings</v-icon>
   </v-list-item-action>

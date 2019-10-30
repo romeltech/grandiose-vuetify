@@ -16,6 +16,9 @@ class UserPolicy
     {
         return $user->role < 5;
     }
+    /**
+     * Model Level
+     */
     public function accessAdminModel(User $user, User $model)
     {
         return $user->role < 5;

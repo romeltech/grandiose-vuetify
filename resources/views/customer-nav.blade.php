@@ -41,12 +41,9 @@
                                     :auth-user="{{ Auth::user() }}">
                                 </user-nav-icon>
                             </v-btn>
-    
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
+
                         @endguest 
-    
+
                         <v-btn icon @click.stop="cartdrawer = !cartdrawer" class="" width="60px">
                             <v-badge color="red">
                                 <template v-slot:badge>0</template>

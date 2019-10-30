@@ -22,7 +22,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**
@@ -90,36 +90,4 @@ class UserController extends Controller
     {
         //
     }
-
-
-
-
-    /**
-     * Customers Pages
-     * 
-     * orders
-     * profile
-     * payment methods
-     * account settings
-     */
-    public function orders(User $user)
-    {
-        return view('user.orders', compact('user'));
-    }
-
-    public function profile(User $user)
-    {
-        return view('user.profile', compact('user'));
-    }
-
-    public function payments(User $user)
-    {
-        return view('user.payments', compact('user'));
-    }
-
-    public function settings(User $user)
-    {
-        return view('user.settings', compact('user'));
-    }
-
 }

@@ -104,9 +104,15 @@ class AdminController extends Controller
         // $user = User::all();
         // $this->authorize('accessAdmin', User::class);
     }
+
     public function users(User $user)
     {
         return view('admin.users', compact('user'));
+    }
+
+    public function adduser(User $user)
+    {
+        return view('admin.adduser', compact('user'));
     }
 
 }
