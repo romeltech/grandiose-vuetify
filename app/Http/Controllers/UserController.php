@@ -10,7 +10,7 @@ class UserController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
         // $this->middleware('auth')->except(['index']);
         // $this->middleware('auth')->only(['index']);
     }
@@ -24,7 +24,8 @@ class UserController extends Controller
     public function index(User $user)
     {
         // return view('admin.users', compact('user'));
-        return view('admin.user.index', compact('user'));
+        return User::all();
+        // return view('admin.user.index', compact('user'));
     }
 
     /**
@@ -45,7 +46,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        User::create($request->all());
+        dd($request);
     }
 
     /**

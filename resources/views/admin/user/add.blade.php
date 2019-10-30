@@ -3,5 +3,9 @@
 @section('admin-content')
 
     <h2 class="mb-3">{{ _('Add User') }}</h2>
-    
+    <v-row>
+        <v-col class="col-12 col-md-4">
+            <add-user-form></add-user-form>
+        </v-col>
+    </v-row>
 @endsection
