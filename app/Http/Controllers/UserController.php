@@ -15,14 +15,16 @@ class UserController extends Controller
         // $this->middleware('auth')->only(['index']);
     }
 
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        
+        // return view('admin.users', compact('user'));
+        return view('admin.user.index', compact('user'));
     }
 
     /**
@@ -30,9 +32,9 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(User $user)
     {
-        //
+        return view('admin.user.add', compact('user'));
     }
 
     /**
