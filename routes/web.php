@@ -49,3 +49,4 @@ Route::group(['prefix'=>'admin','as'=>'admin.'], function(){
     Route::get('{user}/users/add', 'UserController@create')->middleware('can:accessAdminModel,user')->name('adduser');
     Route::get('{user}/settings', 'AdminController@settings')->middleware('can:accessAdminModel,user')->name('settings');
 });
+Route::post('/user/store', 'UserController@store')->name('store');

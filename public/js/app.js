@@ -1838,6 +1838,7 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _actions_errorBag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../actions/errorBag.js */ "./resources/js/actions/errorBag.js");
 //
 //
 //
@@ -1925,46 +1926,128 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  // props : ['formErrors'],
   data: function data() {
     return {
+      successMessage: '',
+      successAlert: false,
+      errorAlert: false,
+      loading: false,
+      errors: new _actions_errorBag_js__WEBPACK_IMPORTED_MODULE_0__["default"](),
       roles: [{
-        code: 1,
+        val: 1,
         label: 'Super Admin'
       }, {
-        code: 2,
+        val: 2,
         label: 'Admin'
       }, {
-        code: 3,
+        val: 3,
         label: 'Store Admin'
       }, {
-        code: 4,
+        val: 4,
         label: 'Delivery Person'
       }, {
-        code: 5,
+        val: 5,
         label: 'Customer'
       }],
-      role: {
-        code: 2,
-        label: 'Admin'
-      },
+      role: 2,
       name: '',
       email: '',
       phone: '',
-      password: ''
+      password: '',
+      //rules
+      valid: true,
+      emailRules: [function (value) {
+        return !!value || 'Required';
+      }, function (value) {
+        return /.+@.+\..+/.test(value) || 'E-mail must be valid';
+      }],
+      nameRules: [function (value) {
+        return !!value || 'Required';
+      }, function (value) {
+        return value && value.length > 8 || 'Min 8 characters';
+      }]
     };
   },
   methods: {
-    setSelectedRole: function setSelectedRole() {},
     addUser: function addUser() {
-      axios.post('/api/user', {
+      var _this = this;
+
+      this.loading = true;
+      axios.post('/user/store', {
         name: this.name,
         email: this.email,
         phone: this.phone,
-        password: this.passowrd,
+        password: this.password,
         role: this.role
-      }); // alert(this.selectedRole)
-      // console.log(roles);
+      }).then(function (response) {
+        _this.successMessage = response.data.message;
+        _this.loading = false;
+        _this.successAlert = true; // setTimeout(() => { this.successAlert = false; }, 3000);
+      })["catch"](function (error) {
+        _this.loading = false;
+        _this.errorAlert = true;
+
+        if (error.response && error.response.status == 422) {
+          _this.errors.setErrors(error.response.data.errors); // console.log(this.errors);
+
+        } // if (error.response.status == 422){
+        //     this.validationErrors = error.response.data.errors;
+        //     console.log(this.validationErrors);
+        //     this.alert = true;
+        // }
+
+      });
+    },
+    clearAlert: function clearAlert() {
+      this.successAlert = false;
+      this.errorAlert = false;
     }
   }
 });
@@ -33567,137 +33650,220 @@ var render = function() {
     { staticClass: "text-center" },
     [
       _c(
-        "v-form",
+        "v-card",
         {
-          ref: "form",
-          attrs: {
-            method: "POST",
-            action: "./api/user",
-            "lazy-validation": ""
-          },
-          on: {
-            submit: function($event) {
-              $event.preventDefault()
-              return _vm.addUser()
-            }
-          }
+          staticClass: "transparent",
+          attrs: { flat: "", loading: _vm.loading }
         },
         [
-          _c("v-text-field", {
-            attrs: {
-              dense: "",
-              autofocus: "",
-              outlined: "",
-              required: "",
-              autocomplete: "name",
-              id: "name",
-              type: "text",
-              name: "name",
-              label: "Name"
-            },
-            model: {
-              value: _vm.name,
-              callback: function($$v) {
-                _vm.name = $$v
-              },
-              expression: "name"
-            }
-          }),
-          _vm._v(" "),
-          _c("v-text-field", {
-            attrs: {
-              dense: "",
-              outlined: "",
-              required: "",
-              autocomplete: "email",
-              id: "email",
-              type: "email",
-              name: "email",
-              label: "E-Mail Address"
-            },
-            model: {
-              value: _vm.email,
-              callback: function($$v) {
-                _vm.email = $$v
-              },
-              expression: "email"
-            }
-          }),
-          _vm._v(" "),
-          _c("v-text-field", {
-            attrs: {
-              dense: "",
-              outlined: "",
-              required: "",
-              autocomplete: "phone",
-              id: "phone",
-              type: "text",
-              name: "phone",
-              label: "Mobile Number"
-            },
-            model: {
-              value: _vm.phone,
-              callback: function($$v) {
-                _vm.phone = $$v
-              },
-              expression: "phone"
-            }
-          }),
-          _vm._v(" "),
-          _c("v-select", {
-            attrs: {
-              dense: "",
-              label: "Role",
-              outlined: "",
-              id: "role",
-              type: "text",
-              name: "role",
-              items: _vm.roles,
-              "item-value": "code",
-              "item-text": "label"
-            },
-            model: {
-              value: _vm.role,
-              callback: function($$v) {
-                _vm.role = $$v
-              },
-              expression: "role"
-            }
-          }),
-          _vm._v(" "),
-          _c("v-text-field", {
-            attrs: {
-              dense: "",
-              outlined: "",
-              required: "",
-              autocomplete: "new-password",
-              id: "password",
-              type: "password",
-              name: "password",
-              label: "Password"
-            },
-            model: {
-              value: _vm.password,
-              callback: function($$v) {
-                _vm.password = $$v
-              },
-              expression: "password"
-            }
-          }),
-          _vm._v(" "),
           _c(
-            "v-btn",
+            "v-form",
             {
-              staticClass: "mb-2",
+              ref: "form",
               attrs: {
-                dense: "",
-                width: "100%",
-                large: "",
-                color: "primary",
-                type: "submit"
+                method: "POST",
+                action: "./api/user",
+                "lazy-validation": ""
+              },
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.addUser()
+                }
+              },
+              model: {
+                value: _vm.valid,
+                callback: function($$v) {
+                  _vm.valid = $$v
+                },
+                expression: "valid"
               }
             },
-            [_vm._v("\n            Save\n        ")]
+            [
+              _c("v-text-field", {
+                attrs: {
+                  rules: _vm.nameRules,
+                  dense: "",
+                  autofocus: "",
+                  outlined: "",
+                  required: "",
+                  autocomplete: "name",
+                  id: "name",
+                  type: "text",
+                  name: "name",
+                  label: "Name"
+                },
+                model: {
+                  value: _vm.name,
+                  callback: function($$v) {
+                    _vm.name = $$v
+                  },
+                  expression: "name"
+                }
+              }),
+              _vm._v(" "),
+              _c("v-text-field", {
+                attrs: {
+                  rules: _vm.emailRules,
+                  dense: "",
+                  outlined: "",
+                  required: "",
+                  autocomplete: "email",
+                  id: "email",
+                  type: "email",
+                  name: "email",
+                  label: "E-Mail Address"
+                },
+                model: {
+                  value: _vm.email,
+                  callback: function($$v) {
+                    _vm.email = $$v
+                  },
+                  expression: "email"
+                }
+              }),
+              _vm._v(" "),
+              _c("v-text-field", {
+                attrs: {
+                  dense: "",
+                  outlined: "",
+                  autocomplete: "phone",
+                  id: "phone",
+                  type: "text",
+                  name: "phone",
+                  label: "Mobile Number"
+                },
+                model: {
+                  value: _vm.phone,
+                  callback: function($$v) {
+                    _vm.phone = $$v
+                  },
+                  expression: "phone"
+                }
+              }),
+              _vm._v(" "),
+              _c("v-select", {
+                attrs: {
+                  dense: "",
+                  label: "Role",
+                  outlined: "",
+                  id: "role",
+                  type: "text",
+                  name: "role",
+                  items: _vm.roles,
+                  "item-value": "val",
+                  "item-text": "label"
+                },
+                model: {
+                  value: _vm.role,
+                  callback: function($$v) {
+                    _vm.role = $$v
+                  },
+                  expression: "role"
+                }
+              }),
+              _vm._v(" "),
+              _c("v-text-field", {
+                attrs: {
+                  rules: _vm.nameRules,
+                  required: "",
+                  dense: "",
+                  outlined: "",
+                  autocomplete: "new-password",
+                  id: "password",
+                  type: "password",
+                  name: "password",
+                  label: "Password"
+                },
+                model: {
+                  value: _vm.password,
+                  callback: function($$v) {
+                    _vm.password = $$v
+                  },
+                  expression: "password"
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                {
+                  staticClass: "mb-2",
+                  attrs: {
+                    disabled: !_vm.valid,
+                    dense: "",
+                    width: "100%",
+                    large: "",
+                    color: "primary",
+                    type: "submit"
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.clearAlert()
+                    }
+                  }
+                },
+                [_vm._v("\n                Save\n            ")]
+              ),
+              _vm._v(" "),
+              _c(
+                "v-alert",
+                {
+                  staticClass: "text-left transparent mt-5",
+                  attrs: {
+                    flat: "",
+                    dismissible: "",
+                    color: "red",
+                    border: "left",
+                    elevation: "2",
+                    "colored-border": "",
+                    icon: "mdi-alert-circle"
+                  },
+                  model: {
+                    value: _vm.errorAlert,
+                    callback: function($$v) {
+                      _vm.errorAlert = $$v
+                    },
+                    expression: "errorAlert"
+                  }
+                },
+                [
+                  _c("div", [_vm._v(_vm._s(_vm.errors.first("name")))]),
+                  _vm._v(" "),
+                  _c("div", [_vm._v(_vm._s(_vm.errors.first("email")))]),
+                  _vm._v(" "),
+                  _c("div", [_vm._v(_vm._s(_vm.errors.first("phone")))]),
+                  _vm._v(" "),
+                  _c("div", [_vm._v(_vm._s(_vm.errors.first("role")))]),
+                  _vm._v(" "),
+                  _c("div", [_vm._v(_vm._s(_vm.errors.first("password")))])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "v-alert",
+                {
+                  staticClass: "text-left transparent mt-5",
+                  attrs: {
+                    flat: "",
+                    dismissible: "",
+                    color: "success",
+                    border: "left",
+                    elevation: "2",
+                    "colored-border": "",
+                    icon: "mdi-alert-circle"
+                  },
+                  model: {
+                    value: _vm.successAlert,
+                    callback: function($$v) {
+                      _vm.successAlert = $$v
+                    },
+                    expression: "successAlert"
+                  }
+                },
+                [_c("div", [_vm._v(_vm._s(_vm.successMessage))])]
+              )
+            ],
+            1
           )
         ],
         1
@@ -83695,19 +83861,93 @@ module.exports = function(module) {
 
 /***/ }),
 
+/***/ "./resources/js/actions/errorBag.js":
+/*!******************************************!*\
+  !*** ./resources/js/actions/errorBag.js ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var ErrorBag =
+/*#__PURE__*/
+function () {
+  function ErrorBag() {
+    var errors = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, ErrorBag);
+
+    this.setErrors(errors);
+  }
+
+  _createClass(ErrorBag, [{
+    key: "hasErrors",
+    value: function hasErrors() {
+      return !!this.keys.length;
+    }
+  }, {
+    key: "hasError",
+    value: function hasError(key) {
+      return this.keys.indexOf(key) > -1;
+    }
+  }, {
+    key: "firstKey",
+    value: function firstKey() {
+      return this.keys[0];
+    }
+  }, {
+    key: "first",
+    value: function first(key) {
+      return this.errors[key] ? this.errors[key][0] : undefined;
+    }
+  }, {
+    key: "setErrors",
+    value: function setErrors(errors) {
+      this.errors = errors;
+    }
+  }, {
+    key: "clearAll",
+    value: function clearAll() {
+      this.setErrors({});
+    }
+  }, {
+    key: "clear",
+    value: function clear(key) {
+      return delete this.errors[key];
+    }
+  }, {
+    key: "keys",
+    get: function get() {
+      return Object.keys(this.errors);
+    }
+  }]);
+
+  return ErrorBag;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (ErrorBag);
+
+/***/ }),
+
 /***/ "./resources/js/admin/AddUserForm.vue":
 /*!********************************************!*\
   !*** ./resources/js/admin/AddUserForm.vue ***!
   \********************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AddUserForm_vue_vue_type_template_id_da852cfc___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AddUserForm.vue?vue&type=template&id=da852cfc& */ "./resources/js/admin/AddUserForm.vue?vue&type=template&id=da852cfc&");
 /* harmony import */ var _AddUserForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AddUserForm.vue?vue&type=script&lang=js& */ "./resources/js/admin/AddUserForm.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _AddUserForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _AddUserForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -83737,7 +83977,7 @@ component.options.__file = "resources/js/admin/AddUserForm.vue"
 /*!*********************************************************************!*\
   !*** ./resources/js/admin/AddUserForm.vue?vue&type=script&lang=js& ***!
   \*********************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -46,8 +47,38 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        User::create($request->all());
-        dd($request);
+
+        $this->validate($request, [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8'],
+            'phone' => [''],
+            'role' => ['required']
+        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'name' => ['required', 'string', 'max:255'],
+        //     'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        //     'password' => ['required', 'string', 'min:8'],
+        //     'phone' => ['required', 'numeric', 'min:8'],
+        //     'role' => ['required']
+        // ]);
+
+        // if ($validator->fails()) {
+        //     return response()->json(['errors'=>$validator->errors()],422);
+        // }
+
+        $user = User::create([
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => Hash::make($request['password']),
+            'phone' => $request['phone'],
+            'role' => $request['role'],
+        ]);
+
+        return response()->json([
+            'user' => $user,
+            'message' => 'Success'
+          ], 200);
     }
 
     /**
