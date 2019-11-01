@@ -1,123 +1,207 @@
 <template>
     <div class="text-center">
-        <v-form 
-            method="POST"
-            action="./api/user"
-            ref="form"
-            @submit.prevent="addUser()"
-            lazy-validation>
-            <v-text-field
-                v-model="name"
-                dense
-                autofocus
-                outlined
-                required
-                autocomplete="name" 
-                id="name"
-                type="text"
-                name="name"
-                label="Name">
-            </v-text-field>
+        <v-card
+            flat
+            class="transparent"
+            :loading="loading">
+            <v-form
+                v-model="valid"
+                method="POST"
+                action="./api/user"
+                ref="form"
+                @submit.prevent="addUser()"
+                lazy-validation>
 
-            <v-text-field
-                v-model="email"
-                dense
-                outlined
-                required
-                autocomplete="email"
-                id="email"
-                type="email"
-                name="email"
-                label="E-Mail Address">
-            </v-text-field>
+                <v-text-field
+                    :rules="nameRules"
+                    v-model="name"
+                    dense
+                    autofocus
+                    outlined
+                    required
+                    autocomplete="name" 
+                    id="name"
+                    type="text"
+                    name="name"
+                    label="Name"
+                    >
+                </v-text-field>
 
-            <v-text-field
-                v-model="phone"
-                dense
-                outlined
-                required
-                autocomplete="phone" 
-                id="phone"
-                type="text"
-                name="phone"
-                label="Mobile Number">
-            </v-text-field>
+                <v-text-field
+                    :rules="emailRules"
+                    v-model="email"
+                    dense
+                    outlined
+                    required
+                    autocomplete="email"
+                    id="email"
+                    type="email"
+                    name="email"
+                    label="E-Mail Address">
+                </v-text-field>
 
-                <!-- @input="setSelectedRole" -->
-            <v-select
-                v-model="role"
-                dense
-                label="Role"
-                outlined
-                id="role"
-                type="text"
-                name="role"
-                :items="roles"
-                item-value="code"
-                item-text="label"
+                <v-text-field
+                    v-model="phone"
+                    dense
+                    outlined
+                    autocomplete="phone" 
+                    id="phone"
+                    type="text"
+                    name="phone"
+                    label="Mobile Number">
+                </v-text-field>
 
-                >
-            </v-select>
-            <!-- :items="roles.label" -->
-            
-            <v-text-field
-                v-model="password"
-                dense
-                outlined
-                required
-                autocomplete="new-password"
-                id="password"
-                type="password"
-                name="password"
-                label="Password">
-            </v-text-field>
+                <v-select
+                    v-model="role"
+                    dense
+                    label="Role"
+                    outlined
+                    id="role"
+                    type="text"
+                    name="role"
+                    :items="roles"
+                    item-value="val"
+                    item-text="label"
+                    >
+                </v-select>
+                
+                <v-text-field
+                    :rules="nameRules"
+                    v-model="password"
+                    required
+                    dense
+                    outlined
+                    autocomplete="new-password"
+                    id="password"
+                    type="password"
+                    name="password"
+                    label="Password">
+                </v-text-field>
 
-            <v-btn
-                dense
-                width="100%"
-                large
-                color="primary"
-                class="mb-2"
-                type="submit">
-                Save
-            </v-btn>
-        </v-form>
+                <v-btn
+                    :disabled="!valid"
+                    @click="clearAlert()"
+                    dense
+                    width="100%"
+                    large
+                    color="primary"
+                    class="mb-2"
+                    type="submit">
+                    Save
+                </v-btn>
+
+                <v-alert
+                    flat
+                    v-model="errorAlert"
+                    dismissible
+                    color="red"
+                    border="left"
+                    elevation="2"
+                    colored-border
+                    icon="mdi-alert-circle"
+                    class="text-left transparent mt-5"
+                    >
+                    <div>{{ errors.first('name') }}</div>
+                    <div>{{ errors.first('email') }}</div>
+                    <div>{{ errors.first('phone') }}</div>
+                    <div>{{ errors.first('role') }}</div>
+                    <div>{{ errors.first('password') }}</div>
+                    <!-- <div class="invalid-feedback" v-if="errors.has('email')" >{{ errors.first('email') }}</div> -->
+                </v-alert>
+
+                <v-alert
+                    flat
+                    v-model="successAlert"
+                    dismissible
+                    color="success"
+                    border="left"
+                    elevation="2"
+                    colored-border
+                    icon="mdi-alert-circle"
+                    class="text-left transparent mt-5"
+                    >
+                    <div>{{successMessage}}</div>
+                    <!-- <div>{{ message }}</div> -->
+                    <!-- <div class="invalid-feedback" v-if="errors.has('email')" >{{ errors.first('email') }}</div> -->
+                </v-alert>
+            </v-form>
+        </v-card>
     </div>
 </template>
 
 <script>
+
+import ErrorBag from "../actions/errorBag.js";
+
 export default {
+    // props : ['formErrors'],
     data () {
         return{
+            successMessage : '',
+            successAlert: false,
+            errorAlert: false,
+            loading: false,
+            errors : new ErrorBag,
             roles : [
-                {code : 1, label : 'Super Admin'},  
-                {code : 2, label : 'Admin'},  
-                {code : 3, label : 'Store Admin'},  
-                {code : 4, label : 'Delivery Person'},  
-                {code : 5, label : 'Customer'}
+                {val : 1, label : 'Super Admin'},  
+                {val : 2, label : 'Admin'},  
+                {val : 3, label : 'Store Admin'},  
+                {val : 4, label : 'Delivery Person'},  
+                {val : 5, label : 'Customer'}
             ],
-            role : {code : 2, label : 'Admin'},
+            role : 2,
             name: '',
             email: '',
             phone: '',
             password: '',
+
+            //rules
+            valid : true,
+            emailRules : [
+                value => !!value || 'Required',
+                value => /.+@.+\..+/.test(value) || 'E-mail must be valid'
+            ],
+            nameRules :  [
+                value => !!value || 'Required',
+                value => (value && value.length > 8)  || 'Min 8 characters',
+            ],
         }
     },
     methods: {
-        setSelectedRole(){
-            
-        },
         addUser(){
-            axios.post('/api/user', {
+            this.loading = true;
+            axios.post('/user/store', {
                 name : this.name,
                 email : this.email,
                 phone : this.phone,
-                password : this.passowrd,
+                password : this.password,
                 role : this.role,
+            })
+            .then(response => {
+                this.successMessage = response.data.message;
+                this.loading = false;
+                this.successAlert = true;
+                // setTimeout(() => { this.successAlert = false; }, 3000);
+            })
+            .catch(error => {
+                this.loading = false;
+                this.errorAlert = true;
+                if (error.response && error.response.status == 422) {
+                    this.errors.setErrors( error.response.data.errors );
+                    // console.log(this.errors);
+                }
 
+
+                // if (error.response.status == 422){
+                //     this.validationErrors = error.response.data.errors;
+                //     console.log(this.validationErrors);
+                //     this.alert = true;
+                // }
             });
-            // alert(this.selectedRole)
-        // console.log(roles);
+        },
+        clearAlert(){
+            this.successAlert = false;
+            this.errorAlert = false;
         }
     }
   }
