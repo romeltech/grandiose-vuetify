@@ -7,11 +7,11 @@
         <v-col class="col-12 col-md-5">
                 {{-- user-id="{{ $user->id }}" --}}
             <add-user-form></add-user-form>
-            @if ($errors->any())
+            {{-- @if ($errors->any())
                 @foreach ($errors->all() as $error)
                     <div>{{$error}}</div>
                 @endforeach
-            @endif
+            @endif --}}
         </v-col>
     </v-row>
 @endsection

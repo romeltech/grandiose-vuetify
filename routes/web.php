@@ -47,6 +47,7 @@ Route::group(['prefix'=>'u','as'=>'u.'], function(){
 Route::group(['prefix'=>'admin','as'=>'admin.'], function(){
     Route::get('{user}/users', 'UserController@index')->middleware('can:accessAdminModel,user')->name('users');
     Route::get('{user}/users/add', 'UserController@create')->middleware('can:accessAdminModel,user')->name('adduser');
+    Route::get('{user}/users/edit', 'UserController@edit')->middleware('can:accessAdminModel,user')->name('edituser');
     Route::get('{user}/settings', 'AdminController@settings')->middleware('can:accessAdminModel,user')->name('settings');
 });
 Route::post('/user/store', 'UserController@store')->name('store');

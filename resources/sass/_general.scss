@@ -15,6 +15,39 @@ a{
     border-bottom: $border;
 }
 
+/* Custom Pagination */
+ul.pagination{
+    margin-top: 15px;
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    li.page-item{
+        a, span{
+            background-color: #FFFFFF;
+            box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+            border-radius: 4px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            font-size: 14px;
+            height: 34px;
+            width: 34px;
+            margin: 0.3rem;
+            color: rgba(0, 0, 0, 0.87);
+            min-width: 34px;
+            padding: 0 5px;
+            transition: 0.3s cubic-bezier(0, 0, 0.2, 1);
+        }
+        &.active, &:hover{
+            a, span{
+                background-color: $primary;
+                color: #ffffff;
+            }
+        }
+    }
+}
 
 
 

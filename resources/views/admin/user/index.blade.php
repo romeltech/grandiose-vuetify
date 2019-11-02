@@ -4,11 +4,11 @@
 
     <h2 class="mb-3">{{ _('Manage Users') }}</h2>
     <v-row>
-        <v-col class="col-12 col-md-5">
-            {{-- {{$users}} --}}
-            <user-list :users="{{$users}}"></user-list>
+        <v-col class="col-12 col-md-6">
 
-            {{-- {{ $users->links() }} --}}
+            <user-list :users-list="{{ $users->toJson() }}"></user-list>
+
+            {{ $users->links() }}
             
         </v-col>
     </v-row>

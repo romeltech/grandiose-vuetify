@@ -42,6 +42,7 @@ Vue.component('user-nav-icon', require('./components/UserNavIcon.vue').default);
  * Admin Components
  */
 Vue.component('add-user-form', require('./admin/AddUserForm.vue').default);
+Vue.component('edit-user-form', require('./admin/EditUserForm.vue').default);
 Vue.component('user-list', require('./admin/UserList.vue').default);
 
 // const files = require.context('./', true, /\.vue$/i)
