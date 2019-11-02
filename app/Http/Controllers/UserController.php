@@ -25,8 +25,11 @@ class UserController extends Controller
     public function index(User $user)
     {
         // return view('admin.users', compact('user'));
-        return User::all();
-        // return view('admin.user.index', compact('user'));
+        // return User::all();
+        $users = User::where('role', '<', 5)->paginate(100);
+        // $users = User::paginate(100);
+        return view('admin.user.index', compact('users'));
+        // return response($users, 200);
     }
 
     /**
@@ -52,26 +55,13 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
-            'phone' => [''],
             'role' => ['required']
         ]);
-        // $validator = Validator::make($request->all(), [
-        //     'name' => ['required', 'string', 'max:255'],
-        //     'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-        //     'password' => ['required', 'string', 'min:8'],
-        //     'phone' => ['required', 'numeric', 'min:8'],
-        //     'role' => ['required']
-        // ]);
-
-        // if ($validator->fails()) {
-        //     return response()->json(['errors'=>$validator->errors()],422);
-        // }
 
         $user = User::create([
             'name' => $request['name'],
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
-            'phone' => $request['phone'],
             'role' => $request['role'],
         ]);
 

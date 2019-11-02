@@ -24,9 +24,11 @@
                             label="{{ __('Email') }}"
                             v-model="email"
                             :rules="emailrules"
+                            autofocus
                             @error('email')
                             {{-- placeholder="{{ old('email')}}" {{ $message }} --}}
                                 value="{{ old('email') }}"
+                                autofocus
                                 error
                                 error-messages="{{ old('email')}} do not match in our records"
                             @enderror>
@@ -44,6 +46,7 @@
                             @error('password')
                                 error
                                 error-messages="{{ $message }}"
+                                autofocus
                             @enderror>
                         </v-text-field>
                         <v-checkbox

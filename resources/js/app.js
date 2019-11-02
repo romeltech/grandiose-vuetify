@@ -21,6 +21,7 @@ import 'babel-polyfill'
 
 import Vue from 'vue'
 import Vuetify from 'vuetify' // path to vuetify export
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
 Vue.use(Vuetify);
 
@@ -41,6 +42,7 @@ Vue.component('user-nav-icon', require('./components/UserNavIcon.vue').default);
  * Admin Components
  */
 Vue.component('add-user-form', require('./admin/AddUserForm.vue').default);
+Vue.component('user-list', require('./admin/UserList.vue').default);
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
@@ -76,9 +78,9 @@ const app = new Vue({
             }
     	    }
     	  },
-        // icons: {
-        //     iconfont: 'mdi'
-        // }
+        icons: {
+            iconfont: 'mdi'
+        }
     }),
     
     data () {

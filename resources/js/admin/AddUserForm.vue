@@ -40,17 +40,6 @@
                     label="E-Mail Address">
                 </v-text-field>
 
-                <v-text-field
-                    v-model="phone"
-                    dense
-                    outlined
-                    autocomplete="phone" 
-                    id="phone"
-                    type="text"
-                    name="phone"
-                    label="Mobile Number">
-                </v-text-field>
-
                 <v-select
                     v-model="role"
                     dense
@@ -152,7 +141,6 @@ export default {
             role : 2,
             name: '',
             email: '',
-            phone: '',
             password: '',
 
             //rules
@@ -163,7 +151,7 @@ export default {
             ],
             nameRules :  [
                 value => !!value || 'Required',
-                value => (value && value.length > 8)  || 'Min 8 characters',
+                value => (value && value.length < 255)  || 'Max 255 characters',
             ],
         }
     },
@@ -190,13 +178,6 @@ export default {
                     this.errors.setErrors( error.response.data.errors );
                     // console.log(this.errors);
                 }
-
-
-                // if (error.response.status == 422){
-                //     this.validationErrors = error.response.data.errors;
-                //     console.log(this.validationErrors);
-                //     this.alert = true;
-                // }
             });
         },
         clearAlert(){
