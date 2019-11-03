@@ -11,7 +11,7 @@ class UserController extends Controller
 
     public function __construct()
     {
-        // $this->middleware('auth');
+        $this->middleware('auth');
         // $this->middleware('auth')->except(['index']);
         // $this->middleware('auth')->only(['index']);
     }
@@ -24,10 +24,11 @@ class UserController extends Controller
      */
     public function index(User $user)
     {
+        $this->authorize('accessAdmin', $user);
         // return view('admin.users', compact('user'));
         // return User::all();
-        $users = User::where('role', '<', 5)->paginate(100);
         // $users = User::paginate(100);
+        $users = User::where('role', '<', 5)->paginate(100);
         return view('admin.user.index', compact('users'));
         // return response($users, 200);
     }
@@ -39,6 +40,7 @@ class UserController extends Controller
      */
     public function create(User $user)
     {
+        $this->authorize('accessAdmin', $user);
         return view('admin.user.add', compact('user'));
     }
 
@@ -50,7 +52,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-
+        $this->authorize('accessAdmin', $user);
         $this->validate($request, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -90,7 +92,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('admin.user.edit', compact('user'));
+        $meh = 'meh';
+        return view('admin.user.edit', compact('user, meh'));
     }
 
     /**

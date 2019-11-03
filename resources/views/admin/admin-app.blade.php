@@ -81,7 +81,7 @@ color="grey lighten-4"
   </template>
 
   <v-list dense class="grey lighten-3">
-    <v-list-item href="{{ route('admin.users', auth()->user()->id ) }}">
+    <v-list-item href="{{ route('admin.users') }}">
       <v-list-item-action>
         <v-icon small>mdi-account-multiple-outline</v-icon>
       </v-list-item-action>
@@ -89,7 +89,7 @@ color="grey lighten-4"
         <v-list-item-title class="grey--text">{{ __('User List') }}</v-list-item-title>
       </v-list-item-content>
     </v-list-item>
-    <v-list-item href="{{ route('admin.adduser', auth()->user()->id ) }}">
+    <v-list-item href="{{ route('admin.adduser' ) }}">
       <v-list-item-action>
         <v-icon small>mdi-account-plus</v-icon>
       </v-list-item-action>
@@ -101,7 +101,8 @@ color="grey lighten-4"
 
 </v-list-group>
 
-<v-list-item href="{{ route('admin.settings', auth()->user()->id ) }}">
+{{-- <v-list-item href="{{ route('admin.settings', auth()->user()->id ) }}"> --}}
+<v-list-item href="{{ route('admin.settings') }}">
   <v-list-item-action>
     <v-icon>mdi-settings</v-icon>
   </v-list-item-action>

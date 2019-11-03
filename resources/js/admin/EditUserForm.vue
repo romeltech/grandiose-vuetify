@@ -123,9 +123,15 @@
 import ErrorBag from "../actions/errorBag.js";
 
 export default {
-    // props : ['formErrors'],
+    mounted (){
+        // console.log(this.editId);
+    },
+    props : ['userId'],
+    // props : ['editId'],
     data () {
         return{
+            // user : this.userid,
+
             successMessage : '',
             successAlert: false,
             errorAlert: false,
