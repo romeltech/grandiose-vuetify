@@ -52,4 +52,5 @@ Route::group(['prefix'=>'admin','as'=>'admin.'], function(){
     Route::get('{user}/users/edit/{edit}', 'UserController@edit')->name('edituser');
     Route::get('/settings', 'AdminController@settings')->name('settings');
     // ->middleware('can:accessAdminModel,user')
-})->middleware('can:accessAdmin,User::class');
+});
+// })->middleware('can:accessAdmin,User::class');
