@@ -4,19 +4,17 @@
             flat
             class="transparent"
             :loading="loading">
+            <!-- action="./api/user" -->
             <v-form
                 v-model="valid"
                 method="POST"
-                action="./api/user"
                 ref="form"
                 @submit.prevent="addUser()"
                 lazy-validation>
-
+                    <!-- autofocus -->
                 <v-text-field
                     :rules="nameRules"
                     v-model="name"
-                    dense
-                    autofocus
                     outlined
                     required
                     autocomplete="name" 
@@ -26,11 +24,9 @@
                     label="Name"
                     >
                 </v-text-field>
-
                 <v-text-field
                     :rules="emailRules"
                     v-model="email"
-                    dense
                     outlined
                     required
                     autocomplete="email"
@@ -42,7 +38,6 @@
 
                 <v-select
                     v-model="role"
-                    dense
                     label="Role"
                     outlined
                     id="role"
@@ -58,7 +53,6 @@
                     :rules="nameRules"
                     v-model="password"
                     required
-                    dense
                     outlined
                     autocomplete="new-password"
                     id="password"
@@ -70,7 +64,6 @@
                 <v-btn
                     :disabled="!valid"
                     @click="clearAlert()"
-                    dense
                     width="100%"
                     large
                     color="primary"
@@ -124,13 +117,13 @@ import ErrorBag from "../actions/errorBag.js";
 
 export default {
     mounted (){
-        // console.log(this.editId);
+        // console.log(this.userData.name);
+        console.log(this.userData);
     },
-    props : ['userId'],
-    // props : ['editId'],
+    props : ['userName', 'userId', 'userEmail', 'userRole'],
     data () {
         return{
-            // user : this.userid,
+            // user : this.userData.email,
 
             successMessage : '',
             successAlert: false,
@@ -144,10 +137,11 @@ export default {
                 {val : 4, label : 'Delivery Person'},  
                 {val : 5, label : 'Customer'}
             ],
-            role : 2,
-            name: '',
-            email: '',
-            password: '',
+            role : this.userRole,
+            name: this.userName,
+            email: this.userEmail,
+            password: this.userPassword,
+            id: this.userId,
 
             //rules
             valid : true,

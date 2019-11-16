@@ -93,8 +93,10 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $meh = 'meh';
-        return view('admin.user.edit', compact('user, meh'));
+        return view('admin.user.edit')->with(['user'=>$user]);
+        // return view('admin.user.edit', compact('user'));
+        // return response()->json($user, 200);
+        // return view('admin.user.edit', 'user');
     }
 
     /**

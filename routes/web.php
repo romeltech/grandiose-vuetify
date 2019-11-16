@@ -50,7 +50,7 @@ Route::group(['prefix'=>'admin','as'=>'admin.'], function(){
     Route::get('/users', 'UserController@index')->name('users');
     Route::get('/user/add', 'UserController@create')->name('adduser');
     Route::post('/user/store', 'UserController@store')->name('store');
-    Route::get('{user}/users/edit/{edit}', 'UserController@edit')->name('edituser');
+    Route::get('/users/edit/{user}', 'UserController@edit')->name('edituser');
     Route::get('/settings', 'AdminController@settings')->name('settings');
     // ->middleware('can:accessAdminModel,user')
 });

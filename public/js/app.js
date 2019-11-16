@@ -2159,22 +2159,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mounted: function mounted() {// console.log(this.editId);
+  mounted: function mounted() {
+    // console.log(this.userData.name);
+    console.log(this.userData);
   },
-  props: ['userId'],
-  // props : ['editId'],
+  props: ['userName', 'userId', 'userEmail', 'userRole'],
   data: function data() {
     return {
-      // user : this.userid,
+      // user : this.userData.email,
       successMessage: '',
       successAlert: false,
       errorAlert: false,
@@ -2196,10 +2190,11 @@ __webpack_require__.r(__webpack_exports__);
         val: 5,
         label: 'Customer'
       }],
-      role: 2,
-      name: '',
-      email: '',
-      password: '',
+      role: this.userRole,
+      name: this.userName,
+      email: this.userEmail,
+      password: this.userPassword,
+      id: this.userId,
       //rules
       valid: true,
       emailRules: [function (value) {
@@ -34903,11 +34898,7 @@ var render = function() {
             "v-form",
             {
               ref: "form",
-              attrs: {
-                method: "POST",
-                action: "./api/user",
-                "lazy-validation": ""
-              },
+              attrs: { method: "POST", "lazy-validation": "" },
               on: {
                 submit: function($event) {
                   $event.preventDefault()
@@ -34926,8 +34917,6 @@ var render = function() {
               _c("v-text-field", {
                 attrs: {
                   rules: _vm.nameRules,
-                  dense: "",
-                  autofocus: "",
                   outlined: "",
                   required: "",
                   autocomplete: "name",
@@ -34948,7 +34937,6 @@ var render = function() {
               _c("v-text-field", {
                 attrs: {
                   rules: _vm.emailRules,
-                  dense: "",
                   outlined: "",
                   required: "",
                   autocomplete: "email",
@@ -34968,7 +34956,6 @@ var render = function() {
               _vm._v(" "),
               _c("v-select", {
                 attrs: {
-                  dense: "",
                   label: "Role",
                   outlined: "",
                   id: "role",
@@ -34991,7 +34978,6 @@ var render = function() {
                 attrs: {
                   rules: _vm.nameRules,
                   required: "",
-                  dense: "",
                   outlined: "",
                   autocomplete: "new-password",
                   id: "password",
@@ -35014,7 +35000,6 @@ var render = function() {
                   staticClass: "mb-2",
                   attrs: {
                     disabled: !_vm.valid,
-                    dense: "",
                     width: "100%",
                     large: "",
                     color: "primary",
