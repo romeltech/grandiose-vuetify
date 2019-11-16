@@ -36,16 +36,16 @@
           <template v-if="authUser.role == 5 ">
             <v-list dense>
               <v-list-item-group color="primary">
-                <a v-bind:href="'/u/'+authUser.id+'/orders'">
+                <a v-bind:href="'/u/orders'">
                   <v-list-item><v-list-item-title>Orders</v-list-item-title></v-list-item>
                 </a>
-                <a v-bind:href="'/u/'+authUser.id+'/profile'">
+                <a v-bind:href="'/u/profile'">
                   <v-list-item><v-list-item-title>Profile</v-list-item-title></v-list-item>
                 </a>
-                <a v-bind:href="'/u/'+authUser.id+'/payment-methods'">
+                <a v-bind:href="'/u/payment-methods'">
                   <v-list-item><v-list-item-title>Payment Methods</v-list-item-title></v-list-item>
                 </a>
-                <a v-bind:href="'/u/'+authUser.id+'/settings'">
+                <a v-bind:href="'/u/settings'">
                   <v-list-item><v-list-item-title>Account Settings</v-list-item-title></v-list-item>
                 </a>
                 <!-- <v-list-item>

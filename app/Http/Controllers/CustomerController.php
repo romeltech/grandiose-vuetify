@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
@@ -22,14 +23,18 @@ class CustomerController extends Controller
      * payment methods
      * account settings
      */
-    public function orders(User $user)
+    public function orders()
     {
+        $user = Auth::user();
+        $this->authorize('accessCustomerOnly', $user);
         return view('customer.orders', compact('user'));
     }
 
-    public function profile(User $user)
+    public function profile()
     {
-        return view('customer.profile', compact('user'));
+        $user = Auth::user();
+        $this->authorize('accessCustomerOnly', $user);
+        return view('customer.profile', compact('user') );
     }
 
     public function payments(User $user)

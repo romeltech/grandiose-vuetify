@@ -6,7 +6,9 @@
         <div class="col-md-8">
             <div class="card">
                 <h1>Profile</h1>
-                <div class="card-header">{{ $user->name }}</div>
+                {{-- <div class="card-header">{{ $user->name }}</div> --}}
+                <div class="card-header">{{ $user->email }}</div>
+                <div class="card-header">{{ $user }}</div>
             </div>
         </div>
     </div>

@@ -4,10 +4,10 @@
             flat
             class="transparent"
             :loading="loading">
+                <!-- action="./api/user" -->
             <v-form
                 v-model="valid"
                 method="POST"
-                action="./api/user"
                 ref="form"
                 @submit.prevent="addUser()"
                 lazy-validation>
@@ -15,7 +15,6 @@
                 <v-text-field
                     :rules="nameRules"
                     v-model="name"
-                    dense
                     autofocus
                     outlined
                     required
@@ -30,7 +29,6 @@
                 <v-text-field
                     :rules="emailRules"
                     v-model="email"
-                    dense
                     outlined
                     required
                     autocomplete="email"
@@ -42,7 +40,6 @@
 
                 <v-select
                     v-model="role"
-                    dense
                     label="Role"
                     outlined
                     id="role"
@@ -58,7 +55,6 @@
                     :rules="nameRules"
                     v-model="password"
                     required
-                    dense
                     outlined
                     autocomplete="new-password"
                     id="password"
@@ -70,7 +66,6 @@
                 <v-btn
                     :disabled="!valid"
                     @click="clearAlert()"
-                    dense
                     width="100%"
                     large
                     color="primary"
@@ -153,13 +148,15 @@ export default {
                 value => !!value || 'Required',
                 value => (value && value.length < 255)  || 'Max 255 characters',
             ],
+            // csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+
         }
     },
     methods: {
         addUser(){
             this.loading = true;
             // axios.post('/user/store', {
-            axios.post('/user/store', {
+            axios.post('/admin/user/store', {
                 name : this.name,
                 email : this.email,
                 phone : this.phone,
@@ -171,13 +168,14 @@ export default {
                 this.loading = false;
                 this.successAlert = true;
                 // setTimeout(() => { this.successAlert = false; }, 3000);
+                // console.log('success meh');
             })
             .catch(error => {
                 this.loading = false;
                 this.errorAlert = true;
                 if (error.response && error.response.status == 422) {
                     this.errors.setErrors( error.response.data.errors );
-                    // console.log(this.errors);
+                    console.log(this.errors);
                 }
             });
         },
