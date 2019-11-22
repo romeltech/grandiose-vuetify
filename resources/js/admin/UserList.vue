@@ -21,7 +21,7 @@
               </template>
 
               <template v-slot:item.action="{ item }">
-                <v-btn icon :href="'users/edit/'">
+                <v-btn icon :href="'users/edit/'+item.id">
                   <v-icon small>edit</v-icon>
                 </v-btn>
                 <v-btn icon :href="'users/edit/'">
@@ -58,7 +58,7 @@
         else if(role == 4) return 'Delivery Person'
         else if(role == 5) return 'Customer'
       },
-      // editItem (item) {
+      // deleteUser (item) {
       //   console.log(item.id);
       //   // this.editedIndex = this.desserts.indexOf(item)
       //   // this.editedItem = Object.assign({}, item)

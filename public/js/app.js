@@ -2317,7 +2317,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     displayRole: function displayRole(role) {
       if (role == 1) return 'Super Admin';else if (role == 2) return 'Admin';else if (role == 3) return 'Store Admin';else if (role == 4) return 'Delivery Person';else if (role == 5) return 'Customer';
-    } // editItem (item) {
+    } // deleteUser (item) {
     //   console.log(item.id);
     //   // this.editedIndex = this.desserts.indexOf(item)
     //   // this.editedItem = Object.assign({}, item)
@@ -35161,7 +35161,7 @@ var render = function() {
                   return [
                     _c(
                       "v-btn",
-                      { attrs: { icon: "", href: "users/edit/" } },
+                      { attrs: { icon: "", href: "users/edit/" + item.id } },
                       [
                         _c("v-icon", { attrs: { small: "" } }, [_vm._v("edit")])
                       ],
