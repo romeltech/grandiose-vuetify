@@ -117,8 +117,13 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $this->authorize('accessAdmin', $user);
+        $user->delete();
+        return response()->json([
+            'user' => $user,
+            'message' => 'User has been deleted.'
+        ], 200);
     }
 }

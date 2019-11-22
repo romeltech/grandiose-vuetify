@@ -46,11 +46,15 @@ Route::group(['prefix'=>'u','as'=>'u.'], function(){
  * Admin Routes
  */
 Route::group(['prefix'=>'admin','as'=>'admin.'], function(){
+    // Users Routes
     // ->middleware('can:accessAdminModel,user')
     Route::get('/users', 'UserController@index')->name('users');
     Route::get('/user/add', 'UserController@create')->name('adduser');
     Route::post('/user/store', 'UserController@store')->name('store');
     Route::get('/users/edit/{user}', 'UserController@edit')->name('edituser');
+    Route::delete('/user/destroy/{user}', 'UserController@destroy')->name('user.destroy');
+
+
     Route::get('/settings', 'AdminController@settings')->name('settings');
     // ->middleware('can:accessAdminModel,user')
 });

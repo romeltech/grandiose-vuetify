@@ -2290,10 +2290,49 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['usersList'],
   data: function data() {
     return {
+      dialog: false,
+      toDelete: [],
+      loading: false,
+      snackbar: false,
+      snackbarColor: '',
+      snackbarMessage: '',
       search: '',
       users: this.usersList.data,
       headers: [{
@@ -2317,17 +2356,37 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     displayRole: function displayRole(role) {
       if (role == 1) return 'Super Admin';else if (role == 2) return 'Admin';else if (role == 3) return 'Store Admin';else if (role == 4) return 'Delivery Person';else if (role == 5) return 'Customer';
-    } // deleteUser (item) {
-    //   console.log(item.id);
-    //   // this.editedIndex = this.desserts.indexOf(item)
-    //   // this.editedItem = Object.assign({}, item)
-    //   // this.dialog = true
-    // },
+    },
+    deleteUser: function deleteUser(userToDelete) {
+      this.dialog = true;
+      this.toDelete = userToDelete;
+    },
+    confirmDelete: function confirmDelete(confirmedDeleteUser) {
+      var _this = this;
 
-  } // mounted(){
-  //     console.log(this.usersList);
-  // },
+      this.loading = true;
+      axios["delete"]('/admin/user/destroy/' + confirmedDeleteUser.id).then(function (response) {
+        setTimeout(function () {
+          var index = _this.users.indexOf(confirmedDeleteUser);
 
+          _this.users.splice(index, 1);
+
+          _this.dialog = false;
+          _this.loading = false;
+          _this.snackbar = true;
+          _this.snackbarColor = 'success';
+          _this.snackbarMessage = response.data.message;
+        }, 300);
+      })["catch"](function (error) {
+        _this.dialog = false;
+        _this.loading = false;
+        _this.snackbar = true;
+        _this.snackbarColor = 'red';
+        _this.snackbarMessage = 'Error deleting user';
+        console.log(error.response);
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -35170,7 +35229,14 @@ var render = function() {
                     _vm._v(" "),
                     _c(
                       "v-btn",
-                      { attrs: { icon: "", href: "users/edit/" } },
+                      {
+                        attrs: { icon: "" },
+                        on: {
+                          click: function($event) {
+                            return _vm.deleteUser(item)
+                          }
+                        }
+                      },
                       [
                         _c("v-icon", { attrs: { small: "" } }, [
                           _vm._v("delete")
@@ -35182,12 +35248,122 @@ var render = function() {
                 }
               }
             ])
-          })
+          }),
+          _vm._v(" "),
+          [
+            _c(
+              "v-row",
+              { attrs: { justify: "center" } },
+              [
+                _c(
+                  "v-dialog",
+                  {
+                    attrs: { persistent: "", "max-width": "400" },
+                    model: {
+                      value: _vm.dialog,
+                      callback: function($$v) {
+                        _vm.dialog = $$v
+                      },
+                      expression: "dialog"
+                    }
+                  },
+                  [
+                    _c(
+                      "v-card",
+                      { attrs: { loading: _vm.loading } },
+                      [
+                        _c("v-card-title", { staticClass: "headline" }, [
+                          _vm._v("Confirm Deletion")
+                        ]),
+                        _vm._v(" "),
+                        _c("v-card-text", [
+                          _vm._v(
+                            "Do you want to delete the account of " +
+                              _vm._s(_vm.toDelete.name) +
+                              "?"
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "v-card-actions",
+                          [
+                            _c("v-spacer"),
+                            _vm._v(" "),
+                            _c(
+                              "v-btn",
+                              {
+                                attrs: { color: "primary", text: "" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.dialog = false
+                                  }
+                                }
+                              },
+                              [_vm._v("Cancel")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "v-btn",
+                              {
+                                attrs: { color: "red", text: "" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.confirmDelete(_vm.toDelete)
+                                  }
+                                }
+                              },
+                              [_vm._v("Delete")]
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          ]
         ],
-        1
-      )
+        2
+      ),
+      _vm._v(" "),
+      [
+        _c(
+          "v-snackbar",
+          {
+            attrs: { color: _vm.snackbarColor },
+            model: {
+              value: _vm.snackbar,
+              callback: function($$v) {
+                _vm.snackbar = $$v
+              },
+              expression: "snackbar"
+            }
+          },
+          [
+            _vm._v("\n        " + _vm._s(_vm.snackbarMessage) + "\n        "),
+            _c(
+              "v-btn",
+              {
+                attrs: { color: "white", text: "" },
+                on: {
+                  click: function($event) {
+                    _vm.snackbar = false
+                  }
+                }
+              },
+              [_vm._v("\n          Close\n        ")]
+            )
+          ],
+          1
+        )
+      ]
     ],
-    1
+    2
   )
 }
 var staticRenderFns = []
