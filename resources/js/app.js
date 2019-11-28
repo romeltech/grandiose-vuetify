@@ -33,6 +33,7 @@ Vue.use(Vuetify);
  *
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
+Vue.component('product-list', require('./components/ProductList.vue').default);
 Vue.component('product-card', require('./components/ProductCard.vue').default);
 Vue.component('cart-items', require('./components/CartItems.vue').default);
 Vue.component('user-nav-icon', require('./components/UserNavIcon.vue').default);

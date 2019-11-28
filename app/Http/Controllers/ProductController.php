@@ -12,12 +12,27 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    /**
+     * Products Web Routes
+     */
     public function index()
     {
         // $products = Product::take(10)->get();
-        $products = Product::all();
-        return view('shop.index', ['products' => $products]);
+        // $products = Product::all();
+        return view('shop.index');
     }
+
+    /**
+     * Products API Routes
+     */
+    public function productListAPI()
+    {
+        $products = Product::paginate(10);
+        return $products;
+    }
+
+
 
     /**
      * Show the form for creating a new resource.

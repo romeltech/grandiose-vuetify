@@ -2,6 +2,6 @@
 
 @section('content')
     <v-container id="products-page">
-        <product-list></product-list>
+        <product-card :products="{{ json_encode($products) }}"></product-card>
     </v-container>
 @endsection

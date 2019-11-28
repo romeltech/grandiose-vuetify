@@ -34,7 +34,7 @@
     props: ['products'],
     mounted () {
         // Do something useful with the data in the template
-        console.log(this.products);
+        console.log('product card: '+this.products);
     },
     // components:{
     //   products
