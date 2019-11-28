@@ -2655,6 +2655,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   // props : ['productData'],
   data: function data() {
@@ -2662,7 +2675,8 @@ __webpack_require__.r(__webpack_exports__);
       loading: false,
       products: [],
       currentpage: 1,
-      lastpage: null
+      lastpage: null,
+      overlay: true
     };
   },
   methods: {
@@ -2677,16 +2691,16 @@ __webpack_require__.r(__webpack_exports__);
     getProducts: function getProducts() {
       var _this2 = this;
 
+      this.overlay = true;
       axios.get('api/products/?page=' + this.currentpage).then(function (response) {
-        _this2.products = response.data.data;
-        _this2.currentpage = response.data.current_page;
-        _this2.lastpage = response.data.last_page;
+        setTimeout(function () {
+          return _this2.products = response.data.data, _this2.currentpage = response.data.current_page, _this2.lastpage = response.data.last_page, _this2.overlay = false;
+        }, 1000);
       })["catch"](function (error) {
         console.log(error.response);
       });
     },
     onPageChange: function onPageChange() {
-      console.log(this);
       this.getProducts();
     }
   },
@@ -35735,94 +35749,117 @@ var render = function() {
     "div",
     [
       _c(
-        "v-row",
-        { staticClass: "justify-center" },
+        "v-card",
+        { staticClass: "elevation-0", attrs: { "min-height": "450px" } },
         [
-          _vm._l(_vm.products, function(product) {
-            return _c(
-              "v-card",
-              {
-                key: product.id,
-                staticClass: "product-card my-0 mx-0",
-                attrs: { loading: _vm.loading, outlined: "", tile: "" }
-              },
-              [
-                _c("v-img", {
-                  attrs: {
-                    src: "https://cdn.vuetifyjs.com/images/cards/cooking.png"
-                  }
-                }),
-                _vm._v(" "),
-                _c("v-card-title", [_vm._v(_vm._s(product.title))]),
-                _vm._v(" "),
-                _c("v-card-text", [
-                  _c("div", { staticClass: "my-1 subtitle-1 black--text" }, [
-                    _vm._v(
-                      "\n                    " +
-                        _vm._s(product.price) +
-                        " AED\n                    "
-                    )
+          _c(
+            "v-row",
+            { staticClass: "justify-center" },
+            _vm._l(_vm.products, function(product) {
+              return _c(
+                "v-card",
+                {
+                  key: product.id,
+                  staticClass: "product-card my-0 mx-0",
+                  attrs: { loading: _vm.loading, outlined: "", tile: "" }
+                },
+                [
+                  _c("v-img", {
+                    attrs: {
+                      src: "https://cdn.vuetifyjs.com/images/cards/cooking.png"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("v-card-title", [_vm._v(_vm._s(product.title))]),
+                  _vm._v(" "),
+                  _c("v-card-text", [
+                    _c("div", { staticClass: "my-1 subtitle-1 black--text" }, [
+                      _vm._v(
+                        "\n                    " +
+                          _vm._s(product.price) +
+                          " AED\n                    "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "product-desc" }, [
+                      _vm._v(_vm._s(product.description))
+                    ])
                   ]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "product-desc" }, [
-                    _vm._v(_vm._s(product.description))
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("v-divider", { staticClass: "mx-4" }),
-                _vm._v(" "),
-                _c(
-                  "v-card-actions",
-                  { staticClass: "product-action" },
-                  [
-                    _c(
-                      "v-btn",
-                      {
-                        attrs: { color: "primary" },
-                        on: { click: _vm.addToCart }
-                      },
-                      [
-                        _vm._v(
-                          "\n                    Add\n                    "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c("v-select", {
-                      staticClass: "product-qty",
-                      attrs: { label: "1", solo: "", flat: "" }
-                    })
-                  ],
-                  1
-                )
+                  _c("v-divider", { staticClass: "mx-4" }),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-actions",
+                    { staticClass: "product-action" },
+                    [
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "primary" },
+                          on: { click: _vm.addToCart }
+                        },
+                        [
+                          _vm._v(
+                            "\n                    Add\n                    "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("v-select", {
+                        staticClass: "product-qty",
+                        attrs: { label: "1", solo: "", flat: "" }
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            }),
+            1
+          ),
+          _vm._v(" "),
+          _c("v-row", { staticClass: "justify-center my-5" }, [
+            _c(
+              "div",
+              { staticClass: "text-center" },
+              [
+                _c("v-pagination", {
+                  attrs: { length: _vm.lastpage, "total-visible": 7 },
+                  on: { input: _vm.onPageChange },
+                  model: {
+                    value: _vm.currentpage,
+                    callback: function($$v) {
+                      _vm.currentpage = $$v
+                    },
+                    expression: "currentpage"
+                  }
+                })
               ],
               1
             )
-          })
-        ],
-        2
-      ),
-      _vm._v(" "),
-      _c("v-row", { staticClass: "justify-center my-5" }, [
-        _c(
-          "div",
-          { staticClass: "text-center" },
-          [
-            _c("v-pagination", {
-              attrs: { length: _vm.lastpage, "total-visible": 7 },
-              on: { input: _vm.onPageChange },
-              model: {
-                value: _vm.currentpage,
-                callback: function($$v) {
-                  _vm.currentpage = $$v
-                },
-                expression: "currentpage"
+          ]),
+          _vm._v(" "),
+          _c(
+            "v-overlay",
+            {
+              attrs: {
+                absolute: true,
+                value: _vm.overlay,
+                color: "#FFFFFF",
+                opacity: ".9"
               }
-            })
-          ],
-          1
-        )
-      ])
+            },
+            [
+              _c("v-progress-circular", {
+                attrs: { width: 3, color: "primary", indeterminate: "" }
+              })
+            ],
+            1
+          )
+        ],
+        1
+      )
     ],
     1
   )

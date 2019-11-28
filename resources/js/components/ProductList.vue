@@ -1,7 +1,7 @@
 <template>
     <div>
-        <v-row class="justify-center">
-            <template>
+        <v-card class="elevation-0" min-height="450px">
+            <v-row class="justify-center">
                 <v-card 
                     v-for="product in products" v-bind:key="product.id"
                     :loading="loading" 
@@ -19,7 +19,6 @@
                     <v-divider class="mx-4"></v-divider>
                     <v-card-actions class="product-action">
                         <v-btn
-
                             color="primary"
                             @click="addToCart"
                         >
@@ -32,19 +31,33 @@
                             class="product-qty">
                         </v-select>
                     </v-card-actions>
-                </v-card>
-            </template>
-        </v-row>
-        <v-row class="justify-center my-5">
-            <div class="text-center">
-                <v-pagination
-                    v-model="currentpage"
-                    :length="lastpage"
-                    :total-visible="7"
-                    @input="onPageChange"
-                ></v-pagination>
-            </div>
-         </v-row>
+                </v-card>   
+            </v-row>
+            <v-row class="justify-center my-5">
+                <div class="text-center">
+                    <v-pagination
+                        v-model="currentpage"
+                        :length="lastpage"
+                        :total-visible="7"
+                        @input="onPageChange"
+                    ></v-pagination>
+                </div>
+            </v-row>
+            <v-overlay
+                :absolute="true"
+                :value="overlay"
+                color="#FFFFFF"
+                opacity=".9"
+                >
+                <v-progress-circular
+                :width="3"
+                color="primary"
+                indeterminate
+                ></v-progress-circular>
+            </v-overlay>
+        </v-card>
+
+
     </div>
 </template>
 
@@ -57,6 +70,8 @@
             products : [],
             currentpage : 1,
             lastpage: null,
+
+            overlay: true,
         }
     },
     methods: {
@@ -65,19 +80,22 @@
             setTimeout(() => (this.loading = false), 2000)
         },
         getProducts (){
+            this.overlay = true;
             axios.get('api/products/?page='+ this.currentpage)
             .then(response => {
-                this.products = response.data.data;
-                this.currentpage = response.data.current_page;
-                this.lastpage = response.data.last_page;
+                setTimeout(() => (
+                    this.products = response.data.data,
+                    this.currentpage = response.data.current_page,
+                    this.lastpage = response.data.last_page,
+                    this.overlay = false                    
+                ), 1000)
             })
             .catch(error => {
                 console.log(error.response);
             });
         },
         onPageChange (){
-            console.log(this);
-            this.getProducts();
+            this.getProducts()            
         }
     },
     mounted (){
