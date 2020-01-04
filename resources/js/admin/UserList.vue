@@ -1,78 +1,90 @@
 <template>
-    <div>
-        <v-card>
-            <v-card-title>
-                <v-text-field
-                    v-model="search"
-                    label="Search"
-                    single-line
-                    hide-details
-                    append-icon="search"
-                ></v-text-field>
-            </v-card-title>
-            <v-data-table
-                :headers="headers"
-                :items="users"
-                :items-per-page="10"
-                :search="search"
-            >
-              <template v-slot:item.role="{ item }">
-                  ({{item.role}}) {{displayRole(item.role)}}
-              </template>
+  <div>
+      <v-card>
+        <v-card-title>
+            <v-text-field
+                v-model="search"
+                label="Search"
+                single-line
+                hide-details
+                append-icon="search"
+            ></v-text-field>
+        </v-card-title>
+        <v-data-table
+            :headers="headers"
+            :items="users"
+            :items-per-page="10"
+            :search="search"
+        >
+          <template v-slot:item.role="{ item }">
+              ({{item.role}}) {{displayRole(item.role)}}
+          </template>
 
-              <template v-slot:item.action="{ item }">
-                <v-btn icon :href="'users/edit/'+item.id">
-                  <v-icon small>edit</v-icon>
-                </v-btn>
-                <v-btn icon @click="deleteUser(item)">
-                  <v-icon small>delete</v-icon>
-                </v-btn>
-              </template>
+          <template v-slot:item.action="{ item }">
+            <v-btn icon :href="'users/edit/'+item.id">
+              <v-icon small>edit</v-icon>
+            </v-btn>
+            <v-btn icon @click="deleteUser(item)">
+              <v-icon small>delete</v-icon>
+            </v-btn>
+          </template>
 
-            </v-data-table>
-
-            <template>
-              <v-row justify="center">
-                <v-dialog v-model="dialog" persistent max-width="400">
-                  <v-card :loading="loading">
-                    <v-card-title class="headline">Confirm Deletion</v-card-title>
-                    <v-card-text>Do you want to delete the account of {{toDelete.name}}?</v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="primary" text @click="dialog = false">Cancel</v-btn>
-                      <v-btn color="red" text @click="confirmDelete(toDelete)">Delete</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
-              </v-row>
-            </template>
-
-        </v-card>
+        </v-data-table>
 
         <template>
-          <v-snackbar
-            v-model="snackbar"
-            :color="snackbarColor"
-          >
-            {{ snackbarMessage }}
-            <v-btn
-              color="white"
-              text
-              @click="snackbar = false"
-            >
-              Close
-            </v-btn>
-          </v-snackbar>
+          <v-row justify="center">
+            <v-dialog v-model="dialog" persistent max-width="400">
+              <v-card :loading="loading">
+                <v-card-title class="headline">Confirm Deletion</v-card-title>
+                <v-card-text>Do you want to delete the account of {{toDelete.name}}?</v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" text @click="dialog = false">Cancel</v-btn>
+                  <v-btn color="red" text @click="confirmDelete(toDelete)">Delete</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-row>
         </template>
 
-    </div>
+      </v-card>
+
+      <template>
+        <v-snackbar
+          v-model="snackbar"
+          :color="snackbarColor"
+        >
+          {{ snackbarMessage }}
+          <v-btn
+            color="white"
+            text
+            @click="snackbar = false"
+          >
+            Close
+          </v-btn>
+        </v-snackbar>
+      </template>
+
+      <quick-message :message-type="mType" :message-text="mText"></quick-message>
+
+  </div>
 </template>
 
 <script>
+  import QuickMessage from '../components/QuickMessage.vue';
+  
   export default {
+    components: {
+      QuickMessage
+    },
     props : ['usersList'],
     data () {
       return {
+
+        // Quick Message
+        mType : '',
+        mText : 'Quick Message Intialized',
+
         dialog: false,
         toDelete : [],
         loading: false,

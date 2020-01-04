@@ -46,6 +46,11 @@ Vue.component('add-user-form', require('./admin/AddUserForm.vue').default);
 Vue.component('edit-user-form', require('./admin/EditUserForm.vue').default);
 Vue.component('user-list', require('./admin/UserList.vue').default);
 
+/**
+ * General Components
+ */
+Vue.component('quick-message', require('./components/QuickMessage.vue').default);
+
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
