@@ -28,7 +28,7 @@ class UserController extends Controller
         // return view('admin.users', compact('user'));
         // return User::all();
         // $users = User::paginate(100);
-        $users = User::where('role', '<', 5)->paginate(100);
+        $users = User::where('role', '<', 6)->paginate(100);
         return view('admin.user.index', compact('users'));
         // return response($users, 200);
     }
