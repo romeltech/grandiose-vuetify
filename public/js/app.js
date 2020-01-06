@@ -2326,6 +2326,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -34605,7 +34606,7 @@ var render = function() {
                   label: "Search",
                   "single-line": "",
                   "hide-details": "",
-                  "append-icon": "search"
+                  "append-icon": "mdi-magnify"
                 },
                 model: {
                   value: _vm.search,
@@ -34651,7 +34652,9 @@ var render = function() {
                       "v-btn",
                       { attrs: { icon: "", href: "users/edit/" + item.id } },
                       [
-                        _c("v-icon", { attrs: { small: "" } }, [_vm._v("edit")])
+                        _c("v-icon", { attrs: { small: "" } }, [
+                          _vm._v("mdi-pencil")
+                        ])
                       ],
                       1
                     ),
@@ -34668,7 +34671,7 @@ var render = function() {
                       },
                       [
                         _c("v-icon", { attrs: { small: "" } }, [
-                          _vm._v("delete")
+                          _vm._v("mdi-delete")
                         ])
                       ],
                       1
@@ -85277,7 +85280,9 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
  // path to vuetify export
+// mdi font is loaded from sass
 // import 'material-design-icons-iconfont/dist/material-design-icons.css'
+// import '@mdi/font/css/materialdesignicons.css'
 //    "@mdi/font": "^4.4.95",
 
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vuetify__WEBPACK_IMPORTED_MODULE_2___default.a);
@@ -85336,6 +85341,7 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
         }
       }
     },
+    // iconfont: 'mdi'
     icons: {
       iconfont: 'mdi'
     }

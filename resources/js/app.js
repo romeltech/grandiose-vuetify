@@ -21,7 +21,9 @@ import 'babel-polyfill'
 
 import Vue from 'vue'
 import Vuetify from 'vuetify' // path to vuetify export
+// mdi font is loaded from sass
 // import 'material-design-icons-iconfont/dist/material-design-icons.css'
+// import '@mdi/font/css/materialdesignicons.css'
 //    "@mdi/font": "^4.4.95",
 
 
@@ -86,7 +88,8 @@ const app = new Vue({
               text: '#1D1D1B'
             }
     	    }
-    	  },
+        },
+        // iconfont: 'mdi'
         icons: {
             iconfont: 'mdi'
         }

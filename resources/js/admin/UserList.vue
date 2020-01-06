@@ -7,8 +7,9 @@
                 label="Search"
                 single-line
                 hide-details
-                append-icon="search"
-            ></v-text-field>
+                append-icon="mdi-magnify"
+            >
+            </v-text-field>
         </v-card-title>
         <v-data-table
             :headers="headers"
@@ -22,10 +23,10 @@
 
           <template v-slot:item.action="{ item }">
             <v-btn icon :href="'users/edit/'+item.id">
-              <v-icon small>edit</v-icon>
+              <v-icon small>mdi-pencil</v-icon>
             </v-btn>
             <v-btn icon @click="deleteUser(item)">
-              <v-icon small>delete</v-icon>
+              <v-icon small>mdi-delete</v-icon>
             </v-btn>
           </template>
 
