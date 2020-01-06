@@ -21,7 +21,9 @@ import 'babel-polyfill'
 
 import Vue from 'vue'
 import Vuetify from 'vuetify' // path to vuetify export
-import 'material-design-icons-iconfont/dist/material-design-icons.css'
+// import 'material-design-icons-iconfont/dist/material-design-icons.css'
+//    "@mdi/font": "^4.4.95",
+
 
 Vue.use(Vuetify);
 
