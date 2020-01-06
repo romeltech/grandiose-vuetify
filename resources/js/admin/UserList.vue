@@ -49,49 +49,31 @@
         </template>
 
       </v-card>
-
-      <template>
-        <v-snackbar
-          v-model="snackbar"
-          :color="snackbarColor"
-        >
-          {{ snackbarMessage }}
-          <v-btn
-            color="white"
-            text
-            @click="snackbar = false"
-          >
-            Close
-          </v-btn>
-        </v-snackbar>
-      </template>
-
-      <quick-message :message-type="mType" :message-text="mText"></quick-message>
+      
+      <snack-bar :snackbar-type="sbType" :snackbar-text="sbText" :snackbar-status="sbStatus"></snack-bar>
 
   </div>
 </template>
 
 <script>
-  import QuickMessage from '../components/QuickMessage.vue';
+  import SnackBar from '../components/SnackBar.vue';
   
   export default {
     components: {
-      QuickMessage
+      SnackBar
     },
     props : ['usersList'],
     data () {
       return {
 
-        // Quick Message
-        mType : '',
-        mText : 'Quick Message Intialized',
+        // SnackBar
+        sbType : '',
+        sbText : '',
+        sbStatus : false,
 
         dialog: false,
         toDelete : [],
         loading: false,
-        snackbar: false,
-        snackbarColor: '',
-        snackbarMessage: '',
 
         search: '',
         users: this.usersList.data,
@@ -117,6 +99,7 @@
       },
       confirmDelete (confirmedDeleteUser){
         this.loading = true;
+        this.sbStatus = false; // SnackBar
         axios.delete('/admin/user/destroy/'+confirmedDeleteUser.id)
         .then(response => {
           setTimeout(() => { 
@@ -124,17 +107,23 @@
             this.users.splice(index, 1);
             this.dialog = false;
             this.loading = false;
-            this.snackbar = true;
-            this.snackbarColor = 'success';
-            this.snackbarMessage = response.data.message; 
+
+            // SnackBar
+            this.sbStatus = true;
+            this.sbType = 'success';
+            this.sbText = response.data.message;
+            
           }, 300);
         })
         .catch(error => {
             this.dialog = false;
             this.loading = false;
-            this.snackbar = true;
-            this.snackbarColor = 'red';
-            this.snackbarMessage = 'Error deleting user';
+
+            // SnackBar
+            this.sbStatus = true;
+            this.sbType = 'error';
+            this.sbText = 'Error deleteing user.';
+
             console.log(error.response);
         });
       }     

@@ -53,7 +53,7 @@ Vue.component('user-list', require('./admin/UserList.vue').default);
 /**
  * General Components
  */
-Vue.component('quick-message', require('./components/QuickMessage.vue').default);
+Vue.component('snack-bar', require('./components/SnackBar.vue').default);
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))

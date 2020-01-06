@@ -2253,23 +2253,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_QuickMessage_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/QuickMessage.vue */ "./resources/js/components/QuickMessage.vue");
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* harmony import */ var _components_SnackBar_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/SnackBar.vue */ "./resources/js/components/SnackBar.vue");
 //
 //
 //
@@ -2330,20 +2314,18 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    QuickMessage: _components_QuickMessage_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+    SnackBar: _components_SnackBar_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   props: ['usersList'],
   data: function data() {
     return {
-      // Quick Message
-      mType: '',
-      mText: 'Quick Message Intialized',
+      // SnackBar
+      sbType: '',
+      sbText: '',
+      sbStatus: false,
       dialog: false,
       toDelete: [],
       loading: false,
-      snackbar: false,
-      snackbarColor: '',
-      snackbarMessage: '',
       search: '',
       users: this.usersList.data,
       headers: [{
@@ -2376,6 +2358,8 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.loading = true;
+      this.sbStatus = false; // SnackBar
+
       axios["delete"]('/admin/user/destroy/' + confirmedDeleteUser.id).then(function (response) {
         setTimeout(function () {
           var index = _this.users.indexOf(confirmedDeleteUser);
@@ -2383,17 +2367,19 @@ __webpack_require__.r(__webpack_exports__);
           _this.users.splice(index, 1);
 
           _this.dialog = false;
-          _this.loading = false;
-          _this.snackbar = true;
-          _this.snackbarColor = 'success';
-          _this.snackbarMessage = response.data.message;
+          _this.loading = false; // SnackBar
+
+          _this.sbStatus = true;
+          _this.sbType = 'success';
+          _this.sbText = response.data.message;
         }, 300);
       })["catch"](function (error) {
         _this.dialog = false;
-        _this.loading = false;
-        _this.snackbar = true;
-        _this.snackbarColor = 'red';
-        _this.snackbarMessage = 'Error deleting user';
+        _this.loading = false; // SnackBar
+
+        _this.sbStatus = true;
+        _this.sbType = 'error';
+        _this.sbText = 'Error deleteing user.';
         console.log(error.response);
       });
     }
@@ -2722,10 +2708,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/QuickMessage.vue?vue&type=script&lang=js&":
-/*!***********************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/QuickMessage.vue?vue&type=script&lang=js& ***!
-  \***********************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SnackBar.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SnackBar.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2746,20 +2732,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['messageType', 'messageText'],
+  props: ['snackbarType', 'snackbarText', 'snackbarStatus'],
   data: function data() {
     return {
-      snackbarColor: 'success',
-      snackbar: true,
-      snackbarMessage: 'Success'
+      snackbar: this.snackbarStatus,
+      sbColor: 'primary',
+      sbMessage: 'SnackBar Message'
     };
   },
-  mounted: function mounted() {
-    console.log('meh');
+  watch: {
+    'snackbarStatus': function snackbarStatus() {
+      this.snackbar = this.snackbarStatus;
+    },
+    'snackbarType': function snackbarType() {
+      this.sbColor = this.snackbarType;
+    },
+    'snackbarText': function snackbarText() {
+      this.sbMessage = this.snackbarText;
+    }
   }
 });
 
@@ -34763,43 +34754,15 @@ var render = function() {
         2
       ),
       _vm._v(" "),
-      [
-        _c(
-          "v-snackbar",
-          {
-            attrs: { color: _vm.snackbarColor },
-            model: {
-              value: _vm.snackbar,
-              callback: function($$v) {
-                _vm.snackbar = $$v
-              },
-              expression: "snackbar"
-            }
-          },
-          [
-            _vm._v("\n        " + _vm._s(_vm.snackbarMessage) + "\n        "),
-            _c(
-              "v-btn",
-              {
-                attrs: { color: "white", text: "" },
-                on: {
-                  click: function($event) {
-                    _vm.snackbar = false
-                  }
-                }
-              },
-              [_vm._v("\n          Close\n        ")]
-            )
-          ],
-          1
-        )
-      ],
-      _vm._v(" "),
-      _c("quick-message", {
-        attrs: { "message-type": _vm.mType, "message-text": _vm.mText }
+      _c("snack-bar", {
+        attrs: {
+          "snackbar-type": _vm.sbType,
+          "snackbar-text": _vm.sbText,
+          "snackbar-status": _vm.sbStatus
+        }
       })
     ],
-    2
+    1
   )
 }
 var staticRenderFns = []
@@ -35192,10 +35155,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/QuickMessage.vue?vue&type=template&id=54b89445&":
-/*!***************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/QuickMessage.vue?vue&type=template&id=54b89445& ***!
-  \***************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SnackBar.vue?vue&type=template&id=29f98bd0&":
+/*!***********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SnackBar.vue?vue&type=template&id=29f98bd0& ***!
+  \***********************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -35210,7 +35173,7 @@ var render = function() {
   return _c(
     "v-snackbar",
     {
-      attrs: { color: _vm.snackbarColor },
+      attrs: { color: _vm.sbColor },
       model: {
         value: _vm.snackbar,
         callback: function($$v) {
@@ -35220,7 +35183,7 @@ var render = function() {
       }
     },
     [
-      _vm._v("\n    " + _vm._s(_vm.snackbarMessage) + "\n    "),
+      _vm._v("\n    " + _vm._s(_vm.sbMessage) + "\n    "),
       _c(
         "v-btn",
         {
@@ -35231,7 +35194,7 @@ var render = function() {
             }
           }
         },
-        [_vm._v("\n\n    Close\n    ")]
+        [_vm._v("\n    Close\n    ")]
       )
     ],
     1
@@ -85309,7 +85272,7 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.component('user-list', __webpack_requ
  * General Components
  */
 
-vue__WEBPACK_IMPORTED_MODULE_1___default.a.component('quick-message', __webpack_require__(/*! ./components/QuickMessage.vue */ "./resources/js/components/QuickMessage.vue")["default"]); // const files = require.context('./', true, /\.vue$/i)
+vue__WEBPACK_IMPORTED_MODULE_1___default.a.component('snack-bar', __webpack_require__(/*! ./components/SnackBar.vue */ "./resources/js/components/SnackBar.vue")["default"]); // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 // Vue.component('header-navigation', require('./components/HeaderNavigation.vue').default);
@@ -85655,17 +85618,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/QuickMessage.vue":
-/*!**************************************************!*\
-  !*** ./resources/js/components/QuickMessage.vue ***!
-  \**************************************************/
+/***/ "./resources/js/components/SnackBar.vue":
+/*!**********************************************!*\
+  !*** ./resources/js/components/SnackBar.vue ***!
+  \**********************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _QuickMessage_vue_vue_type_template_id_54b89445___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./QuickMessage.vue?vue&type=template&id=54b89445& */ "./resources/js/components/QuickMessage.vue?vue&type=template&id=54b89445&");
-/* harmony import */ var _QuickMessage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./QuickMessage.vue?vue&type=script&lang=js& */ "./resources/js/components/QuickMessage.vue?vue&type=script&lang=js&");
+/* harmony import */ var _SnackBar_vue_vue_type_template_id_29f98bd0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SnackBar.vue?vue&type=template&id=29f98bd0& */ "./resources/js/components/SnackBar.vue?vue&type=template&id=29f98bd0&");
+/* harmony import */ var _SnackBar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SnackBar.vue?vue&type=script&lang=js& */ "./resources/js/components/SnackBar.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -85675,9 +85638,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _QuickMessage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _QuickMessage_vue_vue_type_template_id_54b89445___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _QuickMessage_vue_vue_type_template_id_54b89445___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _SnackBar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SnackBar_vue_vue_type_template_id_29f98bd0___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _SnackBar_vue_vue_type_template_id_29f98bd0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -85687,38 +85650,38 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/QuickMessage.vue"
+component.options.__file = "resources/js/components/SnackBar.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/components/QuickMessage.vue?vue&type=script&lang=js&":
-/*!***************************************************************************!*\
-  !*** ./resources/js/components/QuickMessage.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************/
+/***/ "./resources/js/components/SnackBar.vue?vue&type=script&lang=js&":
+/*!***********************************************************************!*\
+  !*** ./resources/js/components/SnackBar.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_QuickMessage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./QuickMessage.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/QuickMessage.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_QuickMessage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SnackBar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./SnackBar.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SnackBar.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SnackBar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/components/QuickMessage.vue?vue&type=template&id=54b89445&":
-/*!*********************************************************************************!*\
-  !*** ./resources/js/components/QuickMessage.vue?vue&type=template&id=54b89445& ***!
-  \*********************************************************************************/
+/***/ "./resources/js/components/SnackBar.vue?vue&type=template&id=29f98bd0&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/SnackBar.vue?vue&type=template&id=29f98bd0& ***!
+  \*****************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuickMessage_vue_vue_type_template_id_54b89445___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./QuickMessage.vue?vue&type=template&id=54b89445& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/QuickMessage.vue?vue&type=template&id=54b89445&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuickMessage_vue_vue_type_template_id_54b89445___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SnackBar_vue_vue_type_template_id_29f98bd0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./SnackBar.vue?vue&type=template&id=29f98bd0& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SnackBar.vue?vue&type=template&id=29f98bd0&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SnackBar_vue_vue_type_template_id_29f98bd0___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuickMessage_vue_vue_type_template_id_54b89445___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SnackBar_vue_vue_type_template_id_29f98bd0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
