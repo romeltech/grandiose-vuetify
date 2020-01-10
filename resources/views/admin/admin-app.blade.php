@@ -42,12 +42,20 @@ color="grey lighten-4"
         <v-list-item-title class="grey--text">Product List</v-list-item-title>
       </v-list-item-content>
     </v-list-item>
-    <v-list-item  @click="">
+    <v-list-item @click="">
       <v-list-item-action>
         <v-icon small>mdi-plus</v-icon>
       </v-list-item-action>
       <v-list-item-content>
         <v-list-item-title class="grey--text">Add Product</v-list-item-title>
+      </v-list-item-content>
+    </v-list-item>
+    <v-list-item href="{{ route('admin.productfields') }}">
+      <v-list-item-action>
+        <v-icon small>mdi-layers-outline</v-icon>
+      </v-list-item-action>
+      <v-list-item-content>
+        <v-list-item-title class="grey--text">Product Fields</v-list-item-title>
       </v-list-item-content>
     </v-list-item>
     <v-list-item @click="">

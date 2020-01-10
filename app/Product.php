@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    protected $fillable = ['imagepath', 'title', 'price', 'description'];
+
+    // protected $fillable = ['imagepath', 'title', 'price', 'description'];
+    protected $guarded = [];
 
     // Relationship to Product Fields 'pf_'
     public function product_fields()

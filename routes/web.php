@@ -30,7 +30,9 @@ Route::get('/shop', 'ProductController@index')->name('shop');
 Route::get('/checkout', 'ProductController@checkout')->name('checkout');
 
 /**
+ * 
  * Customer Routes
+ * 
  */
 Route::group(['prefix'=>'u','as'=>'u.'], function(){
     // Route::get('/', ['as' => 'index', 'uses' => 'AccountController@index']);
@@ -43,7 +45,9 @@ Route::group(['prefix'=>'u','as'=>'u.'], function(){
 
 
 /**
+ * 
  * Admin Routes
+ * 
  */
 Route::group(['prefix'=>'admin','as'=>'admin.'], function(){
     // Users Routes
@@ -54,8 +58,11 @@ Route::group(['prefix'=>'admin','as'=>'admin.'], function(){
     Route::get('/users/edit/{user}', 'UserController@edit')->name('edituser');
     Route::delete('/user/destroy/{user}', 'UserController@destroy')->name('user.destroy');
 
-
+    // Product Routes
+    Route::get('/productfields', 'ProductFieldsController@index')->name('productfields');
+    
     Route::get('/settings', 'AdminController@settings')->name('settings');
+
     // ->middleware('can:accessAdminModel,user')
 });
 // })->middleware('can:accessAdmin,User::class');
