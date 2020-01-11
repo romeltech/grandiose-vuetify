@@ -46,9 +46,14 @@ Vue.component('user-nav-icon', require('./components/UserNavIcon.vue').default);
 /**
  * Admin Components
  */
+
+// User Components
 Vue.component('add-user-form', require('./admin/AddUserForm.vue').default);
 Vue.component('edit-user-form', require('./admin/EditUserForm.vue').default);
 Vue.component('user-list', require('./admin/UserList.vue').default);
+
+// Product Field Components
+Vue.component('add-product-field', require('./admin/product/AddProductFieldForm.vue').default);
 
 /**
  * General Components

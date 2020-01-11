@@ -17,7 +17,7 @@ class CreateProductFieldsTable extends Migration
             $table->bigIncrements('id');
             $table->string('pf_key');
             $table->string('pf_value');
-            $table->unsignedInteger('product_id');
+            $table->unsignedInteger('product_id')->nullable();
             $table->timestamps();
         });
     }

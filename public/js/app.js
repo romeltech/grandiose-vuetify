@@ -2388,6 +2388,178 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/product/AddProductFieldForm.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/product/AddProductFieldForm.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_SnackBar_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/SnackBar.vue */ "./resources/js/components/SnackBar.vue");
+/* harmony import */ var _actions_errorBag_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../actions/errorBag.js */ "./resources/js/actions/errorBag.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    SnackBar: _components_SnackBar_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      loading: false,
+      errors: new _actions_errorBag_js__WEBPACK_IMPORTED_MODULE_1__["default"](),
+      fieldname: '',
+      fieldvalue: '',
+      // SnackBar
+      sbType: '',
+      sbText: '',
+      sbStatus: false,
+      // rules
+      valid: true,
+      fieldnamerule: [function (value) {
+        return !!value || 'Required';
+      }, function (value) {
+        return value && value.length < 50 || 'Max 50 characters';
+      }],
+      fieldvaluerule: [function (value) {
+        return !!value || 'Required';
+      }, function (value) {
+        return value && value.length < 50 || 'Max 50 characters';
+      }],
+      csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+      // Error Handling
+      keyError: false,
+      keyErrorMessage: '',
+      valueError: false,
+      valueErrorMessage: ''
+    };
+  },
+  methods: {
+    addproductfield: function addproductfield() {
+      var _this = this;
+
+      this.loading = true;
+      axios.post('/admin/product/fields/store', {
+        pf_key: this.fieldname,
+        pf_value: this.fieldvalue
+      }).then(function (response) {
+        // SnackBar
+        _this.sbStatus = true;
+        _this.sbType = 'success';
+        _this.sbText = response.data.message;
+        _this.loading = false; // this.responseMessage = response.data.message;
+        // console.log(response.data.message);
+        // console.log('success meh');
+        // this.errors.clearAll();
+
+        _this.$refs.form.reset(); // this.keyError = false;
+        // this.valueError = false;
+
+      })["catch"](function (error) {
+        _this.loading = false;
+
+        if (error.response && error.response.status == 422) {
+          _this.errors.setErrors(error.response.data.errors); // this.responseMessage = this.errors;
+          // console.log(this.responseMessage);
+          // console.log(this.errors.errors.pf_key);
+          // console.log(this.errors.first('pf_key'));
+          // console.log(this.errors.pf_key);
+          // console.log(this.errors);
+          // SnackBar
+
+
+          _this.sbStatus = true;
+          _this.sbType = 'error';
+          _this.sbText = 'Error adding product field'; // Input error messages
+
+          if (_this.errors.hasError('pf_key')) {
+            _this.keyError = true;
+            _this.keyErrorMessage = _this.errors.first('pf_key');
+          }
+
+          if (_this.errors.hasError('pf_value')) {
+            _this.valueError = true;
+            _this.valueErrorMessage = _this.errors.first('pf_value');
+          }
+        }
+      });
+    },
+    clearAlert: function clearAlert() {
+      this.sbStatus = false; // SnackBar
+
+      this.keyError = false;
+      this.keyErrorMessage = '';
+      this.valueError = false;
+      this.valueErrorMessage = '';
+      this.errors.clearAll();
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/CartItems.vue?vue&type=script&lang=js&":
 /*!********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/CartItems.vue?vue&type=script&lang=js& ***!
@@ -34772,6 +34944,138 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/product/AddProductFieldForm.vue?vue&type=template&id=d031363c&":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/product/AddProductFieldForm.vue?vue&type=template&id=d031363c& ***!
+  \*************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "text-center" },
+    [
+      _c(
+        "v-card",
+        { attrs: { loading: _vm.loading } },
+        [
+          _c(
+            "v-form",
+            {
+              ref: "form",
+              staticClass: "pa-5",
+              attrs: { method: "POST", "lazy-validation": "" },
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.addproductfield()
+                }
+              },
+              model: {
+                value: _vm.valid,
+                callback: function($$v) {
+                  _vm.valid = $$v
+                },
+                expression: "valid"
+              }
+            },
+            [
+              _c("v-text-field", {
+                attrs: {
+                  dense: "",
+                  rules: _vm.fieldnamerule,
+                  autofocus: "",
+                  outlined: "",
+                  required: "",
+                  id: "field",
+                  type: "text",
+                  name: "field",
+                  label: "Field",
+                  error: _vm.keyError,
+                  "error-messages": _vm.keyErrorMessage
+                },
+                model: {
+                  value: _vm.fieldname,
+                  callback: function($$v) {
+                    _vm.fieldname = $$v
+                  },
+                  expression: "fieldname"
+                }
+              }),
+              _vm._v(" "),
+              _c("v-text-field", {
+                attrs: {
+                  dense: "",
+                  rules: _vm.fieldvaluerule,
+                  outlined: "",
+                  required: "",
+                  id: "fieldvalue",
+                  type: "text",
+                  name: "fieldvalue",
+                  label: "Value",
+                  error: _vm.valueError,
+                  "error-messages": _vm.valueErrorMessage
+                },
+                model: {
+                  value: _vm.fieldvalue,
+                  callback: function($$v) {
+                    _vm.fieldvalue = $$v
+                  },
+                  expression: "fieldvalue"
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                {
+                  staticClass: "mb-2",
+                  attrs: {
+                    width: "100%",
+                    dense: "",
+                    color: "primary",
+                    type: "submit"
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.clearAlert()
+                    }
+                  }
+                },
+                [_vm._v("\n                Save\n            ")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("snack-bar", {
+        attrs: {
+          "snackbar-type": _vm.sbType,
+          "snackbar-text": _vm.sbText,
+          "snackbar-status": _vm.sbStatus
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/CartItems.vue?vue&type=template&id=4cb2daa5&":
 /*!************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/CartItems.vue?vue&type=template&id=4cb2daa5& ***!
@@ -35246,7 +35550,7 @@ var render = function() {
                     "v-btn",
                     _vm._g({ attrs: { text: "", icon: "" } }, on),
                     [
-                      _c("v-avatar", [
+                      _c("v-avatar", { attrs: { size: "36" } }, [
                         _c("img", {
                           attrs: {
                             src:
@@ -88913,6 +89217,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/admin/product/AddProductFieldForm.vue":
+/*!************************************************************!*\
+  !*** ./resources/js/admin/product/AddProductFieldForm.vue ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AddProductFieldForm_vue_vue_type_template_id_d031363c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AddProductFieldForm.vue?vue&type=template&id=d031363c& */ "./resources/js/admin/product/AddProductFieldForm.vue?vue&type=template&id=d031363c&");
+/* harmony import */ var _AddProductFieldForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AddProductFieldForm.vue?vue&type=script&lang=js& */ "./resources/js/admin/product/AddProductFieldForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AddProductFieldForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AddProductFieldForm_vue_vue_type_template_id_d031363c___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AddProductFieldForm_vue_vue_type_template_id_d031363c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/admin/product/AddProductFieldForm.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/admin/product/AddProductFieldForm.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/admin/product/AddProductFieldForm.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AddProductFieldForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./AddProductFieldForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/product/AddProductFieldForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AddProductFieldForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/admin/product/AddProductFieldForm.vue?vue&type=template&id=d031363c&":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/admin/product/AddProductFieldForm.vue?vue&type=template&id=d031363c& ***!
+  \*******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AddProductFieldForm_vue_vue_type_template_id_d031363c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./AddProductFieldForm.vue?vue&type=template&id=d031363c& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/product/AddProductFieldForm.vue?vue&type=template&id=d031363c&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AddProductFieldForm_vue_vue_type_template_id_d031363c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AddProductFieldForm_vue_vue_type_template_id_d031363c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/app.js":
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
@@ -88965,10 +89338,13 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.component('user-nav-icon', __webpack_
 /**
  * Admin Components
  */
+// User Components
 
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.component('add-user-form', __webpack_require__(/*! ./admin/AddUserForm.vue */ "./resources/js/admin/AddUserForm.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.component('edit-user-form', __webpack_require__(/*! ./admin/EditUserForm.vue */ "./resources/js/admin/EditUserForm.vue")["default"]);
-vue__WEBPACK_IMPORTED_MODULE_1___default.a.component('user-list', __webpack_require__(/*! ./admin/UserList.vue */ "./resources/js/admin/UserList.vue")["default"]);
+vue__WEBPACK_IMPORTED_MODULE_1___default.a.component('user-list', __webpack_require__(/*! ./admin/UserList.vue */ "./resources/js/admin/UserList.vue")["default"]); // Product Field Components
+
+vue__WEBPACK_IMPORTED_MODULE_1___default.a.component('add-product-field', __webpack_require__(/*! ./admin/product/AddProductFieldForm.vue */ "./resources/js/admin/product/AddProductFieldForm.vue")["default"]);
 /**
  * General Components
  */

@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Product_fields;
 use Illuminate\Http\Request;
 
 class ProductFieldsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        // $this->middleware('auth')->except(['index']);
+        // $this->middleware('auth')->only(['index']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +23,7 @@ class ProductFieldsController extends Controller
     public function index(User $user)
     {
         $this->authorize('accessAdmin', $user);
-        return view('admin.product.fields');
+        return view('admin.product.field.index');
     }
 
     /**
@@ -25,7 +33,7 @@ class ProductFieldsController extends Controller
      */
     public function create()
     {
-        //
+        // return view('admin.product.field.add');
     }
 
     /**
@@ -36,7 +44,23 @@ class ProductFieldsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // validate request
+        $this->validate($request, [
+            'pf_key' => ['required', 'string', 'max:50', 'unique:product_fields'],
+            'pf_value' => ['required', 'string', 'max:50', 'unique:product_fields']
+        ]);
+
+        // save request
+        $pf = Product_fields::create([
+            'pf_key' => $request['pf_key'],
+            'pf_value' => $request['pf_value']
+        ]);
+
+        // return request
+        return response()->json([
+            'productfields' => $pf,
+            'message' => 'Product field has been added'
+          ], 200);
     }
 
     /**

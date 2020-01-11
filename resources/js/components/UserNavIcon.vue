@@ -11,7 +11,7 @@
       >
         <template v-slot:activator="{ on }">
           <v-btn text icon v-on="on">
-            <v-avatar>
+            <v-avatar size="36">
               <img src="https://mel-7.com/wp-content/uploads/2019/04/romel-indemne-v1.jpg" alt="Romel Indemne">
             </v-avatar>
           </v-btn>

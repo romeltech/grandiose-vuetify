@@ -50,7 +50,7 @@ color="grey lighten-4"
         <v-list-item-title class="grey--text">Add Product</v-list-item-title>
       </v-list-item-content>
     </v-list-item>
-    <v-list-item href="{{ route('admin.productfields') }}">
+    <v-list-item href="{{ route('admin.p.fields') }}">
       <v-list-item-action>
         <v-icon small>mdi-layers-outline</v-icon>
       </v-list-item-action>
@@ -68,6 +68,8 @@ color="grey lighten-4"
     </v-list-item>
   </v-list>
 </v-list-group>
+
+
 <v-divider dark></v-divider>
 
 
