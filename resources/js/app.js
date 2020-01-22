@@ -54,6 +54,7 @@ Vue.component('user-list', require('./admin/UserList.vue').default);
 
 // Product Field Components
 Vue.component('add-product-field', require('./admin/product/AddProductFieldForm.vue').default);
+Vue.component('product-field-list', require('./admin/product/ProductFieldList.vue').default);
 
 /**
  * General Components

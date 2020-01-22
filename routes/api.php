@@ -24,3 +24,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // });
 
 Route::get('/products', 'ProductController@productListAPI')->name('products');
+Route::get('/product/fields', 'ProductFieldsController@productFieldsAPI')->name('productfields');

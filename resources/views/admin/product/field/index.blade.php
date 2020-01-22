@@ -8,9 +8,8 @@
             <add-product-field></add-product-field>
         </v-col>
         <v-col class="col-12 col-md-8">
-            This is the product fields.
-            {{-- <user-list :users-list="{{ $users->toJson() }}"></user-list>
-            {{ $users->links() }} --}}
+            {{-- <product-field-list :product-fields="{{ $productfields->toJson() }}"></product-field-list> --}}
+            <product-field-list></product-field-list>
         </v-col>
 
     </v-row>

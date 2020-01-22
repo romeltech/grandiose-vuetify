@@ -10,8 +10,8 @@ class ProductFieldsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
-        // $this->middleware('auth')->except(['index']);
+        // $this->middleware('auth');
+        $this->middleware('auth')->except(['productFieldsAPI']);
         // $this->middleware('auth')->only(['index']);
     }
 
@@ -23,9 +23,18 @@ class ProductFieldsController extends Controller
     public function index(User $user)
     {
         $this->authorize('accessAdmin', $user);
+        // $productfields = Product_fields::all();
+        // dd($productfields);
+        // return view('admin.product.field.index', compact('productfields'));
         return view('admin.product.field.index');
     }
+    public function productFieldsAPI()
+    {
+        // $productfields = Product_fields::all();
+        $productfields = Product_fields::paginate(10);;
+        return $productfields;
 
+    }    
     /**
      * Show the form for creating a new resource.
      *
