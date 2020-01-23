@@ -3,6 +3,7 @@
         <!-- class="transparent" -->
             <!-- flat -->
         <v-card
+            flat
             :loading="loading">
             <!-- action="./api/user" -->
             <v-form
@@ -16,7 +17,6 @@
                     dense
                     :rules="fieldnamerule"
                     v-model="fieldname"
-                    autofocus
                     outlined
                     required
                     id="field"

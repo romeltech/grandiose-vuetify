@@ -3,115 +3,155 @@
     <v-data-table
       :headers="headers"
       :items="pf"
+      hide-default-footer
     >
-      <template v-slot:item.name="props">
-        <v-edit-dialog
-          :return-value.sync="props.item.name"
-          @save="save"
-          @cancel="cancel"
-          @open="open"
-          @close="close"
-        > {{ props.item.name }}
-          <template v-slot:input>
-            <v-text-field
-              v-model="props.item.name"
-              :rules="[max25chars]"
-              label="Edit"
-              single-line
-              counter
-            ></v-text-field>
-          </template>
-        </v-edit-dialog>
+      <template v-slot:top>
+          <v-dialog v-model="dialog" max-width="500px">
+            <v-card>
+              <v-card-title>
+                <span class="headline">{{ formTitle }}</span>
+              </v-card-title>
+
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col cols="12" sm="6" md="6">
+                      <v-text-field v-model="editedItem.pf_key" label="Key"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="6">
+                      <v-text-field v-model="editedItem.pf_value" label="Value"></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+                <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
       </template>
-      <template v-slot:item.iron="props">
-        <v-edit-dialog
-          :return-value.sync="props.item.iron"
-          large
-          persistent
-          @save="save"
-          @cancel="cancel"
-          @open="open"
-          @close="close"
+      <template v-slot:item.action="{ item }">
+        <v-icon
+          small
+          class="mr-2"
+          @click="editItem(item)"
         >
-          <div>{{ props.item.iron }}</div>
-          <template v-slot:input>
-            <div class="mt-4 title">Update Iron</div>
-          </template>
-          <template v-slot:input>
-            <v-text-field
-              v-model="props.item.iron"
-              :rules="[max25chars]"
-              label="Edit"
-              single-line
-              counter
-              autofocus
-            ></v-text-field>
-          </template>
-        </v-edit-dialog>
+          mdi-pencil
+        </v-icon>
+        <v-icon
+          small
+          @click="deleteItem(item)"
+        >
+          mdi-trash-can
+        </v-icon>
+      </template>
+      <template v-slot:no-data>
+        <v-btn color="primary" @click="initialize">Reset</v-btn>
       </template>
     </v-data-table>
-
-    <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
-      {{ snackText }}
-      <v-btn text @click="snack = false">Close</v-btn>
-    </v-snackbar>
+    <v-pagination class="mt-3" v-model="page" :length="pageCount" @input="onPageChange"></v-pagination>
   </div>
 </template>
-
 <script>
   export default {
-    // props: ['productFields'],
-    data () {
-      return {
-        pf : [],
-        snack: false,
-        snackColor: '',
-        snackText: '',
-        max25chars: v => v.length <= 25 || 'Input too long!',
-        pagination: {},
-        headers: [
-          {
-            text: 'ID',
-            align: 'left',
-            sortable: false,
-            value: 'id',
-          },
-          { text: 'Key', value: 'pf_key' },
-          { text: 'Value', value: 'pf_value' },        ],
-        pfields: this.productFields
+    mounted (){
+      this.getProductFields(1);
+    },
+    data: () => ({
+      page: 1,
+      pageCount: 0,
+      dialog: false,
+      headers: [
+        { text: 'Key', value: 'pf_key', sortable: false },
+        { text: 'Value', value: 'pf_value', sortable: false },
+        { text: 'Actions', value: 'action', sortable: false },
+      ],
+      pf : [],
+      desserts: [],
+      editedIndex: -1,
+      editedItem: {
+        name: '',
+        calories: 0,
+        fat: 0,
+        carbs: 0,
+        protein: 0,
+      },
+      defaultItem: {
+        name: '',
+        calories: 0,
+        fat: 0,
+        carbs: 0,
+        protein: 0,
+      },
+    }),
+
+    computed: {
+      formTitle () {
+        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
       }
     },
-    methods: {
-      save () {
-        this.snack = true
-        this.snackColor = 'success'
-        this.snackText = 'Data saved'
-      },
-      cancel () {
-        this.snack = true
-        this.snackColor = 'error'
-        this.snackText = 'Canceled'
-      },
-      open () {
-        this.snack = true
-        this.snackColor = 'info'
-        this.snackText = 'Dialog opened'
-      },
-      close () {
-        console.log('Dialog closed')
+
+    watch: {
+      dialog (val) {
+        val || this.close()
       },
     },
-    mounted (){
-        axios.get('api/products')
-        .then(response => {
- 
-            // this.pf = response.data.data;
-            console.log('meh');
-         })
-        .catch(error => {
-            console.log(error.response);
-            console.log('erro');
-        });
-    }
+
+    created () {
+      this.initialize()
+    },
+
+    methods: {
+      initialize(){
+
+      },
+      getProductFields (thecurrentpage) {
+        axios.get('/api/product/fields?page='+thecurrentpage)
+          .then(response => {
+            this.pf = response.data.data;
+            this.page = response.data.current_page;
+            this.pageCount = response.data.last_page;
+            // console.log(response.data.current_page);
+          })
+          .catch(error => {
+              console.log(error.response);
+              console.log('error');
+          });
+      },
+      onPageChange (){
+        this.getProductFields(this.page);
+      },
+
+      editItem (item) {
+        this.editedIndex = this.desserts.indexOf(item)
+        this.editedItem = Object.assign({}, item)
+        this.dialog = true
+      },
+
+      deleteItem (item) {
+        const index = this.desserts.indexOf(item)
+        confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
+      },
+
+      close () {
+        this.dialog = false
+        setTimeout(() => {
+          this.editedItem = Object.assign({}, this.defaultItem)
+          this.editedIndex = -1
+        }, 300)
+      },
+
+      save () {
+        if (this.editedIndex > -1) {
+          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+        } else {
+          this.desserts.push(this.editedItem)
+        }
+        this.close()
+      },
+    },
   }
 </script>
