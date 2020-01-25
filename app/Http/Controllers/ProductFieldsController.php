@@ -31,7 +31,7 @@ class ProductFieldsController extends Controller
     public function productFieldsAPI()
     {
         // $productfields = Product_fields::all();
-        $productfields = Product_fields::paginate(10);;
+        $productfields = Product_fields::orderBy('id', 'DESC')->paginate(10);
         return $productfields;
 
     }    
@@ -54,16 +54,19 @@ class ProductFieldsController extends Controller
     public function store(Request $request)
     {
         // validate request
-        $this->validate($request, [
-            'pf_key' => ['required', 'string', 'max:50', 'unique:product_fields'],
-            'pf_value' => ['required', 'string', 'max:50', 'unique:product_fields']
-        ]);
+        // $this->validate($request, [
+        //     'id' => ['required'],
+        //     'pf_key' => ['required', 'string', 'max:50', 'unique:product_fields'],
+        //     'pf_value' => ['required', 'string', 'max:50', 'unique:product_fields']
+        // ]);
 
         // save request
-        $pf = Product_fields::create([
-            'pf_key' => $request['pf_key'],
-            'pf_value' => $request['pf_value']
-        ]);
+        // $pf = Product_fields::create([
+        //     'pf_key' => $request['pf_key'],
+        //     'pf_value' => $request['pf_value']
+        // ]);
+
+        $pf = Product_fields::create($this->validateRequest());
 
         // return request
         return response()->json([
@@ -101,9 +104,21 @@ class ProductFieldsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        // Check Requested Data if Exist
+        // $productField = Product_fields::find($request->id);
+        $productField = Product_fields::where('id', '=', $request->id)->firstOrFail();
+        
+        // Validate and Update Request
+        $productField->update($this->validateRequest());
+
+        // Return Response
+        return response()->json([
+            // 'currentKey' => $productField->pf_key,
+            // 'requestKey' => $request->pf_key,
+            'message' => 'Product field has been updated'
+        ], 200);
     }
 
     /**
@@ -115,5 +130,17 @@ class ProductFieldsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Form Validation
+     */
+    public function validateRequest()
+    {
+        return request()->validate([
+            'pf_key' => ['min:3', 'max:50', 'string', 'unique:product_fields'],
+            'pf_value' => ['required', 'string', 'max:50']
+        ]);
+
     }
 }

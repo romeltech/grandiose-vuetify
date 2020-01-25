@@ -62,7 +62,12 @@ Route::group(['prefix'=>'admin','as'=>'admin.'], function(){
     Route::get('/product/fields', 'ProductFieldsController@index')->name('p.fields');
     // Route::get('/product/fields/add', 'ProductFieldsController@create')->name('p.field.add');
     Route::post('/product/fields/store', 'ProductFieldsController@store')->name('p.addfield');
+
+    // Product Fields Routes
+    Route::post('/product/fields/update', 'ProductFieldsController@update')->name('p.updatefield');
     
+
+    // Settings Routes
     Route::get('/settings', 'AdminController@settings')->name('settings');
 
     // ->middleware('can:accessAdminModel,user')

@@ -15,7 +15,7 @@ class CreateProductFieldsTable extends Migration
     {
         Schema::create('product_fields', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('pf_key');
+            $table->string('pf_key')->unique();
             $table->string('pf_value');
             $table->unsignedInteger('product_id')->nullable();
             $table->timestamps();

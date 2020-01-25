@@ -2569,6 +2569,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _admin_product_AddProductFieldForm_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../admin/product/AddProductFieldForm.vue */ "./resources/js/admin/product/AddProductFieldForm.vue");
+/* harmony import */ var _components_SnackBar_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/SnackBar.vue */ "./resources/js/components/SnackBar.vue");
+/* harmony import */ var _actions_errorBag_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../actions/errorBag.js */ "./resources/js/actions/errorBag.js");
 //
 //
 //
@@ -2626,12 +2629,40 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    SnackBar: _components_SnackBar_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    AddProductFieldForm: _admin_product_AddProductFieldForm_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   mounted: function mounted() {
     this.getProductFields(1);
   },
   data: function data() {
     return {
+      // Interface
+      dialogLoading: false,
+      // SnackBar
+      sbType: '',
+      sbText: '',
+      sbStatus: false,
+      // Error Handling
+      errors: new _actions_errorBag_js__WEBPACK_IMPORTED_MODULE_2__["default"](),
+      updateKeyError: false,
+      updateKeyErrMsg: '',
+      updateValueError: false,
+      updateValueErrMsg: '',
       page: 1,
       pageCount: 0,
       dialog: false,
@@ -2649,28 +2680,22 @@ __webpack_require__.r(__webpack_exports__);
         sortable: false
       }],
       pf: [],
-      desserts: [],
+      // desserts: [],
+      originalItem: {
+        pf_key: '',
+        pf_value: ''
+      },
       editedIndex: -1,
       editedItem: {
-        name: '',
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0
+        pf_key: '',
+        pf_name: ''
       },
       defaultItem: {
-        name: '',
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0
-      }
+        pf_key: '',
+        pf_name: ''
+      },
+      formTitle: ''
     };
-  },
-  computed: {
-    formTitle: function formTitle() {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item';
-    }
   },
   watch: {
     dialog: function dialog(val) {
@@ -2688,7 +2713,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('/api/product/fields?page=' + thecurrentpage).then(function (response) {
         _this.pf = response.data.data;
         _this.page = response.data.current_page;
-        _this.pageCount = response.data.last_page; // console.log(response.data.current_page);
+        _this.pageCount = response.data.last_page;
       })["catch"](function (error) {
         console.log(error.response);
         console.log('error');
@@ -2698,13 +2723,16 @@ __webpack_require__.r(__webpack_exports__);
       this.getProductFields(this.page);
     },
     editItem: function editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      // Assign Data
+      this.formTitle = 'Edit ' + item.pf_value;
+      this.editedIndex = this.pf.indexOf(item);
       this.editedItem = Object.assign({}, item);
+      this.originalItem = Object.assign({}, item);
       this.dialog = true;
     },
     deleteItem: function deleteItem(item) {
-      var index = this.desserts.indexOf(item);
-      confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1);
+      var index = this.pf.indexOf(item);
+      confirm('Are you sure you want to delete this item?') && this.pf.splice(index, 1);
     },
     close: function close() {
       var _this2 = this;
@@ -2716,13 +2744,72 @@ __webpack_require__.r(__webpack_exports__);
       }, 300);
     },
     save: function save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
+      var _this3 = this;
+
+      this.dialogLoading = true; // if (this.editedIndex > -1) {
+      //   Object.assign(this.pf[this.editedIndex], this.editedItem)
+      // } else {
+      //   this.pf.push(this.editedItem)
+      // }
+
+      var pfdata = [];
+
+      if (this.originalItem.pf_key === this.editedItem.pf_key) {
+        pfdata = {
+          id: this.editedItem.id,
+          pf_value: this.editedItem.pf_value
+        };
       } else {
-        this.desserts.push(this.editedItem);
+        pfdata = {
+          id: this.editedItem.id,
+          pf_key: this.editedItem.pf_key,
+          pf_value: this.editedItem.pf_value
+        };
       }
 
-      this.close();
+      axios.post('/admin/product/fields/update', pfdata).then(function (response) {
+        // SnackBar
+        _this3.sbStatus = true;
+        _this3.sbType = 'success';
+        _this3.sbText = response.data.message; // this.loading = false;
+        // this.responseMessage = response.data.message;
+        // console.log(response.data.message);
+        // console.log('success meh');
+        // this.errors.clearAll();
+        // this.$refs.form.reset();
+        // this.keyError = false;
+        // this.valueError = false;
+
+        _this3.getProductFields(_this3.page);
+
+        _this3.dialogLoading = false;
+
+        _this3.close();
+
+        console.log('success');
+        console.log(response.data);
+      })["catch"](function (error) {
+        _this3.dialogLoading = false;
+
+        if (error.response && error.response.status == 422) {
+          _this3.errors.setErrors(error.response.data.errors); // SnackBar
+
+
+          _this3.sbStatus = true;
+          _this3.sbType = 'error';
+          _this3.sbText = 'Error adding product field'; // Input error messages
+
+          if (_this3.errors.hasError('pf_key')) {
+            _this3.updateKeyError = true;
+            _this3.updateKeyErrMsg = _this3.errors.first('pf_key');
+          }
+
+          if (_this3.errors.hasError('pf_value')) {
+            _this3.updateValueError = true;
+            _this3.updateValueErrMsg = _this3.errors.first('pf_value');
+          }
+        }
+      });
     }
   }
 });
@@ -35262,94 +35349,169 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("v-data-table", {
-        attrs: {
-          headers: _vm.headers,
-          items: _vm.pf,
-          "hide-default-footer": ""
-        },
-        scopedSlots: _vm._u([
-          {
-            key: "top",
-            fn: function() {
-              return [
-                _c(
-                  "v-dialog",
+      _c(
+        "v-row",
+        [
+          _c(
+            "v-col",
+            { staticClass: "col-12 col-md-3" },
+            [_c("add-product-field")],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-col",
+            { staticClass: "col-12 col-md-8" },
+            [
+              _c("v-data-table", {
+                attrs: {
+                  headers: _vm.headers,
+                  items: _vm.pf,
+                  "hide-default-footer": ""
+                },
+                scopedSlots: _vm._u([
                   {
-                    attrs: { "max-width": "500px" },
-                    model: {
-                      value: _vm.dialog,
-                      callback: function($$v) {
-                        _vm.dialog = $$v
-                      },
-                      expression: "dialog"
-                    }
-                  },
-                  [
-                    _c(
-                      "v-card",
-                      [
-                        _c("v-card-title", [
-                          _c("span", { staticClass: "headline" }, [
-                            _vm._v(_vm._s(_vm.formTitle))
-                          ])
-                        ]),
-                        _vm._v(" "),
+                    key: "top",
+                    fn: function() {
+                      return [
                         _c(
-                          "v-card-text",
+                          "v-dialog",
+                          {
+                            attrs: { "max-width": "500px" },
+                            model: {
+                              value: _vm.dialog,
+                              callback: function($$v) {
+                                _vm.dialog = $$v
+                              },
+                              expression: "dialog"
+                            }
+                          },
                           [
                             _c(
-                              "v-container",
+                              "v-card",
+                              { attrs: { loading: _vm.dialogLoading } },
                               [
+                                _c("v-card-title", [
+                                  _c("span", { staticClass: "headline" }, [
+                                    _vm._v(_vm._s(_vm.formTitle))
+                                  ])
+                                ]),
+                                _vm._v(" "),
                                 _c(
-                                  "v-row",
+                                  "v-card-text",
                                   [
                                     _c(
-                                      "v-col",
-                                      {
-                                        attrs: { cols: "12", sm: "6", md: "6" }
-                                      },
+                                      "v-container",
                                       [
-                                        _c("v-text-field", {
-                                          attrs: { label: "Key" },
-                                          model: {
-                                            value: _vm.editedItem.pf_key,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.editedItem,
-                                                "pf_key",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "editedItem.pf_key"
-                                          }
-                                        })
+                                        _c(
+                                          "v-row",
+                                          [
+                                            _c(
+                                              "v-col",
+                                              {
+                                                attrs: {
+                                                  cols: "12",
+                                                  sm: "6",
+                                                  md: "6"
+                                                }
+                                              },
+                                              [
+                                                _c("v-text-field", {
+                                                  attrs: {
+                                                    error: _vm.updateKeyError,
+                                                    "error-messages":
+                                                      _vm.updateKeyErrMsg,
+                                                    originalItem:
+                                                      _vm.editedItem.pf_key,
+                                                    label: "Key"
+                                                  },
+                                                  model: {
+                                                    value:
+                                                      _vm.editedItem.pf_key,
+                                                    callback: function($$v) {
+                                                      _vm.$set(
+                                                        _vm.editedItem,
+                                                        "pf_key",
+                                                        $$v
+                                                      )
+                                                    },
+                                                    expression:
+                                                      "editedItem.pf_key"
+                                                  }
+                                                })
+                                              ],
+                                              1
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "v-col",
+                                              {
+                                                attrs: {
+                                                  cols: "12",
+                                                  sm: "6",
+                                                  md: "6"
+                                                }
+                                              },
+                                              [
+                                                _c("v-text-field", {
+                                                  attrs: {
+                                                    error: _vm.updateValueError,
+                                                    "error-messages":
+                                                      _vm.updateValueErrMsg,
+                                                    label: "Value"
+                                                  },
+                                                  model: {
+                                                    value:
+                                                      _vm.editedItem.pf_value,
+                                                    callback: function($$v) {
+                                                      _vm.$set(
+                                                        _vm.editedItem,
+                                                        "pf_value",
+                                                        $$v
+                                                      )
+                                                    },
+                                                    expression:
+                                                      "editedItem.pf_value"
+                                                  }
+                                                })
+                                              ],
+                                              1
+                                            )
+                                          ],
+                                          1
+                                        )
                                       ],
                                       1
+                                    )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-card-actions",
+                                  [
+                                    _c("v-spacer"),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-btn",
+                                      {
+                                        attrs: { color: "primary", text: "" },
+                                        on: { click: _vm.close }
+                                      },
+                                      [_vm._v("Cancel")]
                                     ),
                                     _vm._v(" "),
                                     _c(
-                                      "v-col",
+                                      "v-btn",
                                       {
-                                        attrs: { cols: "12", sm: "6", md: "6" }
-                                      },
-                                      [
-                                        _c("v-text-field", {
-                                          attrs: { label: "Value" },
-                                          model: {
-                                            value: _vm.editedItem.pf_value,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.editedItem,
-                                                "pf_value",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "editedItem.pf_value"
+                                        attrs: { color: "success", text: "" },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.save()
                                           }
-                                        })
-                                      ],
-                                      1
+                                        }
+                                      },
+                                      [_vm._v("Save")]
                                     )
                                   ],
                                   1
@@ -35359,106 +35521,90 @@ var render = function() {
                             )
                           ],
                           1
+                        )
+                      ]
+                    },
+                    proxy: true
+                  },
+                  {
+                    key: "item.action",
+                    fn: function(ref) {
+                      var item = ref.item
+                      return [
+                        _c(
+                          "v-icon",
+                          {
+                            staticClass: "mr-2",
+                            attrs: { small: "" },
+                            on: {
+                              click: function($event) {
+                                return _vm.editItem(item)
+                              }
+                            }
+                          },
+                          [_vm._v("mdi-pencil")]
                         ),
                         _vm._v(" "),
                         _c(
-                          "v-card-actions",
-                          [
-                            _c("v-spacer"),
-                            _vm._v(" "),
-                            _c(
-                              "v-btn",
-                              {
-                                attrs: { color: "blue darken-1", text: "" },
-                                on: { click: _vm.close }
-                              },
-                              [_vm._v("Cancel")]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "v-btn",
-                              {
-                                attrs: { color: "blue darken-1", text: "" },
-                                on: { click: _vm.save }
-                              },
-                              [_vm._v("Save")]
-                            )
-                          ],
-                          1
+                          "v-icon",
+                          {
+                            attrs: { small: "" },
+                            on: {
+                              click: function($event) {
+                                return _vm.deleteItem(item)
+                              }
+                            }
+                          },
+                          [_vm._v("mdi-trash-can")]
                         )
-                      ],
-                      1
-                    )
-                  ],
-                  1
-                )
-              ]
-            },
-            proxy: true
-          },
-          {
-            key: "item.action",
-            fn: function(ref) {
-              var item = ref.item
-              return [
-                _c(
-                  "v-icon",
-                  {
-                    staticClass: "mr-2",
-                    attrs: { small: "" },
-                    on: {
-                      click: function($event) {
-                        return _vm.editItem(item)
-                      }
+                      ]
                     }
                   },
-                  [_vm._v("\n        mdi-pencil\n      ")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "v-icon",
                   {
-                    attrs: { small: "" },
-                    on: {
-                      click: function($event) {
-                        return _vm.deleteItem(item)
-                      }
+                    key: "no-data",
+                    fn: function() {
+                      return [
+                        _c(
+                          "v-btn",
+                          {
+                            attrs: { color: "primary" },
+                            on: { click: _vm.initialize }
+                          },
+                          [_vm._v("Reset")]
+                        )
+                      ]
+                    },
+                    proxy: true
+                  }
+                ])
+              }),
+              _vm._v(" "),
+              _vm.pageCount > 1
+                ? _c("v-pagination", {
+                    staticClass: "mt-3",
+                    attrs: { length: _vm.pageCount },
+                    on: { input: _vm.onPageChange },
+                    model: {
+                      value: _vm.page,
+                      callback: function($$v) {
+                        _vm.page = $$v
+                      },
+                      expression: "page"
                     }
-                  },
-                  [_vm._v("\n        mdi-trash-can\n      ")]
-                )
-              ]
-            }
-          },
-          {
-            key: "no-data",
-            fn: function() {
-              return [
-                _c(
-                  "v-btn",
-                  {
-                    attrs: { color: "primary" },
-                    on: { click: _vm.initialize }
-                  },
-                  [_vm._v("Reset")]
-                )
-              ]
-            },
-            proxy: true
-          }
-        ])
-      }),
+                  })
+                : _vm._e()
+            ],
+            1
+          )
+        ],
+        1
+      ),
       _vm._v(" "),
-      _c("v-pagination", {
-        staticClass: "mt-3",
-        attrs: { length: _vm.pageCount },
-        on: { input: _vm.onPageChange },
-        model: {
-          value: _vm.page,
-          callback: function($$v) {
-            _vm.page = $$v
-          },
-          expression: "page"
+      _c("snack-bar", {
+        attrs: {
+          "snackbar-type": _vm.sbType,
+          "snackbar-text": _vm.sbText,
+          "snackbar-status": _vm.sbStatus
         }
       })
     ],
