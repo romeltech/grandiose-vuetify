@@ -2,7 +2,55 @@
   <div>
     <v-row>
       <v-col class="col-12 col-md-3">
-          <add-product-field></add-product-field>
+          <v-card
+            flat
+            :loading="loading">
+            <v-form
+                class="pa-5"
+                @submit.prevent="addproductfield()"
+                v-model="valid"
+                method="POST"
+                ref="form"
+                lazy-validation>
+                <v-text-field
+                  dense
+                  :rules="fieldnamerule"
+                  v-model="fieldname"
+                  outlined
+                  required
+                  id="field"
+                  type="text"
+                  name="field"
+                  label="Field"
+                  :error="keyError"
+                  :error-messages="keyErrorMessage"
+                  >
+                </v-text-field>
+                <v-text-field
+                  dense
+                  :rules="fieldvaluerule"
+                  v-model="fieldvalue"
+                  outlined
+                  required
+                  id="fieldvalue"
+                  type="text"
+                  name="fieldvalue"
+                  label="Value"
+                  :error="valueError"
+                  :error-messages="valueErrorMessage"
+                  >
+                </v-text-field>
+                <v-btn
+                  @click="clearAlert()"
+                  width="100%"
+                  dense
+                  color="primary"
+                  class="mb-2"
+                  type="submit">
+                  Save
+                </v-btn>
+            </v-form>
+        </v-card>
       </v-col>
       <v-col class="col-12 col-md-8">
         <v-data-table
@@ -13,8 +61,7 @@
           <template v-slot:top>
               <v-dialog v-model="dialog" max-width="500px">
                 <v-card :loading="dialogLoading">
-                  <!-- <v-card-title class="primary white--text"> -->
-                  <v-card-title>
+                  <v-card-title class="primary white--text">
                     <span class="headline">{{ formTitle }}</span>
                   </v-card-title>
 
@@ -65,19 +112,35 @@
   </div>
 </template>
 <script>
-  import AddProductFieldForm from '../../admin/product/AddProductFieldForm.vue';
   import SnackBar from '../../components/SnackBar.vue';
   import ErrorBag from "../../actions/errorBag.js";
   export default {
     components: {
-      SnackBar,
-      AddProductFieldForm
+      SnackBar
     },
     mounted (){
       this.getProductFields(1);
     },
     data: () => ({
+      // Add a Field
+      fieldname: '',
+      fieldvalue: '',
+      
+      // rules
+      valid : true,
+      fieldnamerule : [
+          value => !!value || 'Required',
+          value => (value && value.length < 50)  || 'Max 50 characters',
+      ],
+      fieldvaluerule :  [
+          value => !!value || 'Required',
+          value => (value && value.length < 50)  || 'Max 50 characters',
+      ],
+      csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+
+
       // Interface
+      loading : false,
       dialogLoading : false,
 
       // SnackBar
@@ -92,13 +155,19 @@
       updateValueError : false,
       updateValueErrMsg : '',
 
+      // Error Handling
+      keyError : false,
+      keyErrorMessage : '',
+      valueError : false,
+      valueErrorMessage : '',
+
       page: 1,
       pageCount: 0,
       dialog: false,
       headers: [
-        { text: 'Key', value: 'pf_key', sortable: false },
-        { text: 'Value', value: 'pf_value', sortable: false },
-        { text: 'Actions', value: 'action', sortable: false },
+        { text: 'Key', value: 'pf_key', sortable: false, width: '40%', align: 'left' },
+        { text: 'Value', value: 'pf_value', sortable: false, width: '40%', align: 'left' },
+        { text: 'Actions', value: 'action', sortable: false, width: '20%', align: 'right' },
       ],
       pf : [],
       // desserts: [],
@@ -128,9 +197,19 @@
     },
 
     methods: {
+      clearAlert(){
+          this.sbStatus = false; // SnackBar
+          this.keyError = false;
+          this.keyErrorMessage = '';
+          this.valueError = false;
+          this.valueErrorMessage = '';
+          this.errors.clearAll();
+      },
       initialize(){
 
       },
+
+      // Get Product Fields
       getProductFields (thecurrentpage) {
         axios.get('/api/product/fields?page='+thecurrentpage)
           .then(response => {
@@ -145,6 +224,52 @@
       },
       onPageChange (){
         this.getProductFields(this.page);
+      },
+
+      // Add Products
+      addproductfield(){
+        this.loading = true;
+        axios.post('/admin/product/fields/store', {
+            pf_key : this.fieldname,
+            pf_value : this.fieldvalue
+        })
+        .then(response => {
+            // SnackBar
+            this.sbStatus = true;
+            this.sbType = 'success';
+            this.sbText = response.data.message;
+            this.loading = false;
+            
+            this.getProductFields(this.page);
+            this.$refs.form.reset();
+        })
+        .catch(error => {
+            this.loading = false;
+            if (error.response && error.response.status == 422) {
+                this.errors.setErrors( error.response.data.errors );
+                // this.responseMessage = this.errors;
+                // console.log(this.responseMessage);
+                // console.log(this.errors.errors.pf_key);
+                // console.log(this.errors.first('pf_key'));
+                // console.log(this.errors.pf_key);
+                // console.log(this.errors);
+
+                // SnackBar
+                this.sbStatus = true;
+                this.sbType = 'error';
+                this.sbText = 'Error adding product field';
+
+                // Input error messages
+                if(this.errors.hasError('pf_key') ){
+                    this.keyError = true;
+                    this.keyErrorMessage = this.errors.first('pf_key');
+                }
+                if(this.errors.hasError('pf_value') ){
+                    this.valueError = true;
+                    this.valueErrorMessage = this.errors.first('pf_value');
+                }
+            }
+        });
       },
 
       editItem (item) {
@@ -169,7 +294,7 @@
       },
 
       save () {
-        this.dialogLoading = true;
+        this.dialogLoading = 'secondary';
         // if (this.editedIndex > -1) {
         //   Object.assign(this.pf[this.editedIndex], this.editedItem)
         // } else {
@@ -230,7 +355,7 @@
           }
         });
 
-      },
+      }
     },
   }
 </script>
