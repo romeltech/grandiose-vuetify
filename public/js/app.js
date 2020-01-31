@@ -2528,6 +2528,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2585,14 +2588,14 @@ __webpack_require__.r(__webpack_exports__);
       page: 1,
       pageCount: 0,
       headers: [{
-        text: 'Key',
-        value: 'pf_key',
+        text: 'Value',
+        value: 'pf_value',
         sortable: false,
         width: '40%',
         align: 'left'
       }, {
-        text: 'Value',
-        value: 'pf_value',
+        text: 'Key',
+        value: 'pf_key',
         sortable: false,
         width: '40%',
         align: 'left'
@@ -2621,6 +2624,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    showAlert: function showAlert(sad) {
+      console.log(sad);
+    },
     clearAlert: function clearAlert() {
       this.sbStatus = false; // SnackBar
 
@@ -2628,7 +2634,7 @@ __webpack_require__.r(__webpack_exports__);
       this.keyErrorMessage = '';
       this.valueError = false;
       this.valueErrorMessage = '';
-      this.errors.clearAll();
+      this.updateKeyError = false, this.updateKeyErrMsg = '', this.updateValueError = false, this.updateValueErrMsg = '', this.errors.clearAll();
     },
     // Get Product Fields
     getProductFields: function getProductFields(thecurrentpage) {
@@ -2668,6 +2674,14 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         _this2.loading = false;
 
+        if (error.response.status == 403) {
+          // SnackBar
+          _this2.sbStatus = true;
+          _this2.sbType = 'error';
+          _this2.sbText = error.response.data.errorMessage;
+          console.log(error.response.data.errorMessage);
+        }
+
         if (error.response && error.response.status == 422) {
           _this2.errors.setErrors(error.response.data.errors); // SnackBar
 
@@ -2689,7 +2703,8 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     editItem: function editItem(item) {
-      // Assign Data
+      this.clearAlert(); // Assign Data
+
       this.formTitle = 'Edit ' + item.pf_value;
       this.editedIndex = this.pf.indexOf(item);
       this.editedItem = Object.assign({}, item);
@@ -35245,6 +35260,7 @@ var render = function() {
                           error: _vm.keyError,
                           "error-messages": _vm.keyErrorMessage
                         },
+                        on: { change: _vm.clearAlert },
                         model: {
                           value: _vm.fieldname,
                           callback: function($$v) {
@@ -35315,6 +35331,33 @@ var render = function() {
                   "hide-default-footer": ""
                 },
                 scopedSlots: _vm._u([
+                  {
+                    key: "item.pf_value",
+                    fn: function(ref) {
+                      var item = ref.item
+                      return [
+                        _c("tr", [
+                          _c(
+                            "td",
+                            { staticStyle: { cursor: "pointer", border: "0" } },
+                            [
+                              _c(
+                                "a",
+                                {
+                                  attrs: {
+                                    href:
+                                      "/admin/product/fields/meta/" +
+                                      item.pf_key
+                                  }
+                                },
+                                [_vm._v(_vm._s(item.pf_value))]
+                              )
+                            ]
+                          )
+                        ])
+                      ]
+                    }
+                  },
                   {
                     key: "top",
                     fn: function() {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Product_fields;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class ProductFieldsController extends Controller
@@ -44,24 +45,35 @@ class ProductFieldsController extends Controller
      */
     public function store(Request $request)
     {
-        // validate request
+        /**
+         * Automatic Slug
+         */
+        
+        // // Check Key First
+        // $slug = Str::slug($request['pf_key'], '-');
+        // if( Product_fields::where('pf_key', $slug)->exists() ){
+        //     return response()->json([
+        //         'errorMessage' => 'Product Key already exists!'
+        //     ], 403);
+        // }
+        
+        // // validate request
         // $this->validate($request, [
-        //     'id' => ['required'],
-        //     'pf_key' => ['required', 'string', 'max:50', 'unique:product_fields'],
+        //     'pf_key' => ['required', 'string', 'min:3', 'max:50', 'unique:product_fields'],
         //     'pf_value' => ['required', 'string', 'max:50', 'unique:product_fields']
         // ]);
 
-        // save request
         // $pf = Product_fields::create([
-        //     'pf_key' => $request['pf_key'],
+        //     'pf_key' => $slug,
         //     'pf_value' => $request['pf_value']
         // ]);
+        /* Automatic Slug */
 
-        $pf = Product_fields::create($this->validateRequest());
+        $pf = Product_fields::create($this->validateRequest()); // Working
 
         // return request
         return response()->json([
-            'productfields' => $pf,
+            'slug' => $request->pf_key,
             'message' => 'Product field has been added'
           ], 200);
     }
@@ -72,10 +84,10 @@ class ProductFieldsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
+    // public function show($key)
+    // {
+    //     return view('admin.product.field.show');
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -121,7 +133,7 @@ class ProductFieldsController extends Controller
     public function validateRequest()
     {
         return request()->validate([
-            'pf_key' => ['min:3', 'max:50', 'string', 'unique:product_fields'],
+            'pf_key' => ['min:3', 'max:50', 'string', 'alpha_dash', 'unique:product_fields'],
             'pf_value' => ['required', 'min:3', 'max:50', 'string']
         ]);
 

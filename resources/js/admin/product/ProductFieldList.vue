@@ -24,6 +24,7 @@
                   label="Field"
                   :error="keyError"
                   :error-messages="keyErrorMessage"
+                  @change="clearAlert"
                   >
                 </v-text-field>
                 <v-text-field
@@ -58,68 +59,70 @@
           :items="pf"
           hide-default-footer
         >
-
+          <template v-slot:item.pf_value="{ item }">
+            <tr>
+              <td style="cursor:pointer;border:0;">
+                <a v-bind:href="'/admin/product/fields/meta/'+item.pf_key">{{ item.pf_value }}</a>
+              </td>
+            </tr>
+          </template>
           <template v-slot:top>
-              <v-dialog v-model="dialog" max-width="500px">
-                <v-card :loading="dialogLoading">
-                  <v-card-title class="primary white--text">
-                    <span class="headline">{{ formTitle }}</span>
-                  </v-card-title>
+            <v-dialog v-model="dialog" max-width="500px">
+              <v-card :loading="dialogLoading">
+                <v-card-title class="primary white--text">
+                  <span class="headline">{{ formTitle }}</span>
+                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12" sm="6" md="6">
+                        <v-text-field
+                          :rules="fieldnamerule"
+                          :error="updateKeyError"
+                          :error-messages="updateKeyErrMsg"
+                          v-model="editedItem.pf_key" 
+                          :originalItem="editedItem.pf_key" 
+                          label="Key">
+                        </v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="6">
+                        <v-text-field 
+                          :rules="fieldvaluerule"
+                          :error="updateValueError"
+                          :error-messages="updateValueErrMsg"
+                          v-model="editedItem.pf_value" 
+                          label="Value">
+                        </v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
 
-                  <v-card-text>
-                    <v-container>
-                      <v-row>
-                        <v-col cols="12" sm="6" md="6">
-                          <v-text-field
-                            :rules="fieldnamerule"
-                            :error="updateKeyError"
-                            :error-messages="updateKeyErrMsg"
-                            v-model="editedItem.pf_key" 
-                            :originalItem="editedItem.pf_key" 
-                            label="Key">
-                          </v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="6">
-                          <v-text-field 
-                            :rules="fieldvaluerule"
-                            :error="updateValueError"
-                            :error-messages="updateValueErrMsg"
-                            v-model="editedItem.pf_value" 
-                            label="Value">
-                          </v-text-field>
-                        </v-col>
-                      </v-row>
-                    </v-container>
-                  </v-card-text>
-
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="primary" text @click="close">Cancel</v-btn>
-                    <v-btn color="success" text @click="save()">Save</v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-   
-              <v-dialog v-model="deleteDialog" persistent max-width="400">
-                <v-card :loading="deleteLoading">
-                  <v-card-title class="headline">Confirm Deletion</v-card-title>
-                  <v-card-text>Do you want to delete the account of <strong>{{formTitle}}</strong>?</v-card-text>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="primary" text @click="deleteDialog = false">Cancel</v-btn>
-                    <v-btn color="red" text @click="confirmDelete(toDelete)">Delete</v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" text @click="close">Cancel</v-btn>
+                  <v-btn color="success" text @click="save()">Save</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+  
+            <v-dialog v-model="deleteDialog" persistent max-width="400">
+              <v-card :loading="deleteLoading">
+                <v-card-title class="headline">Confirm Deletion</v-card-title>
+                <v-card-text>Do you want to delete the account of <strong>{{formTitle}}</strong>?</v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" text @click="deleteDialog = false">Cancel</v-btn>
+                  <v-btn color="red" text @click="confirmDelete(toDelete)">Delete</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </template>
           <template v-slot:item.action="{ item }">
             <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
             <v-icon small @click="toDeleteItem(item)">mdi-trash-can</v-icon>
           </template>
         </v-data-table>
-
-
 
         <v-pagination v-if="pageCount > 1" class="mt-3" v-model="page" :length="pageCount" @input="onPageChange"></v-pagination>
       </v-col>
@@ -188,8 +191,8 @@
       pageCount: 0,
 
       headers: [
-        { text: 'Key', value: 'pf_key', sortable: false, width: '40%', align: 'left' },
         { text: 'Value', value: 'pf_value', sortable: false, width: '40%', align: 'left' },
+        { text: 'Key', value: 'pf_key', sortable: false, width: '40%', align: 'left' },
         { text: 'Actions', value: 'action', sortable: false, width: '20%', align: 'right' },
       ],
       pf : [],
@@ -209,12 +212,19 @@
       formTitle : '',
     }),
     methods: {
+      showAlert(sad){
+        console.log(sad);
+      },
       clearAlert(){
           this.sbStatus = false; // SnackBar
           this.keyError = false;
           this.keyErrorMessage = '';
           this.valueError = false;
           this.valueErrorMessage = '';
+          this.updateKeyError = false,
+          this.updateKeyErrMsg = '',
+          this.updateValueError = false,
+          this.updateValueErrMsg = '',
           this.errors.clearAll();
       },
       // Get Product Fields
@@ -250,9 +260,17 @@
             
             this.getProductFields(this.page);
             this.$refs.form.reset();
+
         })
         .catch(error => {
             this.loading = false;
+            if(error.response.status == 403){
+              // SnackBar
+              this.sbStatus = true;
+              this.sbType = 'error';
+              this.sbText = error.response.data.errorMessage;
+              console.log(error.response.data.errorMessage);
+            }
             if (error.response && error.response.status == 422) {
                 this.errors.setErrors( error.response.data.errors );
                 // SnackBar
@@ -273,6 +291,7 @@
       },
 
       editItem (item) {
+        this.clearAlert();
         // Assign Data
         this.formTitle = 'Edit '+item.pf_value
         this.editedIndex = this.pf.indexOf(item)

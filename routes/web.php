@@ -59,11 +59,13 @@ Route::group(['prefix'=>'admin','as'=>'admin.'], function(){
     Route::delete('/user/destroy/{user}', 'UserController@destroy')->name('user.destroy');
 
     // Product Routes
+    // Route::get('/product/field/{key}', 'ProductFieldsController@show')->name('p.showfield');
     Route::get('/product/fields', 'ProductFieldsController@index')->name('p.fields');
     Route::post('/product/fields/store', 'ProductFieldsController@store')->name('p.addfield');
     Route::post('/product/fields/update', 'ProductFieldsController@update')->name('p.updatefield');
     Route::delete('/product/fields/destroy/{id}', 'ProductFieldsController@destroy')->name('p.destroyfield');
-    // Product Fields Routes
+    // Product Field Meta Routes
+    Route::get('/product/fields/meta/{key}', 'ProductFieldsMetaController@show')->name('p.showfieldmeta');
     
 
     // Settings Routes
