@@ -2512,6 +2512,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2523,6 +2539,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      // Delete a Field
+      toDelete: [],
       // Add a Field
       fieldname: '',
       fieldvalue: '',
@@ -2532,16 +2550,23 @@ __webpack_require__.r(__webpack_exports__);
         return !!value || 'Required';
       }, function (value) {
         return value && value.length < 50 || 'Max 50 characters';
+      }, function (value) {
+        return value && value.length > 3 || 'Min 3 characters';
       }],
       fieldvaluerule: [function (value) {
         return !!value || 'Required';
       }, function (value) {
         return value && value.length < 50 || 'Max 50 characters';
+      }, function (value) {
+        return value && value.length > 3 || 'Min 3 characters';
       }],
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       // Interface
       loading: false,
       dialogLoading: false,
+      deleteLoading: false,
+      deleteDialog: false,
+      dialog: false,
       // SnackBar
       sbType: '',
       sbText: '',
@@ -2559,7 +2584,6 @@ __webpack_require__.r(__webpack_exports__);
       valueErrorMessage: '',
       page: 1,
       pageCount: 0,
-      dialog: false,
       headers: [{
         text: 'Key',
         value: 'pf_key',
@@ -2580,7 +2604,6 @@ __webpack_require__.r(__webpack_exports__);
         align: 'right'
       }],
       pf: [],
-      // desserts: [],
       originalItem: {
         pf_key: '',
         pf_value: ''
@@ -2597,14 +2620,6 @@ __webpack_require__.r(__webpack_exports__);
       formTitle: ''
     };
   },
-  watch: {
-    dialog: function dialog(val) {
-      val || this.close();
-    }
-  },
-  created: function created() {
-    this.initialize();
-  },
   methods: {
     clearAlert: function clearAlert() {
       this.sbStatus = false; // SnackBar
@@ -2615,7 +2630,6 @@ __webpack_require__.r(__webpack_exports__);
       this.valueErrorMessage = '';
       this.errors.clearAll();
     },
-    initialize: function initialize() {},
     // Get Product Fields
     getProductFields: function getProductFields(thecurrentpage) {
       var _this = this;
@@ -2629,6 +2643,7 @@ __webpack_require__.r(__webpack_exports__);
         console.log('error');
       });
     },
+    // update table
     onPageChange: function onPageChange() {
       this.getProductFields(this.page);
     },
@@ -2654,13 +2669,7 @@ __webpack_require__.r(__webpack_exports__);
         _this2.loading = false;
 
         if (error.response && error.response.status == 422) {
-          _this2.errors.setErrors(error.response.data.errors); // this.responseMessage = this.errors;
-          // console.log(this.responseMessage);
-          // console.log(this.errors.errors.pf_key);
-          // console.log(this.errors.first('pf_key'));
-          // console.log(this.errors.pf_key);
-          // console.log(this.errors);
-          // SnackBar
+          _this2.errors.setErrors(error.response.data.errors); // SnackBar
 
 
           _this2.sbStatus = true;
@@ -2687,28 +2696,51 @@ __webpack_require__.r(__webpack_exports__);
       this.originalItem = Object.assign({}, item);
       this.dialog = true;
     },
-    deleteItem: function deleteItem(item) {
-      var index = this.pf.indexOf(item);
-      confirm('Are you sure you want to delete this item?') && this.pf.splice(index, 1);
+    toDeleteItem: function toDeleteItem(item) {
+      this.toDelete = item;
+      this.deleteDialog = true;
+      this.formTitle = item.pf_key;
+    },
+    confirmDelete: function confirmDelete(toDelete) {
+      var _this3 = this;
+
+      this.deleteLoading = true, console.log(this.toDelete);
+      axios["delete"]('/admin/product/fields/destroy/' + toDelete.id).then(function (response) {
+        _this3.deleteLoading = false, // SnackBar
+        _this3.sbStatus = true;
+        _this3.sbType = 'success';
+        _this3.sbText = response.data.message;
+        _this3.deleteDialog = false;
+
+        _this3.getProductFields(_this3.page);
+      })["catch"](function (error) {
+        _this3.deleteLoading = false;
+        _this3.deleteDialog = false;
+        _this3.sbStatus = true;
+        _this3.sbType = 'error';
+
+        if (error.response && error.response.status == 422) {
+          _this3.errors.setErrors(error.response.data.errors);
+
+          _this3.sbText = 'Response Error';
+        } else {
+          _this3.sbText = 'Error adding product field';
+        }
+      });
     },
     close: function close() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.dialog = false;
       setTimeout(function () {
-        _this3.editedItem = Object.assign({}, _this3.defaultItem);
-        _this3.editedIndex = -1;
+        _this4.editedItem = Object.assign({}, _this4.defaultItem);
+        _this4.editedIndex = -1;
       }, 300);
     },
     save: function save() {
-      var _this4 = this;
+      var _this5 = this;
 
-      this.dialogLoading = 'secondary'; // if (this.editedIndex > -1) {
-      //   Object.assign(this.pf[this.editedIndex], this.editedItem)
-      // } else {
-      //   this.pf.push(this.editedItem)
-      // }
-
+      this.dialogLoading = 'secondary';
       var pfdata = [];
 
       if (this.originalItem.pf_key === this.editedItem.pf_key) {
@@ -2726,44 +2758,37 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.post('/admin/product/fields/update', pfdata).then(function (response) {
         // SnackBar
-        _this4.sbStatus = true;
-        _this4.sbType = 'success';
-        _this4.sbText = response.data.message; // this.loading = false;
-        // this.responseMessage = response.data.message;
-        // console.log(response.data.message);
-        // console.log('success meh');
-        // this.errors.clearAll();
-        // this.$refs.form.reset();
-        // this.keyError = false;
-        // this.valueError = false;
+        _this5.sbStatus = true;
+        _this5.sbType = 'success';
+        _this5.sbText = response.data.message; // Update Table
 
-        _this4.getProductFields(_this4.page);
+        _this5.getProductFields(_this5.page);
 
-        _this4.dialogLoading = false;
+        _this5.dialogLoading = false;
 
-        _this4.close();
+        _this5.close();
 
         console.log('success');
         console.log(response.data);
       })["catch"](function (error) {
-        _this4.dialogLoading = false;
+        _this5.dialogLoading = false;
 
         if (error.response && error.response.status == 422) {
-          _this4.errors.setErrors(error.response.data.errors); // SnackBar
+          _this5.errors.setErrors(error.response.data.errors); // SnackBar
 
 
-          _this4.sbStatus = true;
-          _this4.sbType = 'error';
-          _this4.sbText = 'Error adding product field'; // Input error messages
+          _this5.sbStatus = true;
+          _this5.sbType = 'error';
+          _this5.sbText = 'Error adding product field'; // Input error messages
 
-          if (_this4.errors.hasError('pf_key')) {
-            _this4.updateKeyError = true;
-            _this4.updateKeyErrMsg = _this4.errors.first('pf_key');
+          if (_this5.errors.hasError('pf_key')) {
+            _this5.updateKeyError = true;
+            _this5.updateKeyErrMsg = _this5.errors.first('pf_key');
           }
 
-          if (_this4.errors.hasError('pf_value')) {
-            _this4.updateValueError = true;
-            _this4.updateValueErrMsg = _this4.errors.first('pf_value');
+          if (_this5.errors.hasError('pf_value')) {
+            _this5.updateValueError = true;
+            _this5.updateValueErrMsg = _this5.errors.first('pf_value');
           }
         }
       });
@@ -35342,6 +35367,7 @@ var render = function() {
                                               [
                                                 _c("v-text-field", {
                                                   attrs: {
+                                                    rules: _vm.fieldnamerule,
                                                     error: _vm.updateKeyError,
                                                     "error-messages":
                                                       _vm.updateKeyErrMsg,
@@ -35379,6 +35405,7 @@ var render = function() {
                                               [
                                                 _c("v-text-field", {
                                                   attrs: {
+                                                    rules: _vm.fieldvaluerule,
                                                     error: _vm.updateValueError,
                                                     "error-messages":
                                                       _vm.updateValueErrMsg,
@@ -35445,6 +35472,79 @@ var render = function() {
                             )
                           ],
                           1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "v-dialog",
+                          {
+                            attrs: { persistent: "", "max-width": "400" },
+                            model: {
+                              value: _vm.deleteDialog,
+                              callback: function($$v) {
+                                _vm.deleteDialog = $$v
+                              },
+                              expression: "deleteDialog"
+                            }
+                          },
+                          [
+                            _c(
+                              "v-card",
+                              { attrs: { loading: _vm.deleteLoading } },
+                              [
+                                _c(
+                                  "v-card-title",
+                                  { staticClass: "headline" },
+                                  [_vm._v("Confirm Deletion")]
+                                ),
+                                _vm._v(" "),
+                                _c("v-card-text", [
+                                  _vm._v(
+                                    "Do you want to delete the account of "
+                                  ),
+                                  _c("strong", [_vm._v(_vm._s(_vm.formTitle))]),
+                                  _vm._v("?")
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "v-card-actions",
+                                  [
+                                    _c("v-spacer"),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-btn",
+                                      {
+                                        attrs: { color: "primary", text: "" },
+                                        on: {
+                                          click: function($event) {
+                                            _vm.deleteDialog = false
+                                          }
+                                        }
+                                      },
+                                      [_vm._v("Cancel")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-btn",
+                                      {
+                                        attrs: { color: "red", text: "" },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.confirmDelete(
+                                              _vm.toDelete
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [_vm._v("Delete")]
+                                    )
+                                  ],
+                                  1
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                          1
                         )
                       ]
                     },
@@ -35475,7 +35575,7 @@ var render = function() {
                             attrs: { small: "" },
                             on: {
                               click: function($event) {
-                                return _vm.deleteItem(item)
+                                return _vm.toDeleteItem(item)
                               }
                             }
                           },
@@ -35483,22 +35583,6 @@ var render = function() {
                         )
                       ]
                     }
-                  },
-                  {
-                    key: "no-data",
-                    fn: function() {
-                      return [
-                        _c(
-                          "v-btn",
-                          {
-                            attrs: { color: "primary" },
-                            on: { click: _vm.initialize }
-                          },
-                          [_vm._v("Reset")]
-                        )
-                      ]
-                    },
-                    proxy: true
                   }
                 ])
               }),

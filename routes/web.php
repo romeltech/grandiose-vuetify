@@ -60,11 +60,10 @@ Route::group(['prefix'=>'admin','as'=>'admin.'], function(){
 
     // Product Routes
     Route::get('/product/fields', 'ProductFieldsController@index')->name('p.fields');
-    // Route::get('/product/fields/add', 'ProductFieldsController@create')->name('p.field.add');
     Route::post('/product/fields/store', 'ProductFieldsController@store')->name('p.addfield');
-
-    // Product Fields Routes
     Route::post('/product/fields/update', 'ProductFieldsController@update')->name('p.updatefield');
+    Route::delete('/product/fields/destroy/{id}', 'ProductFieldsController@destroy')->name('p.destroyfield');
+    // Product Fields Routes
     
 
     // Settings Routes
