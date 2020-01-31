@@ -3,7 +3,7 @@
 namespace App;
 
 use App\Product;
-use App\Product_fields_meta;
+use App\Product_field_meta;
 use Illuminate\Database\Eloquent\Model;
 
 class Product_fields extends Model
@@ -17,8 +17,8 @@ class Product_fields extends Model
     }
 
     // Relationship to Product Field Meta
-    public function product_fields_meta()
+    public function product_field_meta()
     {
-        return $this->hasMany(Product_fields_meta::class);
+        return $this->hasMany(Product_field_meta::class);
     }
 }

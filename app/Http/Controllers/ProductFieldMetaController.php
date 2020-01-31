@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use App\Product_fields_meta;
+use App\Product_field_meta;
 use Illuminate\Http\Request;
 
-class ProductFieldsMetaController extends Controller
+class ProductFieldMetaController extends Controller
 {
     public function __construct()
     {
@@ -52,9 +52,10 @@ class ProductFieldsMetaController extends Controller
     public function show($key)
     {
         // $fieldMeta = User::where('product_field_key', '=', $key)->firstOrFail();
-        $fieldMeta = Product_fields_meta::where('pf_key', '=', $key)->firstOrFail();
+        $fieldMeta = Product_field_meta::where('pf_key', '=', $key)->first();
+        // $fieldMeta = Product_fields_meta::all();
         // return view('admin.product.field.meta.show', compact('fieldMeta'));
-        return view('admin.product.field.meta.show');
+        return view('admin.product.field.meta.show', compact('fieldMeta'));
     }
 
     /**
