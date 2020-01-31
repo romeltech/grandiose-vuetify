@@ -35,15 +35,6 @@ class ProductFieldsController extends Controller
         return $productfields;
 
     }    
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        // return view('admin.product.field.add');
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -87,17 +78,6 @@ class ProductFieldsController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -115,8 +95,6 @@ class ProductFieldsController extends Controller
 
         // Return Response
         return response()->json([
-            // 'currentKey' => $productField->pf_key,
-            // 'requestKey' => $request->pf_key,
             'message' => 'Product field has been updated'
         ], 200);
     }
@@ -129,7 +107,12 @@ class ProductFieldsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $productfields = Product_fields::where('id', '=', $id)->firstOrFail();
+        $productfields->delete();
+        return response()->json([
+            'requestData' => $productfields,
+            'message' => 'Product field has been Deleted'
+        ], 200);
     }
 
     /**
@@ -139,7 +122,7 @@ class ProductFieldsController extends Controller
     {
         return request()->validate([
             'pf_key' => ['min:3', 'max:50', 'string', 'unique:product_fields'],
-            'pf_value' => ['required', 'string', 'max:50']
+            'pf_value' => ['required', 'min:3', 'max:50', 'string']
         ]);
 
     }
