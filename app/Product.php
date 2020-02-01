@@ -2,7 +2,8 @@
 
 namespace App;
 
-use App\Product_fields;
+
+use App\Product_categories;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
@@ -11,10 +12,10 @@ class Product extends Model
     // protected $fillable = ['imagepath', 'title', 'price', 'description'];
     protected $guarded = [];
 
-    // Relationship to Product Fields 'pf_'
-    public function product_fields()
+    // Relationship to Product Categories
+    public function product_categories()
     {
-        return $this->hasMany(Product_fields::class);
+        return $this->hasMany(Product_categories::class);
     }
 }
 

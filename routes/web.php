@@ -59,11 +59,11 @@ Route::group(['prefix'=>'admin','as'=>'admin.'], function(){
     Route::delete('/user/destroy/{user}', 'UserController@destroy')->name('user.destroy');
 
     // Product Routes
-    // Route::get('/product/field/{key}', 'ProductFieldsController@show')->name('p.showfield');
-    Route::get('/product/fields', 'ProductFieldsController@index')->name('p.fields');
-    Route::post('/product/fields/store', 'ProductFieldsController@store')->name('p.addfield');
-    Route::post('/product/fields/update', 'ProductFieldsController@update')->name('p.updatefield');
-    Route::delete('/product/fields/destroy/{id}', 'ProductFieldsController@destroy')->name('p.destroyfield');
+    // Route::get('/product/field/{key}', 'ProductCategoriesController@show')->name('p.showfield');
+    Route::get('/product/categories', 'ProductCategoriesController@index')->name('p.categories');
+    Route::post('/product/category/store', 'ProductCategoriesController@store')->name('p.addcategory');
+    Route::post('/product/category/update', 'ProductCategoriesController@update')->name('p.updatecategory');
+    Route::delete('/product/category/destroy/{id}', 'ProductCategoriesController@destroy')->name('p.destroycategory');
     // Product Field Meta Routes
     Route::get('/product/fields/meta/{key}', 'FieldMetasController@show')->name('p.showfieldmeta');
     

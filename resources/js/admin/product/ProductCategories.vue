@@ -7,7 +7,7 @@
             :loading="loading">
             <v-form
                 class="pa-5"
-                @submit.prevent="addproductfield()"
+                @submit.prevent="addProductCategory()"
                 v-model="valid"
                 method="POST"
                 ref="form"
@@ -59,10 +59,10 @@
           :items="pf"
           hide-default-footer
         >
-          <template v-slot:item.pf_value="{ item }">
+          <template v-slot:item.product_category_title="{ item }">
             <tr>
               <td style="cursor:pointer;border:0;">
-                <a v-bind:href="'/admin/product/fields/meta/'+item.pf_key">{{ item.pf_value }}</a>
+                <a v-bind:href="'/admin/product/category/field/'+item.product_category_slug">{{ item.product_category_title }}</a>
               </td>
             </tr>
           </template>
@@ -80,8 +80,8 @@
                           :rules="fieldnamerule"
                           :error="updateKeyError"
                           :error-messages="updateKeyErrMsg"
-                          v-model="editedItem.pf_key" 
-                          :originalItem="editedItem.pf_key" 
+                          v-model="editedItem.product_category_slug" 
+                          :originalItem="editedItem.product_category_slug" 
                           label="Key">
                         </v-text-field>
                       </v-col>
@@ -90,7 +90,7 @@
                           :rules="fieldvaluerule"
                           :error="updateValueError"
                           :error-messages="updateValueErrMsg"
-                          v-model="editedItem.pf_value" 
+                          v-model="editedItem.product_category_title" 
                           label="Value">
                         </v-text-field>
                       </v-col>
@@ -138,13 +138,13 @@
       SnackBar
     },
     mounted (){
-      this.getProductFields(1);
+      this.getProductCategories(1);
     },
     data: () => ({
-      // Delete a Field
+      // Delete a Category
       toDelete : [],
 
-      // Add a Field
+      // Add a Category
       fieldname: '',
       fieldvalue: '',
       
@@ -191,23 +191,23 @@
       pageCount: 0,
 
       headers: [
-        { text: 'Value', value: 'pf_value', sortable: false, width: '40%', align: 'left' },
-        { text: 'Key', value: 'pf_key', sortable: false, width: '40%', align: 'left' },
+        { text: 'Title', value: 'product_category_title', sortable: false, width: '40%', align: 'left' },
+        { text: 'Slug', value: 'product_category_slug', sortable: false, width: '40%', align: 'left' },
         { text: 'Actions', value: 'action', sortable: false, width: '20%', align: 'right' },
       ],
       pf : [],
       originalItem: {
-        pf_key: '',
-        pf_value: ''
+        product_category_slug: '',
+        product_category_title: ''
       },
       editedIndex: -1,
       editedItem: {
-        pf_key: '',
-        pf_name: '',
+        product_category_slug: '',
+        product_category_title: '',
       },
       defaultItem: {
-        pf_key: '',
-        pf_name: '',
+        product_category_slug: '',
+        product_category_title: '',
       },
       formTitle : '',
     }),
@@ -227,9 +227,9 @@
           this.updateValueErrMsg = '',
           this.errors.clearAll();
       },
-      // Get Product Fields
-      getProductFields (thecurrentpage) {
-        axios.get('/api/product/fields?page='+thecurrentpage)
+      // Get Product Categories
+      getProductCategories (thecurrentpage) {
+        axios.get('/api/product/categories?page='+thecurrentpage)
           .then(response => {
             this.pf = response.data.data;
             this.page = response.data.current_page;
@@ -242,14 +242,14 @@
       },
       // update table
       onPageChange (){
-        this.getProductFields(this.page);
+        this.getProductCategories(this.page);
       },
       // Add Products
-      addproductfield(){
+      addProductCategory(){
         this.loading = true;
-        axios.post('/admin/product/fields/store', {
-            pf_key : this.fieldname,
-            pf_value : this.fieldvalue
+        axios.post('/admin/product/category/store', {
+            product_category_slug : this.fieldname,
+            product_category_title : this.fieldvalue
         })
         .then(response => {
             // SnackBar
@@ -258,7 +258,7 @@
             this.sbText = response.data.message;
             this.loading = false;
             
-            this.getProductFields(this.page);
+            this.getProductCategories(this.page);
             this.$refs.form.reset();
 
         })
@@ -276,15 +276,15 @@
                 // SnackBar
                 this.sbStatus = true;
                 this.sbType = 'error';
-                this.sbText = 'Error adding product field';
+                this.sbText = 'Error adding product category';
                 // Input error messages
-                if(this.errors.hasError('pf_key') ){
+                if(this.errors.hasError('product_category_slug') ){
                     this.keyError = true;
-                    this.keyErrorMessage = this.errors.first('pf_key');
+                    this.keyErrorMessage = this.errors.first('product_category_slug');
                 }
-                if(this.errors.hasError('pf_value') ){
+                if(this.errors.hasError('product_category_title') ){
                     this.valueError = true;
-                    this.valueErrorMessage = this.errors.first('pf_value');
+                    this.valueErrorMessage = this.errors.first('product_category_title');
                 }
             }
         });
@@ -293,7 +293,7 @@
       editItem (item) {
         this.clearAlert();
         // Assign Data
-        this.formTitle = 'Edit '+item.pf_value
+        this.formTitle = 'Edit '+item.product_category_title
         this.editedIndex = this.pf.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.originalItem = Object.assign({}, item)
@@ -302,13 +302,13 @@
       toDeleteItem (item) {
         this.toDelete = item;
         this.deleteDialog = true;
-        this.formTitle = item.pf_key;
+        this.formTitle = item.product_category_slug;
       },
       confirmDelete(toDelete){
         this.deleteLoading = true,
         console.log(this.toDelete);
         
-        axios.delete('/admin/product/fields/destroy/'+toDelete.id)
+        axios.delete('/admin/product/category/destroy/'+toDelete.id)
         .then(response => {
             this.deleteLoading = false,
             // SnackBar
@@ -316,7 +316,7 @@
             this.sbType = 'success';
             this.sbText = response.data.message;
             this.deleteDialog = false;
-            this.getProductFields(this.page);
+            this.getProductCategories(this.page);
         })
         .catch(error => {
           this.deleteLoading = false;
@@ -327,7 +327,7 @@
             this.errors.setErrors( error.response.data.errors );
             this.sbText = 'Response Error';
           }else{
-            this.sbText = 'Error adding product field';
+            this.sbText = 'Error adding product category';
           }
         });
       },
@@ -342,26 +342,26 @@
       save () {
         this.dialogLoading = 'secondary';
         let pfdata = [];
-        if(this.originalItem.pf_key === this.editedItem.pf_key){
+        if(this.originalItem.product_category_slug === this.editedItem.product_category_slug){
           pfdata = {
             id : this.editedItem.id,
-            pf_value : this.editedItem.pf_value            
+            product_category_title : this.editedItem.product_category_title            
           }
         }else{
           pfdata = {
             id : this.editedItem.id,
-            pf_key : this.editedItem.pf_key,
-            pf_value : this.editedItem.pf_value
+            product_category_slug : this.editedItem.product_category_slug,
+            product_category_title : this.editedItem.product_category_title
           };
         }
-        axios.post('/admin/product/fields/update', pfdata)
+        axios.post('/admin/product/category/update', pfdata)
         .then(response => {
             // SnackBar
             this.sbStatus = true;
             this.sbType = 'success';
             this.sbText = response.data.message;
             // Update Table
-            this.getProductFields(this.page);
+            this.getProductCategories(this.page);
             this.dialogLoading = false;    
             this.close();
             console.log('success');
@@ -374,15 +374,15 @@
               // SnackBar
               this.sbStatus = true;
               this.sbType = 'error';
-              this.sbText = 'Error adding product field';
+              this.sbText = 'Error adding product category';
               // Input error messages
-              if(this.errors.hasError('pf_key') ){
+              if(this.errors.hasError('product_category_slug') ){
                   this.updateKeyError = true;
-                  this.updateKeyErrMsg = this.errors.first('pf_key');
+                  this.updateKeyErrMsg = this.errors.first('product_category_slug');
               }
-              if(this.errors.hasError('pf_value') ){
+              if(this.errors.hasError('product_category_title') ){
                   this.updateValueError = true;
-                  this.updateValueErrMsg = this.errors.first('pf_value');
+                  this.updateValueErrMsg = this.errors.first('product_category_title');
               }
           }
         });
