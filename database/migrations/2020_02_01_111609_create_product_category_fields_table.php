@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFieldMetasTable extends Migration
+class CreateProductCategoryFieldsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateFieldMetasTable extends Migration
      */
     public function up()
     {
-        Schema::create('field_metas', function (Blueprint $table) {
+        Schema::create('product_category_fields', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('field_meta_key')->unique();
-            $table->string('field_meta_value');
-            $table->unsignedInteger('product_fields_id');
+            $table->string('category_field_slug')->unique();
+            $table->string('category_field_title');
+            $table->unsignedInteger('product_category_id');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateFieldMetasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('field_metas');
+        Schema::dropIfExists('product_category_fields');
     }
 }
