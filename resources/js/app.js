@@ -53,8 +53,8 @@ Vue.component('edit-user-form', require('./admin/EditUserForm.vue').default);
 Vue.component('user-list', require('./admin/UserList.vue').default);
 
 // Product Field Components
-// Vue.component('add-product-field', require('./admin/product/AddProductFieldForm.vue').default);
 Vue.component('product-field-list', require('./admin/product/ProductFieldList.vue').default);
+Vue.component('field-meta-list', require('./admin/product/FieldMetaList.vue').default);
 
 /**
  * General Components
