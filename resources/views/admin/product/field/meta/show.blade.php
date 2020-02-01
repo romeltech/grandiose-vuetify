@@ -11,7 +11,9 @@
         >
         {{-- :field-meta="{{ $fieldMeta ?? ''->product_field_metas->field_meta_key->toJson() }}" --}}
     </field-meta-list>
-    <h1>{{ $productfield->product_field_metas->field_meta_value }}</h1>
+    <h1>{{ $productfield->field_metas[0]->field_meta_key }}</h1>
+    {{-- <h1>{{ $productfield->field_metas->field_meta_key }}</h1> --}}
+    
     {{-- <h1>{{ $fieldMeta->product_field_metas->field_meta_key }}</h1> --}}
     {{-- <field-meta-list :product-field="'{!! json_encode($product_id) !!}'"></field-meta-list> --}}
     {{-- <field-meta-list :product-field={!! json_encode($product_id) !!}></field-meta-list> --}}
