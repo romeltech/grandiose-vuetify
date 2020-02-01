@@ -54,7 +54,7 @@ Vue.component('user-list', require('./admin/UserList.vue').default);
 
 // Product Field Components
 Vue.component('product-categories', require('./admin/product/ProductCategories.vue').default);
-Vue.component('field-meta-list', require('./admin/product/FieldMetaList.vue').default);
+Vue.component('product-category-fields', require('./admin/product/ProductCategoryFields.vue').default);
 
 /**
  * General Components

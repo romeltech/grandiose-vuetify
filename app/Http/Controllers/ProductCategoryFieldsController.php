@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Product_fields;
+use App\Product_categories;
 use Illuminate\Http\Request;
 
-class FieldMetasController extends Controller
+class ProductCategoryFieldsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -46,12 +46,12 @@ class FieldMetasController extends Controller
      */
     public function show($id)
     {
-        // $productfield = Product_fields::find($id);
-        $productfield = Product_fields::where('pf_key', '=', $id)->get();
+        // $productfield = Product_categories::find($id);
+        $productcategory = Product_categories::where('product_category_slug', '=', $id)->get();
         // dd($id);
-        dd($productfield[0]->id);
+        dd($productcategory[0]->id);
         // dd($productfield->field_metas->field_meta_value);
-        return view('admin.product.field.meta.show', compact('productfield'));
+        return view('admin.product.category.field.show', compact('productcategory'));
     }
 
     /**

@@ -65,7 +65,7 @@ Route::group(['prefix'=>'admin','as'=>'admin.'], function(){
     Route::post('/product/category/update', 'ProductCategoriesController@update')->name('p.updatecategory');
     Route::delete('/product/category/destroy/{id}', 'ProductCategoriesController@destroy')->name('p.destroycategory');
     // Product Field Meta Routes
-    Route::get('/product/fields/meta/{key}', 'FieldMetasController@show')->name('p.showfieldmeta');
+    Route::get('/product/category/field/{key}', 'ProductCategoryFieldsController@show')->name('p.showcategoryfields');
     
 
     // Settings Routes

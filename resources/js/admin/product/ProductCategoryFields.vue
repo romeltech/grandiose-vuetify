@@ -30,7 +30,7 @@
 
 <script>
   export default {
-    props : ['productField' ,'fieldMeta'],
+    props : ['productCategoryFields' ,'fieldMeta'],
     data () {
       return {
         // Form
@@ -39,9 +39,9 @@
         metaTitleRules : '',
         
         // Product Fields
-        pf : this.productField,
+        pf : this.productCategoryFields,
 
-        tableTitle : this.productField.pf_value,
+        tableTitle : this.productCategoryFields.pf_value,
         itemsPerPage : 10,
         page: 1,
         pageCount: 0,
