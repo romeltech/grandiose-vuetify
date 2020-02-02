@@ -12,26 +12,26 @@ class ProductCategoriesSeeder extends Seeder
     public function run()
     {
         $pc = new \App\Product_categories([
-            'product_category_slug'     => 'Fresh Food',
-            'product_category_title'    => 'fresh-food',
+            'product_category_title'     => 'Fresh Food',
+            'product_category_slug'    => 'fresh-food',
             'product_id'                => 1
         ]);
         $pc->save();
         $pc = new \App\Product_categories([
-            'product_category_slug'     => 'Drinks Tea and Coffee',
-            'product_category_title'    => 'drinks-tea-and-coffee',
+            'product_category_title'     => 'Drinks Tea and Coffee',
+            'product_category_slug'    => 'drinks-tea-and-coffee',
             'product_id'                => 2
         ]);
         $pc->save();
         $pc = new \App\Product_categories([
-            'product_category_slug'     => 'Food Cupboard',
-            'product_category_title'    => 'food-cupboard',
+            'product_category_title'     => 'Food Cupboard',
+            'product_category_slug'    => 'food-cupboard',
             'product_id'                => 3
         ]);
         $pc->save();
         $pc = new \App\Product_categories([
-            'product_category_slug'     => 'Personal Care',
-            'product_category_title'    => 'personal-care',
+            'product_category_title'     => 'Personal Care',
+            'product_category_slug'    => 'personal-care',
             'product_id'                => 4
         ]);
         $pc->save();

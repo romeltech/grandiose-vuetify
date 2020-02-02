@@ -2624,9 +2624,6 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    showAlert: function showAlert(sad) {
-      console.log(sad);
-    },
     clearAlert: function clearAlert() {
       this.sbStatus = false; // SnackBar
 
@@ -2853,7 +2850,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['productField', 'fieldMeta'],
+  props: ['productCategoryFields', 'fieldMeta'],
   data: function data() {
     return {
       // Form
@@ -2861,8 +2858,8 @@ __webpack_require__.r(__webpack_exports__);
       metaTitle: '',
       metaTitleRules: '',
       // Product Fields
-      pf: this.productField,
-      tableTitle: this.productField.pf_value,
+      pf: this.productCategoryFields,
+      tableTitle: this.productCategoryFields.pf_value,
       itemsPerPage: 10,
       page: 1,
       pageCount: 0,
@@ -35335,7 +35332,7 @@ var render = function() {
                           id: "field",
                           type: "text",
                           name: "field",
-                          label: "Field",
+                          label: "Title",
                           error: _vm.keyError,
                           "error-messages": _vm.keyErrorMessage
                         },
@@ -35358,7 +35355,7 @@ var render = function() {
                           id: "fieldvalue",
                           type: "text",
                           name: "fieldvalue",
-                          label: "Value",
+                          label: "Slug",
                           error: _vm.valueError,
                           "error-messages": _vm.valueErrorMessage
                         },
@@ -35489,28 +35486,25 @@ var render = function() {
                                               [
                                                 _c("v-text-field", {
                                                   attrs: {
-                                                    rules: _vm.fieldnamerule,
-                                                    error: _vm.updateKeyError,
+                                                    rules: _vm.fieldvaluerule,
+                                                    error: _vm.updateValueError,
                                                     "error-messages":
-                                                      _vm.updateKeyErrMsg,
-                                                    originalItem:
-                                                      _vm.editedItem
-                                                        .product_category_slug,
-                                                    label: "Key"
+                                                      _vm.updateValueErrMsg,
+                                                    label: "Title"
                                                   },
                                                   model: {
                                                     value:
                                                       _vm.editedItem
-                                                        .product_category_slug,
+                                                        .product_category_title,
                                                     callback: function($$v) {
                                                       _vm.$set(
                                                         _vm.editedItem,
-                                                        "product_category_slug",
+                                                        "product_category_title",
                                                         $$v
                                                       )
                                                     },
                                                     expression:
-                                                      "editedItem.product_category_slug"
+                                                      "editedItem.product_category_title"
                                                   }
                                                 })
                                               ],
@@ -35529,25 +35523,28 @@ var render = function() {
                                               [
                                                 _c("v-text-field", {
                                                   attrs: {
-                                                    rules: _vm.fieldvaluerule,
-                                                    error: _vm.updateValueError,
+                                                    rules: _vm.fieldnamerule,
+                                                    error: _vm.updateKeyError,
                                                     "error-messages":
-                                                      _vm.updateValueErrMsg,
-                                                    label: "Value"
+                                                      _vm.updateKeyErrMsg,
+                                                    originalItem:
+                                                      _vm.editedItem
+                                                        .product_category_slug,
+                                                    label: "Slug"
                                                   },
                                                   model: {
                                                     value:
                                                       _vm.editedItem
-                                                        .product_category_title,
+                                                        .product_category_slug,
                                                     callback: function($$v) {
                                                       _vm.$set(
                                                         _vm.editedItem,
-                                                        "product_category_title",
+                                                        "product_category_slug",
                                                         $$v
                                                       )
                                                     },
                                                     expression:
-                                                      "editedItem.product_category_title"
+                                                      "editedItem.product_category_slug"
                                                   }
                                                 })
                                               ],
