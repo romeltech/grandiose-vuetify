@@ -2849,41 +2849,69 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['productCategoryFields', 'fieldMeta'],
+  props: ['productCategory'],
   data: function data() {
     return {
       // Form
       valid: false,
       metaTitle: '',
       metaTitleRules: '',
-      // Product Fields
-      pf: this.productCategoryFields,
-      tableTitle: this.productCategoryFields.pf_value,
+      // Product Category objecy
+      pCategory: this.productCategory,
+      // Data Table
+      categoryFields: [],
+      tableTitle: '',
       itemsPerPage: 10,
       page: 1,
       pageCount: 0,
       headers: [{
-        text: 'Meta Title',
-        value: 'name',
+        text: 'Title',
+        value: 'category_field_title',
         width: '40%',
         align: 'left'
       }, {
         text: 'Slug',
-        value: 'calories',
+        value: 'category_field_slug',
         width: '40%',
         align: 'left'
       }, {
-        text: 'Action',
-        value: 'fat',
+        text: 'Actions',
+        value: 'action',
+        sortable: false,
         width: '20%',
         align: 'right'
-      }],
-      fieldMetas: []
+      }]
     };
   },
   mounted: function mounted() {
-    console.log(this.fieldMeta);
+    this.getCategoryFields(1);
+    this.tableTitle = this.productCategory.product_category_title;
+  },
+  methods: {
+    getCategoryFields: function getCategoryFields(i) {
+      var _this = this;
+
+      // Get the data 
+      axios.get('/api/product/category/fields/' + this.pCategory.id + '?page=' + i).then(function (response) {
+        _this.categoryFields = response.data.data;
+        _this.page = response.data.current_page;
+        _this.pageCount = response.data.last_page;
+      })["catch"](function (error) {
+        console.log('Error: ' + error);
+      });
+    },
+    onPageChange: function onPageChange() {
+      this.getCategoryFields(this.page);
+    },
+    editItem: function editItem(itemToEdit) {
+      console.log(itemToEdit);
+    },
+    deleteItem: function deleteItem(itemToDelete) {
+      console.log(itemToDelete);
+    }
   }
 });
 
@@ -35777,7 +35805,7 @@ var render = function() {
                 staticClass: "elevation-1",
                 attrs: {
                   headers: _vm.headers,
-                  items: _vm.fieldMetas,
+                  items: _vm.categoryFields,
                   page: _vm.page,
                   "items-per-page": _vm.itemsPerPage,
                   "hide-default-footer": ""
@@ -35785,9 +35813,6 @@ var render = function() {
                 on: {
                   "update:page": function($event) {
                     _vm.page = $event
-                  },
-                  "page-count": function($event) {
-                    _vm.pageCount = $event
                   }
                 },
                 scopedSlots: _vm._u([
@@ -35814,21 +35839,58 @@ var render = function() {
                       ]
                     },
                     proxy: true
+                  },
+                  {
+                    key: "item.action",
+                    fn: function(ref) {
+                      var item = ref.item
+                      return [
+                        _c(
+                          "v-icon",
+                          {
+                            staticClass: "mr-2",
+                            attrs: { small: "" },
+                            on: {
+                              click: function($event) {
+                                return _vm.editItem(item)
+                              }
+                            }
+                          },
+                          [_vm._v("mdi-pencil")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "v-icon",
+                          {
+                            attrs: { small: "" },
+                            on: {
+                              click: function($event) {
+                                return _vm.toDeleteItem(item)
+                              }
+                            }
+                          },
+                          [_vm._v("mdi-trash-can")]
+                        )
+                      ]
+                    }
                   }
                 ])
               }),
               _vm._v(" "),
-              _c("v-pagination", {
-                staticClass: "mt-3",
-                attrs: { length: _vm.pageCount },
-                model: {
-                  value: _vm.page,
-                  callback: function($$v) {
-                    _vm.page = $$v
-                  },
-                  expression: "page"
-                }
-              })
+              _vm.pageCount > 1
+                ? _c("v-pagination", {
+                    staticClass: "mt-3",
+                    attrs: { length: _vm.pageCount },
+                    on: { input: _vm.onPageChange },
+                    model: {
+                      value: _vm.page,
+                      callback: function($$v) {
+                        _vm.page = $$v
+                      },
+                      expression: "page"
+                    }
+                  })
+                : _vm._e()
             ],
             1
           )

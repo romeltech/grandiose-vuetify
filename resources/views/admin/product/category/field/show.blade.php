@@ -6,7 +6,8 @@
     {{-- <field-meta-list :field-meta="{{ $fieldMeta ?? '' }}"></field-meta-list> --}}
     {{-- <field-meta-list :field-meta="{{ $fieldMeta ?? ''->toJson() }}"></field-meta-list> --}}
     <product-category-fields
-        {{-- :product-field="{{ $product_id->toJson() }}"  --}}
+        :product-category="{{ $productCategory[0]->toJson() }}" 
+        {{-- :product-category="'{!! json_encode($productCategory) !!}'"  --}}
         
         >
         {{-- :field-meta="{{ $fieldMeta ?? ''->product_field_metas->field_meta_key->toJson() }}" --}}

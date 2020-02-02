@@ -12,92 +12,92 @@ class ProductCategoryFieldsSeeder extends Seeder
     public function run()
     {
         $pc = new \App\Product_category_fields([
-            'category_field_slug'     => 'Fruits and Vegetables',
-            'category_field_title'    => 'fruits-and-vegetables',
+            'category_field_title'     => 'Fruits and Vegetables',
+            'category_field_slug'    => 'fruits-and-vegetables',
             'product_category_id'     => 1
         ]);
         $pc->save();
         $pc = new \App\Product_category_fields([
-            'category_field_slug'     => 'Bakery',
-            'category_field_title'    => 'bakery',
+            'category_field_title'     => 'Bakery',
+            'category_field_slug'    => 'bakery',
             'product_category_id'     => 1
         ]);
         $pc->save();
         $pc = new \App\Product_category_fields([
-            'category_field_slug'     => 'Meat and Poultry',
-            'category_field_title'    => 'meat-and-poultry',
+            'category_field_title'     => 'Meat and Poultry',
+            'category_field_slug'    => 'meat-and-poultry',
             'product_category_id'     => 1
         ]);
         $pc->save();
         $pc = new \App\Product_category_fields([
-            'category_field_slug'     => 'Dairy and Eggs',
-            'category_field_title'    => 'dairy-and-eggs',
+            'category_field_title'     => 'Dairy and Eggs',
+            'category_field_slug'    => 'dairy-and-eggs',
             'product_category_id'     => 1
         ]);
         $pc->save();
         $pc = new \App\Product_category_fields([
-            'category_field_slug'     => 'Fish and Seafoods',
-            'category_field_title'    => 'fish-and-seafoods',
+            'category_field_title'     => 'Fish and Seafoods',
+            'category_field_slug'    => 'fish-and-seafoods',
             'product_category_id'     => 1
         ]);
         $pc->save();
         $pc = new \App\Product_category_fields([
-            'category_field_slug'     => 'Chilled Food Counter',
-            'category_field_title'    => 'chilled-food-counter',
+            'category_field_title'     => 'Chilled Food Counter',
+            'category_field_slug'    => 'chilled-food-counter',
             'product_category_id'     => 1
         ]);
         $pc->save();
         $pc = new \App\Product_category_fields([
-            'category_field_slug'     => 'Water',
-            'category_field_title'    => 'water',
+            'category_field_title'     => 'Water',
+            'category_field_slug'    => 'water',
             'product_category_id'     => 2
         ]);
         $pc->save();
         $pc = new \App\Product_category_fields([
-            'category_field_slug'     => 'Soft Drinks',
-            'category_field_title'    => 'soft-drinks',
+            'category_field_title'     => 'Soft Drinks',
+            'category_field_slug'    => 'soft-drinks',
             'product_category_id'     => 2
         ]);
         $pc->save();
         $pc = new \App\Product_category_fields([
-            'category_field_slug'     => 'Tea',
-            'category_field_title'    => 'tea',
+            'category_field_title'     => 'Tea',
+            'category_field_slug'    => 'tea',
             'product_category_id'     => 2
         ]);
         $pc->save();
         $pc = new \App\Product_category_fields([
-            'category_field_slug'     => 'Coffee',
-            'category_field_title'    => 'coffee',
+            'category_field_title'     => 'Coffee',
+            'category_field_slug'    => 'coffee',
             'product_category_id'     => 2
         ]);
         $pc->save();
         $pc = new \App\Product_category_fields([
-            'category_field_slug'     => 'Chips Dips and Snacks',
-            'category_field_title'    => 'chips-dips-and-snacks',
+            'category_field_title'     => 'Chips Dips and Snacks',
+            'category_field_slug'    => 'chips-dips-and-snacks',
             'product_category_id'     => 3
         ]);
         $pc->save();
         $pc = new \App\Product_category_fields([
-            'category_field_slug'     => 'Chocolates',
-            'category_field_title'    => 'chocolates',
+            'category_field_title'     => 'Chocolates',
+            'category_field_slug'    => 'chocolates',
             'product_category_id'     => 3
         ]);
         $pc->save();
         $pc = new \App\Product_category_fields([
-            'category_field_slug'     => 'Dental Care',
-            'category_field_title'    => 'dental-care',
+            'category_field_title'     => 'Dental Care',
+            'category_field_slug'    => 'dental-care',
             'product_category_id'     => 4
         ]);
         $pc->save();
         $pc = new \App\Product_category_fields([
-            'category_field_slug'     => 'Skin Care',
-            'category_field_title'    => 'skin-care',
+            'category_field_title'     => 'Skin Care',
+            'category_field_slug'    => 'skin-care',
             'product_category_id'     => 4
         ]);
         $pc->save();
         $pc = new \App\Product_category_fields([
-            'category_field_slug'     => 'Hair Care',
-            'category_field_title'    => 'hair-care',
+            'category_field_title'     => 'Hair Care',
+            'category_field_slug'    => 'hair-care',
             'product_category_id'     => 4
         ]);
         $pc->save();

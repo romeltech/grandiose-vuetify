@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Product_categories;
+use App\Product_category_fields;
 use Illuminate\Http\Request;
 
 class ProductCategoryFieldsController extends Controller
@@ -47,13 +48,17 @@ class ProductCategoryFieldsController extends Controller
     public function show($id)
     {
         // $productfield = Product_categories::find($id);
-        $productcategory = Product_categories::where('product_category_slug', '=', $id)->get();
+        $productCategory = Product_categories::where('product_category_slug', '=', $id)->get();
         // dd($id);
-        dd($productcategory[0]->id);
+        // dd($categoryFields[0]->id);
         // dd($productfield->field_metas->field_meta_value);
-        return view('admin.product.category.field.show', compact('productcategory'));
+        return view('admin.product.category.field.show', compact('productCategory'));
     }
-
+    public function categoryFieldsAPI($id)
+    {
+        return Product_category_fields::where('product_category_id', '=', $id)->orderBy('id', 'DESC')->paginate(3);
+        
+    }
     /**
      * Show the form for editing the specified resource.
      *
