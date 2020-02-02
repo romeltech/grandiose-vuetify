@@ -102,7 +102,7 @@ export default {
     methods: {
         addproductfield(){
             this.loading = true;
-            axios.post('/admin/product/fields/store', {
+            axios.post('/admin/product/categories/store', {
                 pf_key : this.fieldname,
                 pf_value : this.fieldvalue
             })
