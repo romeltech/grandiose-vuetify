@@ -21,11 +21,7 @@
                   id="field"
                   type="text"
                   name="field"
-<<<<<<< HEAD
-                  label="Field"
-=======
                   label="Title"
->>>>>>> mel
                   :error="keyError"
                   :error-messages="keyErrorMessage"
                   @change="clearAlert"
@@ -40,11 +36,7 @@
                   id="fieldvalue"
                   type="text"
                   name="fieldvalue"
-<<<<<<< HEAD
-                  label="Value"
-=======
                   label="Slug"
->>>>>>> mel
                   :error="valueError"
                   :error-messages="valueErrorMessage"
                   >
@@ -84,8 +76,6 @@
                   <v-container>
                     <v-row>
                       <v-col cols="12" sm="6" md="6">
-<<<<<<< HEAD
-=======
                         <v-text-field 
                           :rules="fieldvaluerule"
                           :error="updateValueError"
@@ -95,27 +85,13 @@
                         </v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
->>>>>>> mel
                         <v-text-field
                           :rules="fieldnamerule"
                           :error="updateKeyError"
                           :error-messages="updateKeyErrMsg"
                           v-model="editedItem.product_category_slug" 
                           :originalItem="editedItem.product_category_slug" 
-<<<<<<< HEAD
-                          label="Key">
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="6">
-                        <v-text-field 
-                          :rules="fieldvaluerule"
-                          :error="updateValueError"
-                          :error-messages="updateValueErrMsg"
-                          v-model="editedItem.product_category_title" 
-                          label="Value">
-=======
                           label="Slug">
->>>>>>> mel
                         </v-text-field>
                       </v-col>
                     </v-row>
@@ -236,12 +212,6 @@
       formTitle : '',
     }),
     methods: {
-<<<<<<< HEAD
-      showAlert(sad){
-        console.log(sad);
-      },
-=======
->>>>>>> mel
       clearAlert(){
           this.sbStatus = false; // SnackBar
           this.keyError = false;
