@@ -10,19 +10,48 @@
           hide-default-footer
           class="elevation-1"
         >
+
+
           <!-- @page-count="pageCount = $event" -->
           <template v-slot:top>
             <v-toolbar flat color="white">
               <v-toolbar-title>{{tableTitle}}</v-toolbar-title>
               <v-spacer></v-spacer>
-              <v-btn class="primary" >new</v-btn>
-              <!-- @click="submit" -->
+              <v-btn class="primary"  @click="newItem">new</v-btn>
+              <v-dialog v-model="dialog" max-width="500px">
+                <v-card>
+                  <v-card-title>
+                    <span class="headline">{{ formTitle }}</span>
+                  </v-card-title>
+
+                  <v-card-text>
+                    <v-container>
+                      <v-row>
+                        <v-col cols="12" md="6">
+                          <v-text-field v-model="dialogItem.category_field_title" label="Title"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                          <v-text-field v-model="dialogItem.category_field_slug" label="Slug"></v-text-field>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-card-text>
+
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+                    <v-btn v-if="dialogAction = 1" color="blue darken-1" text @click="save(dialogItem)">Save</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+
             </v-toolbar>
           </template>
           <template v-slot:item.action="{ item }">
             <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
             <v-icon small @click="toDeleteItem(item)">mdi-trash-can</v-icon>
           </template>
+
         </v-data-table>
         <v-pagination v-if="pageCount > 1" class="mt-3" v-model="page" :length="pageCount" @input="onPageChange"></v-pagination>
       </v-col>
@@ -35,11 +64,20 @@
     props : ['productCategory'],
     data () {
       return {
+        
         // Form
+        formTitle : '',
         valid : false,
         metaTitle : '',
         metaTitleRules : '',
         
+        // Dialog
+        dialog : false,
+        dialogAction : '',
+
+        // Edit
+        dialogItem: [],
+
         // Product Category objecy
         pCategory : this.productCategory,
 
@@ -76,11 +114,31 @@
       onPageChange (){
         this.getCategoryFields(this.page);
       },
-      editItem(itemToEdit){
-        console.log(itemToEdit);
+      newItem(){
+        this.dialog = true;
+        this.formTitle = 'New Item';
+        this.dialogAction = 1;
+        this.dialogItem = [];
+        console.log(this.dialogItem);
+      },
+      editItem(item){
+        this.dialog = true;
+        this.formTitle = 'Edit '+item.category_field_title;
+        this.dialogAction = 2;
+        // Assign Data
+        this.dialogItem = Object.assign({}, item);
+        // this.originalItem = Object.assign({}, item)
+        console.log(this.dialogItem);
+      },
+      save(){
+        this.dialog = false;
+        console.log(this.dialogItem);
       },
       deleteItem(itemToDelete){
         console.log(itemToDelete);
+      },
+      close(){
+        this.dialog = false
       }
     }
   }
