@@ -10,8 +10,6 @@
           hide-default-footer
           class="elevation-1"
         >
-
-
           <!-- @page-count="pageCount = $event" -->
           <template v-slot:top>
             <v-toolbar flat color="white">
@@ -19,7 +17,7 @@
               <v-spacer></v-spacer>
               <v-btn class="primary"  @click="newItem">new</v-btn>
               <v-dialog v-model="dialog" max-width="500px">
-                <v-card>
+                <v-card :loading="loading">
                   <v-card-title>
                     <span class="headline">{{ formTitle }}</span>
                   </v-card-title>
@@ -40,7 +38,7 @@
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-                    <v-btn v-if="dialogAction = 1" color="blue darken-1" text @click="save(dialogItem)">Save</v-btn>
+                    <v-btn v-if="dialogAction = 1" color="blue darken-1" text @click="save(dialogItem)">{{mainAction}}</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -56,22 +54,39 @@
         <v-pagination v-if="pageCount > 1" class="mt-3" v-model="page" :length="pageCount" @input="onPageChange"></v-pagination>
       </v-col>
     </v-row>
+    <snack-bar :snackbar-type="sbType" :snackbar-text="sbText" :snackbar-status="sbStatus"></snack-bar>
   </div>
 </template>
 
 <script>
+  import SnackBar from '../../components/SnackBar.vue';
+  import ErrorBag from "../../actions/errorBag.js";
   export default {
+    components: {
+      SnackBar
+    },
     props : ['productCategory'],
     data () {
       return {
-        
+        // SnackBar
+        sbType : '',
+        sbText : '',
+        sbStatus : false,
+
+        // Error Handling
+        errors : new ErrorBag,
+
         // Form
         formTitle : '',
         valid : false,
         metaTitle : '',
         metaTitleRules : '',
+        mainAction : '',
         
+        csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+
         // Dialog
+        loading : false,
         dialog : false,
         dialogAction : '',
 
@@ -83,7 +98,7 @@
 
         // Data Table
         categoryFields : [],
-        tableTitle :'',
+        tableTitle : '',
         itemsPerPage : 10,
         page: 1,
         pageCount: 0,
@@ -99,9 +114,9 @@
       this.tableTitle = this.productCategory.product_category_title;
     },
     methods: {
-      getCategoryFields(i){
+      getCategoryFields(p){
         // Get the data 
-        axios.get('/api/product/category/fields/'+this.pCategory.id+'?page='+i)
+        axios.get('/api/product/category/fields/'+this.pCategory.id+'?page='+p)
         .then(response => {
           this.categoryFields = response.data.data;
           this.page = response.data.current_page;
@@ -115,24 +130,57 @@
         this.getCategoryFields(this.page);
       },
       newItem(){
+        this.mainAction = 'create'; 
         this.dialog = true;
         this.formTitle = 'New Item';
         this.dialogAction = 1;
         this.dialogItem = [];
-        console.log(this.dialogItem);
       },
       editItem(item){
         this.dialog = true;
         this.formTitle = 'Edit '+item.category_field_title;
         this.dialogAction = 2;
+        this.mainAction = 'update';
+        console.log(this.mainAction);
         // Assign Data
         this.dialogItem = Object.assign({}, item);
         // this.originalItem = Object.assign({}, item)
         console.log(this.dialogItem);
       },
-      save(){
-        this.dialog = false;
-        console.log(this.dialogItem);
+      save(dialogItem){
+        this.loading = false;
+        // Create Category Fields
+        if(this.mainAction === 'create'){
+          // console.log(this.dialogItem.category_field_title);
+          this.loading = true;
+          axios.post('/admin/product/category/field/store', {
+              product_category_id : this.productCategory.id,
+              category_field_slug : this.dialogItem.category_field_slug,
+              category_field_title : this.dialogItem.category_field_title
+          })
+          .then(response => {
+              // SnackBar
+              this.sbStatus = true;
+              this.sbType = 'success';
+              this.sbText = response.data.message;
+              this.loading = false;
+
+              this.dialog = false;
+              
+              this.getCategoryFields(this.page);
+              // this.$refs.form.reset();
+
+          })
+          .catch(error => {
+              this.loading = false;
+              if(error.response.status == 403){
+              }
+              // console.log(error);
+          });
+        }
+        else if(this.mainAction === 'update'){
+          console.log(this.mainAction);
+        }
       },
       deleteItem(itemToDelete){
         console.log(itemToDelete);

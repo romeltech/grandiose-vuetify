@@ -2819,6 +2819,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_SnackBar_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/SnackBar.vue */ "./resources/js/components/SnackBar.vue");
+/* harmony import */ var _actions_errorBag_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../actions/errorBag.js */ "./resources/js/actions/errorBag.js");
 //
 //
 //
@@ -2879,17 +2881,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    SnackBar: _components_SnackBar_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   props: ['productCategory'],
   data: function data() {
     return {
+      // SnackBar
+      sbType: '',
+      sbText: '',
+      sbStatus: false,
+      // Error Handling
+      errors: new _actions_errorBag_js__WEBPACK_IMPORTED_MODULE_1__["default"](),
       // Form
       formTitle: '',
       valid: false,
       metaTitle: '',
       metaTitleRules: '',
+      mainAction: '',
+      csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       // Dialog
+      loading: false,
       dialog: false,
       dialogAction: '',
       // Edit
@@ -2926,11 +2941,11 @@ __webpack_require__.r(__webpack_exports__);
     this.tableTitle = this.productCategory.product_category_title;
   },
   methods: {
-    getCategoryFields: function getCategoryFields(i) {
+    getCategoryFields: function getCategoryFields(p) {
       var _this = this;
 
       // Get the data 
-      axios.get('/api/product/category/fields/' + this.pCategory.id + '?page=' + i).then(function (response) {
+      axios.get('/api/product/category/fields/' + this.pCategory.id + '?page=' + p).then(function (response) {
         _this.categoryFields = response.data.data;
         _this.page = response.data.current_page;
         _this.pageCount = response.data.last_page;
@@ -2942,24 +2957,54 @@ __webpack_require__.r(__webpack_exports__);
       this.getCategoryFields(this.page);
     },
     newItem: function newItem() {
+      this.mainAction = 'create';
       this.dialog = true;
       this.formTitle = 'New Item';
       this.dialogAction = 1;
       this.dialogItem = [];
-      console.log(this.dialogItem);
     },
     editItem: function editItem(item) {
       this.dialog = true;
       this.formTitle = 'Edit ' + item.category_field_title;
-      this.dialogAction = 2; // Assign Data
+      this.dialogAction = 2;
+      this.mainAction = 'update';
+      console.log(this.mainAction); // Assign Data
 
       this.dialogItem = Object.assign({}, item); // this.originalItem = Object.assign({}, item)
 
       console.log(this.dialogItem);
     },
-    save: function save() {
-      this.dialog = false;
-      console.log(this.dialogItem);
+    save: function save(dialogItem) {
+      var _this2 = this;
+
+      this.loading = false; // Create Category Fields
+
+      if (this.mainAction === 'create') {
+        // console.log(this.dialogItem.category_field_title);
+        this.loading = true;
+        axios.post('/admin/product/category/field/store', {
+          product_category_id: this.productCategory.id,
+          category_field_slug: this.dialogItem.category_field_slug,
+          category_field_title: this.dialogItem.category_field_title
+        }).then(function (response) {
+          // SnackBar
+          _this2.sbStatus = true;
+          _this2.sbType = 'success';
+          _this2.sbText = response.data.message;
+          _this2.loading = false;
+          _this2.dialog = false;
+
+          _this2.getCategoryFields(_this2.page); // this.$refs.form.reset();
+
+        })["catch"](function (error) {
+          _this2.loading = false;
+
+          if (error.response.status == 403) {} // console.log(error);
+
+        });
+      } else if (this.mainAction === 'update') {
+        console.log(this.mainAction);
+      }
     },
     deleteItem: function deleteItem(itemToDelete) {
       console.log(itemToDelete);
@@ -35909,6 +35954,7 @@ var render = function() {
                               [
                                 _c(
                                   "v-card",
+                                  { attrs: { loading: _vm.loading } },
                                   [
                                     _c("v-card-title", [
                                       _c("span", { staticClass: "headline" }, [
@@ -36031,7 +36077,7 @@ var render = function() {
                                                   }
                                                 }
                                               },
-                                              [_vm._v("Save")]
+                                              [_vm._v(_vm._s(_vm.mainAction))]
                                             )
                                           : _vm._e()
                                       ],
@@ -36106,7 +36152,15 @@ var render = function() {
           )
         ],
         1
-      )
+      ),
+      _vm._v(" "),
+      _c("snack-bar", {
+        attrs: {
+          "snackbar-type": _vm.sbType,
+          "snackbar-text": _vm.sbText,
+          "snackbar-status": _vm.sbStatus
+        }
+      })
     ],
     1
   )

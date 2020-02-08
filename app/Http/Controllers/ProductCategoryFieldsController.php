@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class ProductCategoryFieldsController extends Controller
 {
+    public function __construct()
+    {
+        // $this->middleware('auth');
+        // $this->middleware('auth')->except(['productCategoriesAPI']);
+        // $this->middleware('auth')->only(['index']);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -36,7 +42,14 @@ class ProductCategoryFieldsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Create
+        $categorie_fields = Product_category_fields::create($this->validateRequest());
+
+        // return request
+        return response()->json([
+            'slug' => $request->category_field_slug,
+            'message' => 'Category field has been added'
+          ], 200);
     }
 
     /**
@@ -56,7 +69,7 @@ class ProductCategoryFieldsController extends Controller
     }
     public function categoryFieldsAPI($id)
     {
-        return Product_category_fields::where('product_category_id', '=', $id)->orderBy('id', 'DESC')->paginate(3);
+        return Product_category_fields::where('product_category_id', '=', $id)->orderBy('id', 'DESC')->paginate(5);
         
     }
     /**
@@ -91,5 +104,18 @@ class ProductCategoryFieldsController extends Controller
     public function destroy($id)
     {
         //
+    }
+    
+    /**
+     * Form Validation
+     */
+    public function validateRequest()
+    {
+        return request()->validate([
+            'product_category_id' => ['exists:product_categories,id'],
+            'category_field_slug' => ['min:3', 'max:50', 'string', 'alpha_dash', 'unique:Product_category_fields'],
+            'category_field_title' => ['required', 'min:3', 'max:50', 'string']
+        ]);
+
     }
 }
