@@ -17,7 +17,7 @@ class CreateProductCategoryFieldsTable extends Migration
             $table->bigIncrements('id');
             $table->string('category_field_slug')->unique();
             $table->string('category_field_title');
-            $table->unsignedInteger('product_category_id')->nullable();
+            $table->unsignedInteger('product_category_id');
             $table->timestamps();
         });
     }

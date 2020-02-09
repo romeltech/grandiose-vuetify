@@ -2821,6 +2821,44 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_SnackBar_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/SnackBar.vue */ "./resources/js/components/SnackBar.vue");
 /* harmony import */ var _actions_errorBag_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../actions/errorBag.js */ "./resources/js/actions/errorBag.js");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2887,87 +2925,104 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     SnackBar: _components_SnackBar_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ['productCategory'],
+  props: ["productCategory"],
   data: function data() {
-    return {
+    var _ref;
+
+    return _ref = {
       // SnackBar
-      sbType: '',
-      sbText: '',
+      sbType: "",
+      sbText: "",
       sbStatus: false,
       // Error Handling
       errors: new _actions_errorBag_js__WEBPACK_IMPORTED_MODULE_1__["default"](),
+      slugError: false,
+      slugErrorMessage: '',
+      titleError: false,
+      titleErrorMessage: '',
+      valid: true,
+      titleRule: [function (value) {
+        return !!value || 'Required';
+      }, function (value) {
+        return value && value.length < 50 || 'Max 50 characters';
+      }, function (value) {
+        return value && value.length > 3 || 'Min 3 characters';
+      }],
+      slugRule: [function (value) {
+        return !!value || 'Required';
+      }, function (value) {
+        return value && value.length < 50 || 'Max 50 characters';
+      }, function (value) {
+        return value && value.length > 3 || 'Min 3 characters';
+      }],
       // Form
-      formTitle: '',
-      valid: false,
-      metaTitle: '',
-      metaTitleRules: '',
-      mainAction: '',
-      csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-      // Dialog
-      loading: false,
-      dialog: false,
-      dialogAction: '',
-      // Edit
-      dialogItem: [],
-      // Product Category objecy
-      pCategory: this.productCategory,
-      // Data Table
-      categoryFields: [],
-      tableTitle: '',
-      itemsPerPage: 10,
-      page: 1,
-      pageCount: 0,
-      headers: [{
-        text: 'Title',
-        value: 'category_field_title',
-        width: '40%',
-        align: 'left'
-      }, {
-        text: 'Slug',
-        value: 'category_field_slug',
-        width: '40%',
-        align: 'left'
-      }, {
-        text: 'Actions',
-        value: 'action',
-        sortable: false,
-        width: '20%',
-        align: 'right'
-      }]
-    };
+      formTitle: ""
+    }, _defineProperty(_ref, "valid", false), _defineProperty(_ref, "metaTitle", ""), _defineProperty(_ref, "metaTitleRules", ""), _defineProperty(_ref, "mainAction", ""), _defineProperty(_ref, "csrf", document.querySelector('meta[name="csrf-token"]').getAttribute("content")), _defineProperty(_ref, "loading", false), _defineProperty(_ref, "dialog", false), _defineProperty(_ref, "dialogAction", ""), _defineProperty(_ref, "dialogItem", []), _defineProperty(_ref, "pCategory", this.productCategory), _defineProperty(_ref, "categoryFields", []), _defineProperty(_ref, "tableTitle", ""), _defineProperty(_ref, "itemsPerPage", 10), _defineProperty(_ref, "page", 1), _defineProperty(_ref, "pageCount", 0), _defineProperty(_ref, "headers", [{
+      text: "Title",
+      value: "category_field_title",
+      width: "40%",
+      align: "left"
+    }, {
+      text: "Slug",
+      value: "category_field_slug",
+      width: "40%",
+      align: "left"
+    }, {
+      text: "Actions",
+      value: "action",
+      sortable: false,
+      width: "20%",
+      align: "right"
+    }]), _ref;
   },
   mounted: function mounted() {
     this.getCategoryFields(1);
     this.tableTitle = this.productCategory.product_category_title;
   },
+  watch: {
+    dialog: function dialog() {
+      if (this.dialog == false) {
+        this.$refs.form.reset();
+      }
+    }
+  },
   methods: {
+    clearAlert: function clearAlert() {
+      this.errors.clearAll();
+      this.slugError = false;
+      this.slugErrorMessage = '';
+      this.titleError = false;
+      this.titleErrorMessage = ''; // console.log(this.slugError);
+    },
     getCategoryFields: function getCategoryFields(p) {
       var _this = this;
 
-      // Get the data 
-      axios.get('/api/product/category/fields/' + this.pCategory.id + '?page=' + p).then(function (response) {
+      // Get the data
+      axios.get("/api/product/category/fields/" + this.pCategory.id + "?page=" + p).then(function (response) {
         _this.categoryFields = response.data.data;
         _this.page = response.data.current_page;
         _this.pageCount = response.data.last_page;
       })["catch"](function (error) {
-        console.log('Error: ' + error);
+        console.log("Error: " + error);
       });
     },
     onPageChange: function onPageChange() {
       this.getCategoryFields(this.page);
     },
     newItem: function newItem() {
-      this.mainAction = 'create';
+      this.clearAlert();
+      this.mainAction = "create";
       this.dialog = true;
-      this.formTitle = 'New Item';
+      this.formTitle = "New Item";
       this.dialogAction = 1;
       this.dialogItem = [];
     },
     editItem: function editItem(item) {
+      this.clearAlert();
       this.dialog = true;
-      this.formTitle = 'Edit ' + item.category_field_title;
+      this.formTitle = "Edit " + item.category_field_title;
       this.dialogAction = 2;
-      this.mainAction = 'update';
+      this.mainAction = "update";
       console.log(this.mainAction); // Assign Data
 
       this.dialogItem = Object.assign({}, item); // this.originalItem = Object.assign({}, item)
@@ -2979,17 +3034,17 @@ __webpack_require__.r(__webpack_exports__);
 
       this.loading = false; // Create Category Fields
 
-      if (this.mainAction === 'create') {
+      if (this.mainAction === "create") {
         // console.log(this.dialogItem.category_field_title);
         this.loading = true;
-        axios.post('/admin/product/category/field/store', {
+        axios.post("/admin/product/category/field/store", {
           product_category_id: this.productCategory.id,
           category_field_slug: this.dialogItem.category_field_slug,
           category_field_title: this.dialogItem.category_field_title
         }).then(function (response) {
           // SnackBar
           _this2.sbStatus = true;
-          _this2.sbType = 'success';
+          _this2.sbType = "success";
           _this2.sbText = response.data.message;
           _this2.loading = false;
           _this2.dialog = false;
@@ -2999,10 +3054,34 @@ __webpack_require__.r(__webpack_exports__);
         })["catch"](function (error) {
           _this2.loading = false;
 
-          if (error.response.status == 403) {} // console.log(error);
+          if (error.response.status == 403) {
+            // SnackBar
+            _this2.sbStatus = true;
+            _this2.sbType = 'error';
+            _this2.sbText = error.response.data.errorMessage;
+            console.log(error.response.data.errorMessage);
+          }
 
+          if (error.response && error.response.status == 422) {
+            _this2.errors.setErrors(error.response.data.errors); // SnackBar
+
+
+            _this2.sbStatus = true;
+            _this2.sbType = 'error';
+            _this2.sbText = 'Error adding product category'; // Input error messages
+
+            if (_this2.errors.hasError('category_field_slug')) {
+              _this2.slugError = true;
+              _this2.slugErrorMessage = _this2.errors.first('category_field_slug');
+            }
+
+            if (_this2.errors.hasError('category_field_title')) {
+              _this2.titleError = true;
+              _this2.titleErrorMessage = _this2.errors.first('category_field_title');
+            }
+          }
         });
-      } else if (this.mainAction === 'update') {
+      } else if (this.mainAction === "update") {
         console.log(this.mainAction);
       }
     },
@@ -3010,6 +3089,7 @@ __webpack_require__.r(__webpack_exports__);
       console.log(itemToDelete);
     },
     close: function close() {
+      this.clearAlert();
       this.dialog = false;
     }
   }
@@ -35956,81 +36036,132 @@ var render = function() {
                                   "v-card",
                                   { attrs: { loading: _vm.loading } },
                                   [
-                                    _c("v-card-title", [
-                                      _c("span", { staticClass: "headline" }, [
-                                        _vm._v(_vm._s(_vm.formTitle))
-                                      ])
-                                    ]),
-                                    _vm._v(" "),
                                     _c(
-                                      "v-card-text",
+                                      "v-form",
+                                      {
+                                        ref: "form",
+                                        attrs: {
+                                          method: "POST",
+                                          "lazy-validation": ""
+                                        },
+                                        on: {
+                                          submit: function($event) {
+                                            $event.preventDefault()
+                                            return _vm.save(_vm.dialogItem)
+                                          }
+                                        },
+                                        model: {
+                                          value: _vm.valid,
+                                          callback: function($$v) {
+                                            _vm.valid = $$v
+                                          },
+                                          expression: "valid"
+                                        }
+                                      },
                                       [
+                                        _c("v-card-title", [
+                                          _c(
+                                            "span",
+                                            { staticClass: "headline" },
+                                            [_vm._v(_vm._s(_vm.formTitle))]
+                                          )
+                                        ]),
+                                        _vm._v(" "),
                                         _c(
-                                          "v-container",
+                                          "v-card-text",
                                           [
                                             _c(
-                                              "v-row",
+                                              "v-container",
                                               [
                                                 _c(
-                                                  "v-col",
-                                                  {
-                                                    attrs: {
-                                                      cols: "12",
-                                                      md: "6"
-                                                    }
-                                                  },
+                                                  "v-row",
                                                   [
-                                                    _c("v-text-field", {
-                                                      attrs: { label: "Title" },
-                                                      model: {
-                                                        value:
-                                                          _vm.dialogItem
-                                                            .category_field_title,
-                                                        callback: function(
-                                                          $$v
-                                                        ) {
-                                                          _vm.$set(
-                                                            _vm.dialogItem,
-                                                            "category_field_title",
-                                                            $$v
-                                                          )
-                                                        },
-                                                        expression:
-                                                          "dialogItem.category_field_title"
-                                                      }
-                                                    })
-                                                  ],
-                                                  1
-                                                ),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "v-col",
-                                                  {
-                                                    attrs: {
-                                                      cols: "12",
-                                                      md: "6"
-                                                    }
-                                                  },
-                                                  [
-                                                    _c("v-text-field", {
-                                                      attrs: { label: "Slug" },
-                                                      model: {
-                                                        value:
-                                                          _vm.dialogItem
-                                                            .category_field_slug,
-                                                        callback: function(
-                                                          $$v
-                                                        ) {
-                                                          _vm.$set(
-                                                            _vm.dialogItem,
-                                                            "category_field_slug",
-                                                            $$v
-                                                          )
-                                                        },
-                                                        expression:
-                                                          "dialogItem.category_field_slug"
-                                                      }
-                                                    })
+                                                    _c(
+                                                      "v-col",
+                                                      {
+                                                        attrs: {
+                                                          cols: "12",
+                                                          md: "6"
+                                                        }
+                                                      },
+                                                      [
+                                                        _c("v-text-field", {
+                                                          attrs: {
+                                                            label: "Title",
+                                                            rules:
+                                                              _vm.titleRule,
+                                                            error:
+                                                              _vm.titleError,
+                                                            "error-messages":
+                                                              _vm.titleErrorMessage
+                                                          },
+                                                          on: {
+                                                            change:
+                                                              _vm.clearAlert
+                                                          },
+                                                          model: {
+                                                            value:
+                                                              _vm.dialogItem
+                                                                .category_field_title,
+                                                            callback: function(
+                                                              $$v
+                                                            ) {
+                                                              _vm.$set(
+                                                                _vm.dialogItem,
+                                                                "category_field_title",
+                                                                $$v
+                                                              )
+                                                            },
+                                                            expression:
+                                                              "dialogItem.category_field_title"
+                                                          }
+                                                        })
+                                                      ],
+                                                      1
+                                                    ),
+                                                    _vm._v(" "),
+                                                    _c(
+                                                      "v-col",
+                                                      {
+                                                        attrs: {
+                                                          cols: "12",
+                                                          md: "6"
+                                                        }
+                                                      },
+                                                      [
+                                                        _c("v-text-field", {
+                                                          attrs: {
+                                                            label: "Slug",
+                                                            rules: _vm.slugRule,
+                                                            error:
+                                                              _vm.slugError,
+                                                            "error-messages":
+                                                              _vm.slugErrorMessage
+                                                          },
+                                                          on: {
+                                                            change:
+                                                              _vm.clearAlert
+                                                          },
+                                                          model: {
+                                                            value:
+                                                              _vm.dialogItem
+                                                                .category_field_slug,
+                                                            callback: function(
+                                                              $$v
+                                                            ) {
+                                                              _vm.$set(
+                                                                _vm.dialogItem,
+                                                                "category_field_slug",
+                                                                $$v
+                                                              )
+                                                            },
+                                                            expression:
+                                                              "dialogItem.category_field_slug"
+                                                          }
+                                                        })
+                                                      ],
+                                                      1
+                                                    )
                                                   ],
                                                   1
                                                 )
@@ -36039,47 +36170,45 @@ var render = function() {
                                             )
                                           ],
                                           1
-                                        )
-                                      ],
-                                      1
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "v-card-actions",
-                                      [
-                                        _c("v-spacer"),
-                                        _vm._v(" "),
-                                        _c(
-                                          "v-btn",
-                                          {
-                                            attrs: {
-                                              color: "blue darken-1",
-                                              text: ""
-                                            },
-                                            on: { click: _vm.close }
-                                          },
-                                          [_vm._v("Cancel")]
                                         ),
                                         _vm._v(" "),
-                                        (_vm.dialogAction = 1)
-                                          ? _c(
+                                        _c(
+                                          "v-card-actions",
+                                          [
+                                            _c("v-spacer"),
+                                            _vm._v(" "),
+                                            _c(
                                               "v-btn",
                                               {
                                                 attrs: {
                                                   color: "blue darken-1",
                                                   text: ""
                                                 },
-                                                on: {
-                                                  click: function($event) {
-                                                    return _vm.save(
-                                                      _vm.dialogItem
-                                                    )
-                                                  }
-                                                }
+                                                on: { click: _vm.close }
                                               },
-                                              [_vm._v(_vm._s(_vm.mainAction))]
-                                            )
-                                          : _vm._e()
+                                              [_vm._v("Cancel")]
+                                            ),
+                                            _vm._v(" "),
+                                            (_vm.dialogAction = 1)
+                                              ? _c(
+                                                  "v-btn",
+                                                  {
+                                                    attrs: {
+                                                      color: "primary",
+                                                      text: "",
+                                                      type: "submit"
+                                                    }
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      _vm._s(_vm.mainAction)
+                                                    )
+                                                  ]
+                                                )
+                                              : _vm._e()
+                                          ],
+                                          1
+                                        )
                                       ],
                                       1
                                     )
