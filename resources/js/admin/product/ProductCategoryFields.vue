@@ -27,36 +27,35 @@
                   <v-card-title>
                     <span class="headline">{{ formTitle }}</span>
                   </v-card-title>
-
-                  <v-card-text>
+                  <v-card-text v-if="mainAction == 'delete'">
+                    Are you sure you want to delete <strong>{{toDeleteTitle}}</strong>?
+                  </v-card-text>
+                  <v-card-text v-if="mainAction != 'delete'">
                     <v-container>
-                      <!-- class="pa-5" -->
-
-                        <v-row>
-                          <v-col cols="12" md="6">
-                            <v-text-field 
-                            v-model="dialogItem.category_field_title"
-                            label="Title"
-                            :rules="titleRule"
-                            :error="titleError"
-                            :error-messages="titleErrorMessage"
+                      <v-row>
+                        <v-col cols="12" md="6">
+                          <v-text-field 
+                          v-model="dialogItem.category_field_title"
+                          label="Title"
+                          :rules="titleRule"
+                          :error="titleError"
+                          :error-messages="titleErrorMessage"
+                          @change="clearAlert"
+                          >
+                        </v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                          <v-text-field 
+                            v-model="dialogItem.category_field_slug"
+                            label="Slug"
+                            :rules="slugRule"
+                            :error="slugError"
+                            :error-messages="slugErrorMessage"
                             @change="clearAlert"
                             >
                           </v-text-field>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <v-text-field 
-                              v-model="dialogItem.category_field_slug"
-                              label="Slug"
-                              :rules="slugRule"
-                              :error="slugError"
-                              :error-messages="slugErrorMessage"
-                              @change="clearAlert"
-                              >
-                            </v-text-field>
-                          </v-col>
-                        </v-row>
-               
+                        </v-col>
+                      </v-row>
                     </v-container>
                   </v-card-text>
 
@@ -134,6 +133,7 @@ export default {
       metaTitle: "",
       metaTitleRules: "",
       mainAction: "",
+      toDeleteTitle : "",
 
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
 
@@ -227,7 +227,7 @@ export default {
       this.formTitle = "Edit " + item.category_field_title;
       this.dialogAction = 2;
       this.mainAction = "update";
-      console.log(this.mainAction);
+      // console.log(this.mainAction);
       // Assign Data
       this.dialogItem = Object.assign({}, item);
       // this.originalItem = Object.assign({}, item)
@@ -283,12 +283,91 @@ export default {
               }
             }
           });
-      } else if (this.mainAction === "update") {
-        console.log(this.mainAction);
+      }else if (this.mainAction === "update") {
+        this.loading = true;
+        axios
+        .post('/admin/product/category/field/update', {
+          id: this.dialogItem.id,
+          product_category_id: this.productCategory.id,
+          category_field_slug: this.dialogItem.category_field_slug,
+          category_field_title: this.dialogItem.category_field_title
+        })
+        .then(response => {
+          // SnackBar
+          this.sbStatus = true;
+          this.sbType = "success";
+          this.sbText = response.data.message;
+          this.loading = false;
+
+          this.dialog = false;
+
+          this.getCategoryFields(this.page);
+          // this.$refs.form.reset();
+        })
+        .catch(error => {
+          this.loading = false;
+          if (error.response.status == 403) {
+            // SnackBar
+            this.sbStatus = true;
+            this.sbType = 'error';
+            this.sbText = error.response.data.errorMessage;
+            console.log(error.response.data.errorMessage);
+          }
+          if (error.response && error.response.status == 422) {
+            this.errors.setErrors( error.response.data.errors );
+            // SnackBar
+            this.sbStatus = true;
+            this.sbType = 'error';
+            this.sbText = 'Error adding product category';
+            // Input error messages
+            if(this.errors.hasError('category_field_slug') ){
+                this.slugError = true;
+                this.slugErrorMessage = this.errors.first('category_field_slug');
+            }
+            if(this.errors.hasError('category_field_title') ){
+                this.titleError = true;
+                this.titleErrorMessage = this.errors.first('category_field_title');
+            }
+          }
+        });
+      }else if (this.mainAction === "delete") {
+
+        this.loading = true,
+      
+        axios.delete('/admin/product/category/field/destroy/'+this.dialogItem.id)
+        .then(response => {
+          // SnackBar
+          this.sbStatus = true;
+          this.sbType = "success";
+          this.sbText = response.data.message;
+          this.loading = false;
+
+          this.dialog = false;
+
+          this.getCategoryFields(this.page);
+        })
+        .catch(error => {
+          this.loading = false;
+          this.dialog = false;
+          this.sbStatus = true;
+          this.sbType = 'error';
+          if (error.response && error.response.status == 422) {
+            this.errors.setErrors( error.response.data.errors );
+            this.sbText = 'Response Error';
+          }else{
+            this.sbText = 'Error deleting category field';
+          }
+        });
       }
+
     },
-    deleteItem(itemToDelete) {
-      console.log(itemToDelete);
+    toDeleteItem(item) {
+      this.dialogItem = Object.assign({}, item);
+      this.dialog = true;
+      this.mainAction = "delete";
+      this.formTitle = 'Confirm Deletion';
+      this.toDeleteTitle = this.dialogItem.category_field_title;
+      // console.log(this.dialogItem.id);
     },
     close() {
       this.clearAlert();

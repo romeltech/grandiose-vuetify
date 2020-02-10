@@ -90,9 +90,17 @@ class ProductCategoryFieldsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $categoryFields = Product_category_fields::where('id', '=', $request->id)->firstOrFail();
+        
+        // Validate and Update Request
+        $categoryFields->update($this->validateRequest());
+
+        // Return Response
+        return response()->json([
+            'message' => 'Product Category has been updated'
+        ], 200);
     }
 
     /**
@@ -103,7 +111,12 @@ class ProductCategoryFieldsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $categoryFields = Product_category_fields::where('id', '=', $id)->firstOrFail();
+        $categoryFields->delete();
+        return response()->json([
+            'requestData' => $categoryFields,
+            'message' => 'Category field has been Deleted'
+        ], 200);
     }
     
     /**
