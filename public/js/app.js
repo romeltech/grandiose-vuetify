@@ -3016,6 +3016,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.formTitle = "New Item";
       this.dialogAction = 1;
       this.dialogItem = [];
+      console.log(this.mainAction);
     },
     editItem: function editItem(item) {
       this.clearAlert();
@@ -3026,8 +3027,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       // Assign Data
 
       this.dialogItem = Object.assign({}, item);
-      this.originalItem = Object.assign({}, item);
-      console.log(this.dialogItem);
+      this.originalItem = Object.assign({}, item); // console.log(this.dialogItem);
+
+      console.log(this.mainAction);
     },
     save: function save(dialogItem) {
       var _this2 = this;

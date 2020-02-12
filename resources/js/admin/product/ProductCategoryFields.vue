@@ -222,6 +222,7 @@ export default {
       this.formTitle = "New Item";
       this.dialogAction = 1;
       this.dialogItem = [];
+      console.log(this.mainAction);
     },
     editItem(item) {
       this.clearAlert();
@@ -233,7 +234,8 @@ export default {
       // Assign Data
       this.dialogItem = Object.assign({}, item);
       this.originalItem = Object.assign({}, item);
-      console.log(this.dialogItem);
+      // console.log(this.dialogItem);
+      console.log(this.mainAction);
     },
     save(dialogItem) {
       this.loading = false;
