@@ -236,7 +236,7 @@ export default {
       console.log(this.dialogItem);
     },
     save(){
-      console.log(dialogItem);
+      console.log(this.dialogItem);
     },
     // save(dialogItem) {
     //   this.loading = false;

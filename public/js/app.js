@@ -3030,7 +3030,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       console.log(this.dialogItem);
     },
     save: function save() {
-      console.log(dialogItem);
+      console.log(this.dialogItem);
     },
     // save(dialogItem) {
     //   this.loading = false;
