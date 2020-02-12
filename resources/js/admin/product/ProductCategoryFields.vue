@@ -288,8 +288,11 @@ export default {
       }else if (this.mainAction === "update") {
         this.loading = true;
 
+        console.log('original item: '+this.originalItem.category_field_slug);
+        console.log('dialogItem item: '+this.dialogItem.category_field_slug);
+
         let updateData = [];
-        if(this.originalItem.category_field_slug === this.dialogItem.category_field_slug){
+        if(this.originalItem.category_field_slug != this.dialogItem.category_field_slug){
           updateData = {
             id: this.dialogItem.id,
             product_category_id: this.productCategory.id,

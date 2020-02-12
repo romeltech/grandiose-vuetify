@@ -3083,9 +3083,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         });
       } else if (this.mainAction === "update") {
         this.loading = true;
+<<<<<<< HEAD
         var updateData = [];
 
         if (this.originalItem.category_field_slug === this.dialogItem.category_field_slug) {
+=======
+        console.log('original item: ' + this.originalItem.category_field_slug);
+        console.log('dialogItem item: ' + this.dialogItem.category_field_slug);
+        var updateData = [];
+
+        if (this.originalItem.category_field_slug != this.dialogItem.category_field_slug) {
+>>>>>>> mel
           updateData = {
             id: this.dialogItem.id,
             product_category_id: this.productCategory.id,
