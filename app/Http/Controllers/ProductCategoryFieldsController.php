@@ -126,7 +126,7 @@ class ProductCategoryFieldsController extends Controller
     {
         return request()->validate([
             'product_category_id' => ['exists:product_categories,id'],
-            'category_field_slug' => ['min:3', 'max:50', 'string', 'alpha_dash', 'unique:Product_category_fields'],
+            'category_field_slug' => ['min:3', 'max:50', 'string', 'alpha_dash', 'unique:product_category_fields'],
             'category_field_title' => ['required', 'min:3', 'max:50', 'string']
         ]);
 
