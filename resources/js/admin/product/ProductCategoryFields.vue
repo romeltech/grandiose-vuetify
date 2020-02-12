@@ -232,7 +232,7 @@ export default {
       // console.log(this.mainAction);
       // Assign Data
       this.dialogItem = Object.assign({}, item);
-      // this.originalItem = Object.assign({}, item)
+      this.originalItem = Object.assign({}, item)
       console.log(this.dialogItem);
     },
     save(dialogItem) {
