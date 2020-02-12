@@ -235,149 +235,152 @@ export default {
       this.originalItem = Object.assign({}, item);
       console.log(this.dialogItem);
     },
-    save(dialogItem) {
-      this.loading = false;
-      // Create Category Fields
-      if (this.mainAction === "create") {
-        // console.log(this.dialogItem.category_field_title);
-        this.loading = true;
-        axios
-          .post("/admin/product/category/field/store", {
-            product_category_id: this.productCategory.id,
-            category_field_slug: this.dialogItem.category_field_slug,
-            category_field_title: this.dialogItem.category_field_title
-          })
-          .then(response => {
-            // SnackBar
-            this.sbStatus = true;
-            this.sbType = "success";
-            this.sbText = response.data.message;
-            this.loading = false;
-
-            this.dialog = false;
-
-            this.getCategoryFields(this.page);
-            // this.$refs.form.reset();
-          })
-          .catch(error => {
-            this.loading = false;
-            if (error.response.status == 403) {
-              // SnackBar
-              this.sbStatus = true;
-              this.sbType = 'error';
-              this.sbText = error.response.data.errorMessage;
-              console.log(error.response.data.errorMessage);
-            }
-            if (error.response && error.response.status == 422) {
-              this.errors.setErrors( error.response.data.errors );
-              // SnackBar
-              this.sbStatus = true;
-              this.sbType = 'error';
-              this.sbText = 'Error adding product category';
-              // Input error messages
-              if(this.errors.hasError('category_field_slug') ){
-                  this.slugError = true;
-                  this.slugErrorMessage = this.errors.first('category_field_slug');
-              }
-              if(this.errors.hasError('category_field_title') ){
-                  this.titleError = true;
-                  this.titleErrorMessage = this.errors.first('category_field_title');
-              }
-            }
-          });
-      }else if (this.mainAction === "update") {
-        this.loading = true;
-
-        console.log('original item: '+this.originalItem.category_field_slug);
-        console.log('dialogItem item: '+this.dialogItem.category_field_slug);
-
-        let updateData = [];
-        if(this.originalItem.category_field_slug != this.dialogItem.category_field_slug){
-          updateData = {
-            id: this.dialogItem.id,
-            product_category_id: this.productCategory.id,
-            category_field_slug: this.dialogItem.category_field_slug,
-            category_field_title: this.dialogItem.category_field_title,      
-          }
-        }else{
-          updateData = {
-            id: this.dialogItem.id,
-            product_category_id: this.productCategory.id,
-            category_field_title: this.dialogItem.category_field_title,
-          };
-        }
-
-        axios
-        .post('/admin/product/category/field/update', updateData)
-        .then(response => {
-          // SnackBar
-          this.sbStatus = true;
-          this.sbType = "success";
-          this.sbText = response.data.message;
-          this.loading = false;
-
-          this.dialog = false;
-
-          this.getCategoryFields(this.page);
-          // this.$refs.form.reset();
-        })
-        .catch(error => {
-          this.loading = false;
-          if (error.response.status == 403) {
-            // SnackBar
-            this.sbStatus = true;
-            this.sbType = 'error';
-            this.sbText = error.response.data.errorMessage;
-            console.log(error.response.data.errorMessage);
-          }
-          if (error.response && error.response.status == 422) {
-            this.errors.setErrors( error.response.data.errors );
-            // SnackBar
-            this.sbStatus = true;
-            this.sbType = 'error';
-            this.sbText = 'Error adding product category';
-            // Input error messages
-            if(this.errors.hasError('category_field_slug') ){
-                this.slugError = true;
-                this.slugErrorMessage = this.errors.first('category_field_slug');
-            }
-            if(this.errors.hasError('category_field_title') ){
-                this.titleError = true;
-                this.titleErrorMessage = this.errors.first('category_field_title');
-            }
-          }
-        });
-      }else if (this.mainAction === "delete") {
-
-        this.loading = true,
-      
-        axios.delete('/admin/product/category/field/destroy/'+this.dialogItem.id)
-        .then(response => {
-          // SnackBar
-          this.sbStatus = true;
-          this.sbType = "success";
-          this.sbText = response.data.message;
-          this.loading = false;
-
-          this.dialog = false;
-
-          this.getCategoryFields(this.page);
-        })
-        .catch(error => {
-          this.loading = false;
-          this.dialog = false;
-          this.sbStatus = true;
-          this.sbType = 'error';
-          if (error.response && error.response.status == 422) {
-            this.errors.setErrors( error.response.data.errors );
-            this.sbText = 'Response Error';
-          }else{
-            this.sbText = 'Error deleting category field';
-          }
-        });
-      }
-
+    save(){
+      console.log(dialogItem);
     },
+    // save(dialogItem) {
+    //   this.loading = false;
+    //   // Create Category Fields
+    //   if (this.mainAction === "create") {
+    //     // console.log(this.dialogItem.category_field_title);
+    //     this.loading = true;
+    //     axios
+    //       .post("/admin/product/category/field/store", {
+    //         product_category_id: this.productCategory.id,
+    //         category_field_slug: this.dialogItem.category_field_slug,
+    //         category_field_title: this.dialogItem.category_field_title
+    //       })
+    //       .then(response => {
+    //         // SnackBar
+    //         this.sbStatus = true;
+    //         this.sbType = "success";
+    //         this.sbText = response.data.message;
+    //         this.loading = false;
+
+    //         this.dialog = false;
+
+    //         this.getCategoryFields(this.page);
+    //         // this.$refs.form.reset();
+    //       })
+    //       .catch(error => {
+    //         this.loading = false;
+    //         if (error.response.status == 403) {
+    //           // SnackBar
+    //           this.sbStatus = true;
+    //           this.sbType = 'error';
+    //           this.sbText = error.response.data.errorMessage;
+    //           console.log(error.response.data.errorMessage);
+    //         }
+    //         if (error.response && error.response.status == 422) {
+    //           this.errors.setErrors( error.response.data.errors );
+    //           // SnackBar
+    //           this.sbStatus = true;
+    //           this.sbType = 'error';
+    //           this.sbText = 'Error adding product category';
+    //           // Input error messages
+    //           if(this.errors.hasError('category_field_slug') ){
+    //               this.slugError = true;
+    //               this.slugErrorMessage = this.errors.first('category_field_slug');
+    //           }
+    //           if(this.errors.hasError('category_field_title') ){
+    //               this.titleError = true;
+    //               this.titleErrorMessage = this.errors.first('category_field_title');
+    //           }
+    //         }
+    //       });
+    //   }else if (this.mainAction === "update") {
+    //     this.loading = true;
+
+    //     console.log('original item: '+this.originalItem.category_field_slug);
+    //     console.log('dialogItem item: '+this.dialogItem.category_field_slug);
+
+    //     let updateData = [];
+    //     if(this.originalItem.category_field_slug != this.dialogItem.category_field_slug){
+    //       updateData = {
+    //         id: this.dialogItem.id,
+    //         product_category_id: this.productCategory.id,
+    //         category_field_slug: this.dialogItem.category_field_slug,
+    //         category_field_title: this.dialogItem.category_field_title,      
+    //       }
+    //     }else{
+    //       updateData = {
+    //         id: this.dialogItem.id,
+    //         product_category_id: this.productCategory.id,
+    //         category_field_title: this.dialogItem.category_field_title,
+    //       };
+    //     }
+
+    //     axios
+    //     .post('/admin/product/category/field/update', updateData)
+    //     .then(response => {
+    //       // SnackBar
+    //       this.sbStatus = true;
+    //       this.sbType = "success";
+    //       this.sbText = response.data.message;
+    //       this.loading = false;
+
+    //       this.dialog = false;
+
+    //       this.getCategoryFields(this.page);
+    //       // this.$refs.form.reset();
+    //     })
+    //     .catch(error => {
+    //       this.loading = false;
+    //       if (error.response.status == 403) {
+    //         // SnackBar
+    //         this.sbStatus = true;
+    //         this.sbType = 'error';
+    //         this.sbText = error.response.data.errorMessage;
+    //         console.log(error.response.data.errorMessage);
+    //       }
+    //       if (error.response && error.response.status == 422) {
+    //         this.errors.setErrors( error.response.data.errors );
+    //         // SnackBar
+    //         this.sbStatus = true;
+    //         this.sbType = 'error';
+    //         this.sbText = 'Error adding product category';
+    //         // Input error messages
+    //         if(this.errors.hasError('category_field_slug') ){
+    //             this.slugError = true;
+    //             this.slugErrorMessage = this.errors.first('category_field_slug');
+    //         }
+    //         if(this.errors.hasError('category_field_title') ){
+    //             this.titleError = true;
+    //             this.titleErrorMessage = this.errors.first('category_field_title');
+    //         }
+    //       }
+    //     });
+    //   }else if (this.mainAction === "delete") {
+
+    //     this.loading = true,
+      
+    //     axios.delete('/admin/product/category/field/destroy/'+this.dialogItem.id)
+    //     .then(response => {
+    //       // SnackBar
+    //       this.sbStatus = true;
+    //       this.sbType = "success";
+    //       this.sbText = response.data.message;
+    //       this.loading = false;
+
+    //       this.dialog = false;
+
+    //       this.getCategoryFields(this.page);
+    //     })
+    //     .catch(error => {
+    //       this.loading = false;
+    //       this.dialog = false;
+    //       this.sbStatus = true;
+    //       this.sbType = 'error';
+    //       if (error.response && error.response.status == 422) {
+    //         this.errors.setErrors( error.response.data.errors );
+    //         this.sbText = 'Response Error';
+    //       }else{
+    //         this.sbText = 'Error deleting category field';
+    //       }
+    //     });
+    //   }
+
+    // },
     toDeleteItem(item) {
       this.dialogItem = Object.assign({}, item);
       this.dialog = true;
