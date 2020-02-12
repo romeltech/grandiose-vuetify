@@ -3082,23 +3082,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           }
         });
       } else if (this.mainAction === "update") {
-        this.loading = true;
-        var updateData = [];
-
-        if (this.originalItem.category_field_slug === this.dialogItem.category_field_slug) {
-          updateData = {
-            id: this.dialogItem.id,
-            product_category_id: this.productCategory.id,
-            category_field_slug: this.dialogItem.category_field_slug,
-            category_field_title: this.dialogItem.category_field_title
-          };
-        } else {
-          updateData = {
-            id: this.dialogItem.id,
-            product_category_id: this.productCategory.id,
-            category_field_title: this.dialogItem.category_field_title
-          };
-        }
+        this.loading = true; // let updateData = [];
+        // if(this.originalItem.category_field_slug === this.dialogItem.category_field_slug){
+        //   updateData = {
+        //     id: this.dialogItem.id,
+        //     product_category_id: this.productCategory.id,
+        //     category_field_slug: this.dialogItem.category_field_slug,
+        //     category_field_title: this.dialogItem.category_field_title,      
+        //   }
+        // }else{
+        //   updateData = {
+        //     id: this.dialogItem.id,
+        //     product_category_id: this.productCategory.id,
+        //     category_field_title: this.dialogItem.category_field_title,
+        //   };
+        // }
 
         axios.post('/admin/product/category/field/update', updateData).then(function (response) {
           // SnackBar
