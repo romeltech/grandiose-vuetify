@@ -34,7 +34,7 @@ color="grey lighten-4"
     <v-list-item-title class="grey--text">Products</v-list-item-title>
   </template>
   <v-list dense class="grey lighten-3">
-    <v-list-item  @click="">
+    <v-list-item href="{{ route('admin.p.list') }}">
       <v-list-item-action>
         <v-icon small>mdi-format-list-bulleted</v-icon>
       </v-list-item-action>

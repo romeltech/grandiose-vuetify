@@ -32,6 +32,15 @@ class ProductController extends Controller
         return $products;
     }
 
+    /**
+     * Products API Routes
+     */
+    public function adminProductList()
+    {
+        // $products = Product::paginate(10);
+        // return $products;
+        return view('admin.product.index');
+    }
 
 
     /**

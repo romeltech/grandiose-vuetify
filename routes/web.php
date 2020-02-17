@@ -59,7 +59,8 @@ Route::group(['prefix'=>'admin','as'=>'admin.'], function(){
     Route::delete('/user/destroy/{user}', 'UserController@destroy')->name('user.destroy');
 
     // Product Routes
-    // Route::get('/product/field/{key}', 'ProductCategoriesController@show')->name('p.showfield');
+    Route::get('/products', 'ProductController@adminProductList')->name('p.list');
+    // Product Category Routes
     Route::get('/product/categories', 'ProductCategoriesController@index')->name('p.categories');
     Route::post('/product/category/store', 'ProductCategoriesController@store')->name('p.addcategory');
     Route::post('/product/category/update', 'ProductCategoriesController@update')->name('p.updatecategory');
