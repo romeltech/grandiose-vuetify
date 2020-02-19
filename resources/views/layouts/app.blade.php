@@ -50,7 +50,7 @@
         </v-sheet>
 
     </v-app>
-
+    <input type="hidden" value="{{ url('/') }}" v-model="baseUrl" />
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     @yield('scripts')

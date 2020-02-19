@@ -42,6 +42,14 @@ class ProductController extends Controller
         return view('admin.product.index');
     }
 
+    /**
+     * Admin Products API Routes
+     */
+    public function adminProductListAPI(){
+        $products = Product::paginate(10);
+        return $products;
+    }
+
 
     /**
      * Show the form for creating a new resource.
