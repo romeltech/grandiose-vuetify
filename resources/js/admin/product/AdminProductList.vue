@@ -2,17 +2,18 @@
    <div>
       <v-row>
          <v-col class="col-12">
+            
          <v-data-table
             :headers="headers"
             :items="products"
             :page.sync="page"
             :items-per-page="itemsPerPage"
             hide-default-footer
-            class="elevation-1 pb-3"
+            class="elevation-1"
          >
             <!-- @page-count="pageCount = $event" -->
-           <template v-slot:top>
-               <v-toolbar flat color="white">
+            <template v-slot:top>
+               <v-toolbar flat color="transparent">
                <v-toolbar-title>Product List</v-toolbar-title>
                <v-spacer></v-spacer>
                <v-btn class="primary" @click="newItem">new</v-btn>
@@ -74,9 +75,12 @@
                </v-dialog> -->
                </v-toolbar>
             </template>
+            <template v-slot:item.title="{ item }">
+               <a v-bind:href="'/admin/product/'+item.slug">{{ item.title }}</a>
+            </template>
             <template v-slot:item.imagepath="{ item }">
                <v-avatar tile>
-                  <v-img :src="'/'+item.imagepath"></v-img>
+                  <v-img :src="'/'+item.imagepath" style="max-width:40px;max-height:40px;"></v-img>
                </v-avatar>
             </template>
             <template v-slot:item.action="{ item }">
@@ -96,7 +100,12 @@
       <!-- <snack-bar :snackbar-type="sbType" :snackbar-text="sbText" :snackbar-status="sbStatus"></snack-bar> -->
    </div>
 </template>
-
+<style scoped>
+   table td a:hover{
+      border-bottom: 1px dotted;
+      transition: .1s ease-out;
+   }
+</style>
 <script>
 export default {
    data() {

@@ -80,7 +80,8 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        $products = Product::where('slug', '=', $id)->get();
+        return view('admin.product.show', compact('products'));
     }
 
     /**

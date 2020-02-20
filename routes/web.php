@@ -60,6 +60,7 @@ Route::group(['prefix'=>'admin','as'=>'admin.'], function(){
 
     // Product Routes
     Route::get('/products', 'ProductController@adminProductList')->name('p.list');
+    Route::get('/product/{id}', 'ProductController@show')->name('p.show');
     // Product Category Routes
     Route::get('/product/categories', 'ProductCategoriesController@index')->name('p.categories');
     Route::post('/product/category/store', 'ProductCategoriesController@store')->name('p.addcategory');
