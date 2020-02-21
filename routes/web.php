@@ -58,9 +58,6 @@ Route::group(['prefix'=>'admin','as'=>'admin.'], function(){
     Route::get('/users/edit/{user}', 'UserController@edit')->name('edituser');
     Route::delete('/user/destroy/{user}', 'UserController@destroy')->name('user.destroy');
 
-    // Product Routes
-    Route::get('/products', 'ProductController@adminProductList')->name('p.list');
-    Route::get('/product/{id}', 'ProductController@show')->name('p.show');
     // Product Category Routes
     Route::get('/product/categories', 'ProductCategoriesController@index')->name('p.categories');
     Route::post('/product/category/store', 'ProductCategoriesController@store')->name('p.addcategory');
@@ -72,7 +69,10 @@ Route::group(['prefix'=>'admin','as'=>'admin.'], function(){
     Route::post('/product/category/field/update', 'ProductCategoryFieldsController@update')->name('p.updatecategoryfields');
     Route::delete('/product/category/field/destroy/{id}', 'ProductCategoryFieldsController@destroy')->name('p.destroycategoryfields');
     
-
+    // Product Routes
+    Route::get('/products', 'ProductController@adminProductList')->name('p.list');
+    Route::get('/product/{id}', 'ProductController@show')->name('p.show');
+    
     // Settings Routes
     Route::get('/settings', 'AdminController@settings')->name('settings');
 

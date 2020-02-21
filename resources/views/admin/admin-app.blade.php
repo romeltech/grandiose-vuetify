@@ -127,8 +127,6 @@ color="grey lighten-4"
 
 <v-content style="height:100%">
   <v-container style="height:100%" fluid class="grey lighten-4">
-    <v-col>
       @yield('admin-content')
-    </v-col>
   </v-container>
 </v-content>
