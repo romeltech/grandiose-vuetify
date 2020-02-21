@@ -7,7 +7,7 @@
         :nudge-width="150"
         transition="slide-y-transition"
         offset-y
-        :nudge-bottom="10"
+        :nudge-bottom="3"
       >
         <template v-slot:activator="{ on }">
           <v-btn text icon v-on="on">

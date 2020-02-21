@@ -1,4 +1,4 @@
-<v-app-bar app clipped-left color="primary">
+<v-app-bar dense app clipped-left color="primary">
     <v-app-bar-nav-icon @click="drawer = !drawer" class="white--text"></v-app-bar-nav-icon>
     <span class="title ml-3 mr-5 white--text">Grandiose Admin Panel</span>
     <v-spacer></v-spacer>

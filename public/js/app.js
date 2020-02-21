@@ -38444,7 +38444,7 @@ var render = function() {
             "nudge-width": 150,
             transition: "slide-y-transition",
             "offset-y": "",
-            "nudge-bottom": 10
+            "nudge-bottom": 3
           },
           scopedSlots: _vm._u([
             {
