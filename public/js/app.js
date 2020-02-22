@@ -2843,114 +2843,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2960,8 +2852,16 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     this.getProductCategories(1);
   },
+  computed: {
+    mainCategories: function mainCategories() {
+      return this.productCategories.filter(function (u) {
+        return u.parent == 0;
+      });
+    }
+  },
   data: function data() {
     return {
+      // All Product Categories
       // Delete a Category
       toDelete: [],
       // Add a Category
@@ -3026,7 +2926,8 @@ __webpack_require__.r(__webpack_exports__);
         width: '20%',
         align: 'right'
       }],
-      pf: [],
+      productCategories: [],
+      groupedProductCategories: [],
       originalItem: {
         product_category_slug: '',
         product_category_title: ''
@@ -3057,10 +2958,69 @@ __webpack_require__.r(__webpack_exports__);
     getProductCategories: function getProductCategories(thecurrentpage) {
       var _this = this;
 
-      axios.get('/api/product/categories?page=' + thecurrentpage).then(function (response) {
-        _this.pf = response.data.data;
-        _this.page = response.data.current_page;
-        _this.pageCount = response.data.last_page;
+      // axios.get('/api/product/categories?page='+thecurrentpage)
+      axios.get('/api/product/categories').then(function (response) {
+        // this.productCategories = response.data.data;
+        _this.productCategories = response.data;
+        console.log(_this.productCategories); // this.page = response.data.current_page;
+        // this.pageCount = response.data.last_page;
+        // let result = [];
+        // this.productCategories.forEach((pc) => {
+        //   if(pc.parent == 0){
+        //     result.push(pc);
+        //   }
+        // });
+        // console.log(result);
+        // array.push(element1, ..., elementN);  
+        // console.log(this.productCategories);
+        // Grouped
+        // let result = this.productCategories.reduce(function (a, c) {
+        //   a[c.parent] = a[c.parent] || [];
+        //   a[c.parent].push(c)
+        //   return a;
+        // }, Object.create(null));
+        // console.log(result);
+        // var groupBy = function(xs, key) {
+        //   return xs.reduce(function(rv, x) {
+        //     (rv[x[key]] = rv[x[key]] || []).push(x);
+        //     return rv;
+        //   }, {});
+        // };
+        // const grouped = groupBy(response.data.data, 'product_category_slug');
+        // function groupBy(list, keyGetter) {
+        //     const map = new Map();
+        //     list.forEach((item) => {
+        //         const key = keyGetter(item);
+        //         const collection = map.get(key);
+        //         if (!collection) {
+        //             map.set(key, [item]);
+        //         } else {
+        //             collection.push(item);
+        //         }
+        //     });
+        //     return map;
+        // }
+        // const grouped = groupBy(response.data.data, i => i.parent);
+        // console.log(grouped);
+        // Group by color as key to the person array
+        // const personGroupedByColor = groupBy(person, 'color');
+        // let index = [];
+        // this.groupedProductCategories[this.productCategories]="";
+        // let key = [];
+        // let val = [];
+        // this.productCategories.forEach(function (pc, index) {
+        //   index[pc];
+        //   console.log(index);
+        // });
+        // foreach (this.groupedProductCategories as key => val) {
+        // if ($templevel==$val['level']){
+        //   $grouparr[$templevel][$newkey]=$val;
+        // } else {
+        //   $grouparr[$val['level']][$newkey]=$val;
+        // }
+        //   $newkey++;       
+        // }
+        // print($grouparr);
       })["catch"](function (error) {
         console.log(error.response);
         console.log('error');
@@ -37150,440 +37110,26 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
+    { staticClass: "col" },
     [
       _c(
-        "v-row",
+        "v-card",
         [
           _c(
-            "v-col",
-            { staticClass: "col-12 col-md-3" },
-            [
-              _c(
-                "v-card",
-                { attrs: { flat: "", loading: _vm.loading } },
+            "v-list",
+            { attrs: { dense: "" } },
+            _vm._l(this.mainCategories, function(pc, i) {
+              return _c(
+                "v-list-item",
+                { key: i },
                 [
-                  _c(
-                    "v-form",
-                    {
-                      ref: "form",
-                      staticClass: "pa-5",
-                      attrs: { method: "POST", "lazy-validation": "" },
-                      on: {
-                        submit: function($event) {
-                          $event.preventDefault()
-                          return _vm.addProductCategory()
-                        }
-                      },
-                      model: {
-                        value: _vm.valid,
-                        callback: function($$v) {
-                          _vm.valid = $$v
-                        },
-                        expression: "valid"
-                      }
-                    },
-                    [
-                      _c("v-text-field", {
-                        attrs: {
-                          dense: "",
-                          rules: _vm.fieldnamerule,
-                          outlined: "",
-                          required: "",
-                          id: "field",
-                          type: "text",
-                          name: "field",
-                          label: "Title",
-                          error: _vm.keyError,
-                          "error-messages": _vm.keyErrorMessage
-                        },
-                        on: { change: _vm.clearAlert },
-                        model: {
-                          value: _vm.fieldname,
-                          callback: function($$v) {
-                            _vm.fieldname = $$v
-                          },
-                          expression: "fieldname"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("v-text-field", {
-                        attrs: {
-                          dense: "",
-                          rules: _vm.fieldvaluerule,
-                          outlined: "",
-                          required: "",
-                          id: "fieldvalue",
-                          type: "text",
-                          name: "fieldvalue",
-                          label: "Slug",
-                          error: _vm.valueError,
-                          "error-messages": _vm.valueErrorMessage
-                        },
-                        model: {
-                          value: _vm.fieldvalue,
-                          callback: function($$v) {
-                            _vm.fieldvalue = $$v
-                          },
-                          expression: "fieldvalue"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "v-btn",
-                        {
-                          staticClass: "mb-2",
-                          attrs: {
-                            width: "100%",
-                            dense: "",
-                            color: "primary",
-                            type: "submit"
-                          },
-                          on: {
-                            click: function($event) {
-                              return _vm.clearAlert()
-                            }
-                          }
-                        },
-                        [_vm._v("\n                Save\n              ")]
-                      )
-                    ],
-                    1
-                  )
+                  _c("v-list-item-title", [
+                    _vm._v(_vm._s(pc.product_category_title))
+                  ])
                 ],
                 1
               )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "v-col",
-            { staticClass: "col-12 col-md-8" },
-            [
-              _c("v-data-table", {
-                attrs: {
-                  headers: _vm.headers,
-                  items: _vm.pf,
-                  "hide-default-footer": ""
-                },
-                scopedSlots: _vm._u([
-                  {
-                    key: "item.product_category_title",
-                    fn: function(ref) {
-                      var item = ref.item
-                      return [
-                        _c("tr", [
-                          _c(
-                            "td",
-                            { staticStyle: { cursor: "pointer", border: "0" } },
-                            [
-                              _c(
-                                "a",
-                                {
-                                  attrs: {
-                                    href:
-                                      "/admin/product/category/field/" +
-                                      item.product_category_slug
-                                  }
-                                },
-                                [_vm._v(_vm._s(item.product_category_title))]
-                              )
-                            ]
-                          )
-                        ])
-                      ]
-                    }
-                  },
-                  {
-                    key: "top",
-                    fn: function() {
-                      return [
-                        _c(
-                          "v-dialog",
-                          {
-                            attrs: { "max-width": "500px" },
-                            model: {
-                              value: _vm.dialog,
-                              callback: function($$v) {
-                                _vm.dialog = $$v
-                              },
-                              expression: "dialog"
-                            }
-                          },
-                          [
-                            _c(
-                              "v-card",
-                              { attrs: { loading: _vm.dialogLoading } },
-                              [
-                                _c(
-                                  "v-card-title",
-                                  { staticClass: "primary white--text" },
-                                  [
-                                    _c("span", { staticClass: "headline" }, [
-                                      _vm._v(_vm._s(_vm.formTitle))
-                                    ])
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "v-card-text",
-                                  [
-                                    _c(
-                                      "v-container",
-                                      [
-                                        _c(
-                                          "v-row",
-                                          [
-                                            _c(
-                                              "v-col",
-                                              {
-                                                attrs: {
-                                                  cols: "12",
-                                                  sm: "6",
-                                                  md: "6"
-                                                }
-                                              },
-                                              [
-                                                _c("v-text-field", {
-                                                  attrs: {
-                                                    rules: _vm.fieldvaluerule,
-                                                    error: _vm.updateValueError,
-                                                    "error-messages":
-                                                      _vm.updateValueErrMsg,
-                                                    label: "Title"
-                                                  },
-                                                  model: {
-                                                    value:
-                                                      _vm.editedItem
-                                                        .product_category_title,
-                                                    callback: function($$v) {
-                                                      _vm.$set(
-                                                        _vm.editedItem,
-                                                        "product_category_title",
-                                                        $$v
-                                                      )
-                                                    },
-                                                    expression:
-                                                      "editedItem.product_category_title"
-                                                  }
-                                                })
-                                              ],
-                                              1
-                                            ),
-                                            _vm._v(" "),
-                                            _c(
-                                              "v-col",
-                                              {
-                                                attrs: {
-                                                  cols: "12",
-                                                  sm: "6",
-                                                  md: "6"
-                                                }
-                                              },
-                                              [
-                                                _c("v-text-field", {
-                                                  attrs: {
-                                                    rules: _vm.fieldnamerule,
-                                                    error: _vm.updateKeyError,
-                                                    "error-messages":
-                                                      _vm.updateKeyErrMsg,
-                                                    originalItem:
-                                                      _vm.editedItem
-                                                        .product_category_slug,
-                                                    label: "Slug"
-                                                  },
-                                                  model: {
-                                                    value:
-                                                      _vm.editedItem
-                                                        .product_category_slug,
-                                                    callback: function($$v) {
-                                                      _vm.$set(
-                                                        _vm.editedItem,
-                                                        "product_category_slug",
-                                                        $$v
-                                                      )
-                                                    },
-                                                    expression:
-                                                      "editedItem.product_category_slug"
-                                                  }
-                                                })
-                                              ],
-                                              1
-                                            )
-                                          ],
-                                          1
-                                        )
-                                      ],
-                                      1
-                                    )
-                                  ],
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "v-card-actions",
-                                  [
-                                    _c("v-spacer"),
-                                    _vm._v(" "),
-                                    _c(
-                                      "v-btn",
-                                      {
-                                        attrs: { color: "primary", text: "" },
-                                        on: { click: _vm.close }
-                                      },
-                                      [_vm._v("Cancel")]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "v-btn",
-                                      {
-                                        attrs: { color: "success", text: "" },
-                                        on: {
-                                          click: function($event) {
-                                            return _vm.save()
-                                          }
-                                        }
-                                      },
-                                      [_vm._v("Save")]
-                                    )
-                                  ],
-                                  1
-                                )
-                              ],
-                              1
-                            )
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "v-dialog",
-                          {
-                            attrs: { persistent: "", "max-width": "400" },
-                            model: {
-                              value: _vm.deleteDialog,
-                              callback: function($$v) {
-                                _vm.deleteDialog = $$v
-                              },
-                              expression: "deleteDialog"
-                            }
-                          },
-                          [
-                            _c(
-                              "v-card",
-                              { attrs: { loading: _vm.deleteLoading } },
-                              [
-                                _c(
-                                  "v-card-title",
-                                  { staticClass: "headline" },
-                                  [_vm._v("Confirm Deletion")]
-                                ),
-                                _vm._v(" "),
-                                _c("v-card-text", [
-                                  _vm._v(
-                                    "Do you want to delete the account of "
-                                  ),
-                                  _c("strong", [_vm._v(_vm._s(_vm.formTitle))]),
-                                  _vm._v("?")
-                                ]),
-                                _vm._v(" "),
-                                _c(
-                                  "v-card-actions",
-                                  [
-                                    _c("v-spacer"),
-                                    _vm._v(" "),
-                                    _c(
-                                      "v-btn",
-                                      {
-                                        attrs: { color: "primary", text: "" },
-                                        on: {
-                                          click: function($event) {
-                                            _vm.deleteDialog = false
-                                          }
-                                        }
-                                      },
-                                      [_vm._v("Cancel")]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "v-btn",
-                                      {
-                                        attrs: { color: "red", text: "" },
-                                        on: {
-                                          click: function($event) {
-                                            return _vm.confirmDelete(
-                                              _vm.toDelete
-                                            )
-                                          }
-                                        }
-                                      },
-                                      [_vm._v("Delete")]
-                                    )
-                                  ],
-                                  1
-                                )
-                              ],
-                              1
-                            )
-                          ],
-                          1
-                        )
-                      ]
-                    },
-                    proxy: true
-                  },
-                  {
-                    key: "item.action",
-                    fn: function(ref) {
-                      var item = ref.item
-                      return [
-                        _c(
-                          "v-icon",
-                          {
-                            staticClass: "mr-2",
-                            attrs: { small: "" },
-                            on: {
-                              click: function($event) {
-                                return _vm.editItem(item)
-                              }
-                            }
-                          },
-                          [_vm._v("mdi-pencil")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "v-icon",
-                          {
-                            attrs: { small: "" },
-                            on: {
-                              click: function($event) {
-                                return _vm.toDeleteItem(item)
-                              }
-                            }
-                          },
-                          [_vm._v("mdi-trash-can")]
-                        )
-                      ]
-                    }
-                  }
-                ])
-              }),
-              _vm._v(" "),
-              _vm.pageCount > 1
-                ? _c("v-pagination", {
-                    staticClass: "mt-3",
-                    attrs: { length: _vm.pageCount },
-                    on: { input: _vm.onPageChange },
-                    model: {
-                      value: _vm.page,
-                      callback: function($$v) {
-                        _vm.page = $$v
-                      },
-                      expression: "page"
-                    }
-                  })
-                : _vm._e()
-            ],
+            }),
             1
           )
         ],

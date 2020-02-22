@@ -31,9 +31,27 @@ class ProductCategoriesController extends Controller
     }
     public function productCategoriesAPI()
     {
-        // $productfields = Product_categories::all();
-        $productfields = Product_categories::orderBy('id', 'DESC')->paginate(10);
-        return $productfields;
+        $productCategories = Product_categories::all();
+        return collect($productCategories);
+        
+        // return Product_categories::all()->groupBy('parent');
+        // $productfields = Product_categories::orderBy('id', 'DESC')->paginate(10);
+        // $productfields = Product_categories::orderBy('id', 'DESC')->all();
+        // $grouped = [];
+        // foreach ($productCategories as $pc) {
+        //     if($pc->parent === 0){
+        //         return 'meh';
+        //     }
+        // }
+        
+
+        // return collect($productCategories)->groupBy('parent');
+        // return collect($productCategories);
+        // return $productfields;
+        // $productCategories = collect($productCategories);
+        // $productCategories = collect($productCategories)->map(function ($item) {
+        //     return (object) $item;
+        // });
 
     }    
 

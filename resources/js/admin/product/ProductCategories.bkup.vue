@@ -1,24 +1,132 @@
 <template>
-  <div class="col">
-    <v-card>
-      <v-list dense>
-        <!-- <div v-for="(pc, i) in productCategories" :key="i">
-          <v-list-item v-if="pc.parent == 0" style="border-bottom: 1px solid #eee;">
-            <v-list-item-title >{{pc.product_category_title}}</v-list-item-title>
-          </v-list-item>
-        </div> -->
+  <div>
+    <v-row>
+      <v-col class="col-12 col-md-3">
+          <v-card
+            flat
+            :loading="loading">
+            <v-form
+                class="pa-5"
+                @submit.prevent="addProductCategory()"
+                v-model="valid"
+                method="POST"
+                ref="form"
+                lazy-validation>
+                <v-text-field
+                  dense
+                  :rules="fieldnamerule"
+                  v-model="fieldname"
+                  outlined
+                  required
+                  id="field"
+                  type="text"
+                  name="field"
+                  label="Title"
+                  :error="keyError"
+                  :error-messages="keyErrorMessage"
+                  @change="clearAlert"
+                  >
+                </v-text-field>
+                <v-text-field
+                  dense
+                  :rules="fieldvaluerule"
+                  v-model="fieldvalue"
+                  outlined
+                  required
+                  id="fieldvalue"
+                  type="text"
+                  name="fieldvalue"
+                  label="Slug"
+                  :error="valueError"
+                  :error-messages="valueErrorMessage"
+                  >
+                </v-text-field>
+                <v-btn
+                  @click="clearAlert()"
+                  width="100%"
+                  dense
+                  color="primary"
+                  class="mb-2"
+                  type="submit">
+                  Save
+                </v-btn>
+            </v-form>
+        </v-card>
+      </v-col>
+      <v-col class="col-12 col-md-8">
+        <v-data-table
+          :headers="headers"
+          :items="pf"
+          hide-default-footer
+        >
+          <template v-slot:item.product_category_title="{ item }">
+            <tr>
+              <td style="cursor:pointer;border:0;">
+                <a v-bind:href="'/admin/product/category/field/'+item.product_category_slug">{{ item.product_category_title }}</a>
+              </td>
+            </tr>
+          </template>
+          <template v-slot:top>
+            <v-dialog v-model="dialog" max-width="500px">
+              <v-card :loading="dialogLoading">
+                <v-card-title class="primary white--text">
+                  <span class="headline">{{ formTitle }}</span>
+                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12" sm="6" md="6">
+                        <v-text-field 
+                          :rules="fieldvaluerule"
+                          :error="updateValueError"
+                          :error-messages="updateValueErrMsg"
+                          v-model="editedItem.product_category_title" 
+                          label="Title">
+                        </v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="6">
+                        <v-text-field
+                          :rules="fieldnamerule"
+                          :error="updateKeyError"
+                          :error-messages="updateKeyErrMsg"
+                          v-model="editedItem.product_category_slug" 
+                          :originalItem="editedItem.product_category_slug" 
+                          label="Slug">
+                        </v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
 
-        
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" text @click="close">Cancel</v-btn>
+                  <v-btn color="success" text @click="save()">Save</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+  
+            <v-dialog v-model="deleteDialog" persistent max-width="400">
+              <v-card :loading="deleteLoading">
+                <v-card-title class="headline">Confirm Deletion</v-card-title>
+                <v-card-text>Do you want to delete the account of <strong>{{formTitle}}</strong>?</v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" text @click="deleteDialog = false">Cancel</v-btn>
+                  <v-btn color="red" text @click="confirmDelete(toDelete)">Delete</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </template>
+          <template v-slot:item.action="{ item }">
+            <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+            <v-icon small @click="toDeleteItem(item)">mdi-trash-can</v-icon>
+          </template>
+        </v-data-table>
 
-          <v-list-item v-for="(pc, i) in this.mainCategories" :key="i">
-            <v-list-item-title >{{pc.product_category_title}}</v-list-item-title>
-          </v-list-item>
-          <!-- <v-list-item v-if="productCategories.parent == 0">
-            <v-list-item-title >{{pc.product_category_title}}</v-list-item-title>
-          </v-list-item>
-          -->
-      </v-list>
-    </v-card>
+        <v-pagination v-if="pageCount > 1" class="mt-3" v-model="page" :length="pageCount" @input="onPageChange"></v-pagination>
+      </v-col>
+    </v-row>
     <snack-bar :snackbar-type="sbType" :snackbar-text="sbText" :snackbar-status="sbStatus"></snack-bar>
   </div>
 </template>
@@ -32,16 +140,7 @@
     mounted (){
       this.getProductCategories(1);
     },
-    computed: {
-      mainCategories: function(){
-        return this.productCategories.filter(function(u) {
-          return u.parent == 0;
-        })
-      }
-    },
     data: () => ({
-      // All Product Categories
-
       // Delete a Category
       toDelete : [],
 
@@ -96,8 +195,7 @@
         { text: 'Slug', value: 'product_category_slug', sortable: false, width: '40%', align: 'left' },
         { text: 'Actions', value: 'action', sortable: false, width: '20%', align: 'right' },
       ],
-      productCategories : [],
-      groupedProductCategories : [],
+      pf : [],
       originalItem: {
         product_category_slug: '',
         product_category_title: ''
@@ -128,86 +226,11 @@
       },
       // Get Product Categories
       getProductCategories (thecurrentpage) {
-        // axios.get('/api/product/categories?page='+thecurrentpage)
-        axios.get('/api/product/categories')
+        axios.get('/api/product/categories?page='+thecurrentpage)
           .then(response => {
-            // this.productCategories = response.data.data;
-            this.productCategories = response.data;
-            console.log(this.productCategories);
-            // this.page = response.data.current_page;
-            // this.pageCount = response.data.last_page;
-
-            // let result = [];
-            
-            // this.productCategories.forEach((pc) => {
-            //   if(pc.parent == 0){
-            //     result.push(pc);
-            //   }
-            // });
-            // console.log(result);
-            
-            // array.push(element1, ..., elementN);  
-
-            // console.log(this.productCategories);
-
-            // Grouped
-            // let result = this.productCategories.reduce(function (a, c) {
-            //   a[c.parent] = a[c.parent] || [];
-            //   a[c.parent].push(c)
-            //   return a;
-            // }, Object.create(null));
-            // console.log(result);
-
-
-            // var groupBy = function(xs, key) {
-            //   return xs.reduce(function(rv, x) {
-            //     (rv[x[key]] = rv[x[key]] || []).push(x);
-            //     return rv;
-            //   }, {});
-            // };
-
-            // const grouped = groupBy(response.data.data, 'product_category_slug');
-
-            // function groupBy(list, keyGetter) {
-            //     const map = new Map();
-            //     list.forEach((item) => {
-            //         const key = keyGetter(item);
-            //         const collection = map.get(key);
-            //         if (!collection) {
-            //             map.set(key, [item]);
-            //         } else {
-            //             collection.push(item);
-            //         }
-            //     });
-            //     return map;
-            // }
-
-            // const grouped = groupBy(response.data.data, i => i.parent);
-
-            // console.log(grouped);
-            // Group by color as key to the person array
-            // const personGroupedByColor = groupBy(person, 'color');
-
-            // let index = [];
-            // this.groupedProductCategories[this.productCategories]="";
-            // let key = [];
-            // let val = [];
-
-            // this.productCategories.forEach(function (pc, index) {
-            //   index[pc];
-            //   console.log(index);
-            // });
-
-            // foreach (this.groupedProductCategories as key => val) {
-            // if ($templevel==$val['level']){
-            //   $grouparr[$templevel][$newkey]=$val;
-            // } else {
-            //   $grouparr[$val['level']][$newkey]=$val;
-            // }
-            //   $newkey++;       
-            // }
-            // print($grouparr);
-
+            this.pf = response.data.data;
+            this.page = response.data.current_page;
+            this.pageCount = response.data.last_page;
           })
           .catch(error => {
               console.log(error.response);
