@@ -44,44 +44,43 @@
                            
                         </div>
                         <div class="col-md-4 col-12">
-                            <v-card class="mx-auto">
-                                 <v-expansion-panels accordion multiple focusable>
-                                    <v-expansion-panel>
-                                        <v-expansion-panel-header style="min-height:40px;">Caregories</v-expansion-panel-header>
-                                        <v-expansion-panel-content>
-                                            <div class="row pt-3">
-                                                <v-treeview
-                                                    dense
-                                                    selection-type="independent"
-                                                    selectable
-                                                    selected-color="primary"
-                                                    :items="productCategories">
-                                                </v-treeview>
-                                            </div>
-                                        </v-expansion-panel-content>
-                                    </v-expansion-panel>
-                                    <v-expansion-panel>
-                                        <v-expansion-panel-header style="min-height:40px;">Featured Image</v-expansion-panel-header>
-                                        <v-expansion-panel-content>
-                                            <div class="pt-3">
-                                                <v-img :src="featuredImg" aspect-ratio="2" contain></v-img>
-                                            </div>
-                                        </v-expansion-panel-content>
-                                    </v-expansion-panel>
-                                    <v-expansion-panel>
-                                        <v-expansion-panel-header style="min-height:40px;">Gallery</v-expansion-panel-header>
-                                        <v-expansion-panel-content>
-                                            <div class="pt-3">
-                                                <div class="row">
-                                                    <div style="border:1px solid #eee;" class="col-4" v-for="n in 5" :key="n">
-                                                        <v-img :src="featuredImg" aspect-ratio="2" contain></v-img>
-                                                    </div>
+
+                            <v-expansion-panels accordion multiple focusable>
+                                <v-expansion-panel>
+                                    <v-expansion-panel-header style="min-height:40px;">Caregories</v-expansion-panel-header>
+                                    <v-expansion-panel-content>
+                                        <div class="row pt-3">
+                                            <v-treeview
+                                                dense
+                                                selection-type="independent"
+                                                selectable
+                                                selected-color="primary"
+                                                :items="productCategories">
+                                            </v-treeview>
+                                        </div>
+                                    </v-expansion-panel-content>
+                                </v-expansion-panel>
+                                <v-expansion-panel>
+                                    <v-expansion-panel-header style="min-height:40px;">Featured Image</v-expansion-panel-header>
+                                    <v-expansion-panel-content>
+                                        <div class="pt-3">
+                                            <v-img :src="featuredImg" aspect-ratio="2" contain></v-img>
+                                        </div>
+                                    </v-expansion-panel-content>
+                                </v-expansion-panel>
+                                <v-expansion-panel>
+                                    <v-expansion-panel-header style="min-height:40px;">Gallery</v-expansion-panel-header>
+                                    <v-expansion-panel-content>
+                                        <div class="pt-3">
+                                            <div class="row">
+                                                <div style="border:1px solid #eee;" class="col-4" v-for="n in 5" :key="n">
+                                                    <v-img :src="featuredImg" aspect-ratio="2" contain></v-img>
                                                 </div>
                                             </div>
-                                        </v-expansion-panel-content>
-                                    </v-expansion-panel>
-                                </v-expansion-panels>
-                            </v-card>
+                                        </div>
+                                    </v-expansion-panel-content>
+                                </v-expansion-panel>
+                            </v-expansion-panels>
                         </div>
                     </div>
                 </div><!-- page-content -->

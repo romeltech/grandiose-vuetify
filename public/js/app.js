@@ -2490,7 +2490,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["products"],
   data: function data() {
@@ -36833,122 +36832,111 @@ var render = function() {
                     { staticClass: "col-md-4 col-12" },
                     [
                       _c(
-                        "v-card",
-                        { staticClass: "mx-auto" },
+                        "v-expansion-panels",
+                        {
+                          attrs: { accordion: "", multiple: "", focusable: "" }
+                        },
                         [
                           _c(
-                            "v-expansion-panels",
-                            {
-                              attrs: {
-                                accordion: "",
-                                multiple: "",
-                                focusable: ""
-                              }
-                            },
+                            "v-expansion-panel",
                             [
                               _c(
-                                "v-expansion-panel",
-                                [
-                                  _c(
-                                    "v-expansion-panel-header",
-                                    { staticStyle: { "min-height": "40px" } },
-                                    [_vm._v("Caregories")]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("v-expansion-panel-content", [
-                                    _c(
-                                      "div",
-                                      { staticClass: "row pt-3" },
-                                      [
-                                        _c("v-treeview", {
-                                          attrs: {
-                                            dense: "",
-                                            "selection-type": "independent",
-                                            selectable: "",
-                                            "selected-color": "primary",
-                                            items: _vm.productCategories
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    )
-                                  ])
-                                ],
-                                1
+                                "v-expansion-panel-header",
+                                { staticStyle: { "min-height": "40px" } },
+                                [_vm._v("Caregories")]
                               ),
                               _vm._v(" "),
+                              _c("v-expansion-panel-content", [
+                                _c(
+                                  "div",
+                                  { staticClass: "row pt-3" },
+                                  [
+                                    _c("v-treeview", {
+                                      attrs: {
+                                        dense: "",
+                                        "selection-type": "independent",
+                                        selectable: "",
+                                        "selected-color": "primary",
+                                        items: _vm.productCategories
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
+                              ])
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-expansion-panel",
+                            [
                               _c(
-                                "v-expansion-panel",
-                                [
-                                  _c(
-                                    "v-expansion-panel-header",
-                                    { staticStyle: { "min-height": "40px" } },
-                                    [_vm._v("Featured Image")]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("v-expansion-panel-content", [
-                                    _c(
-                                      "div",
-                                      { staticClass: "pt-3" },
-                                      [
-                                        _c("v-img", {
-                                          attrs: {
-                                            src: _vm.featuredImg,
-                                            "aspect-ratio": "2",
-                                            contain: ""
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    )
-                                  ])
-                                ],
-                                1
+                                "v-expansion-panel-header",
+                                { staticStyle: { "min-height": "40px" } },
+                                [_vm._v("Featured Image")]
                               ),
                               _vm._v(" "),
+                              _c("v-expansion-panel-content", [
+                                _c(
+                                  "div",
+                                  { staticClass: "pt-3" },
+                                  [
+                                    _c("v-img", {
+                                      attrs: {
+                                        src: _vm.featuredImg,
+                                        "aspect-ratio": "2",
+                                        contain: ""
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
+                              ])
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-expansion-panel",
+                            [
                               _c(
-                                "v-expansion-panel",
-                                [
+                                "v-expansion-panel-header",
+                                { staticStyle: { "min-height": "40px" } },
+                                [_vm._v("Gallery")]
+                              ),
+                              _vm._v(" "),
+                              _c("v-expansion-panel-content", [
+                                _c("div", { staticClass: "pt-3" }, [
                                   _c(
-                                    "v-expansion-panel-header",
-                                    { staticStyle: { "min-height": "40px" } },
-                                    [_vm._v("Gallery")]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("v-expansion-panel-content", [
-                                    _c("div", { staticClass: "pt-3" }, [
-                                      _c(
+                                    "div",
+                                    { staticClass: "row" },
+                                    _vm._l(5, function(n) {
+                                      return _c(
                                         "div",
-                                        { staticClass: "row" },
-                                        _vm._l(5, function(n) {
-                                          return _c(
-                                            "div",
-                                            {
-                                              key: n,
-                                              staticClass: "col-4",
-                                              staticStyle: {
-                                                border: "1px solid #eee"
-                                              }
-                                            },
-                                            [
-                                              _c("v-img", {
-                                                attrs: {
-                                                  src: _vm.featuredImg,
-                                                  "aspect-ratio": "2",
-                                                  contain: ""
-                                                }
-                                              })
-                                            ],
-                                            1
-                                          )
-                                        }),
-                                        0
+                                        {
+                                          key: n,
+                                          staticClass: "col-4",
+                                          staticStyle: {
+                                            border: "1px solid #eee"
+                                          }
+                                        },
+                                        [
+                                          _c("v-img", {
+                                            attrs: {
+                                              src: _vm.featuredImg,
+                                              "aspect-ratio": "2",
+                                              contain: ""
+                                            }
+                                          })
+                                        ],
+                                        1
                                       )
-                                    ])
-                                  ])
-                                ],
-                                1
-                              )
+                                    }),
+                                    0
+                                  )
+                                ])
+                              ])
                             ],
                             1
                           )
