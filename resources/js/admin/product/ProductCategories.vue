@@ -1,7 +1,38 @@
 <template>
-  <div class="col">
-    <v-card>
-      <v-list dense>
+  <div>
+    <!-- selection-type="independent"
+    selectable -->
+    <v-card class="mx-0">
+      <v-treeview
+        dense
+        selected-color="primary"
+        :items="items"
+        open-on-click
+        >
+        <template slot="label" slot-scope="props">
+            {{props.item.product_category_title}}
+            <!-- {{item.id}} -->
+               <!-- {{ item.product_category_title }} -->
+        </template>
+      </v-treeview>
+    </v-card>
+  <!-- <v-data-table
+    :headers="headers"
+    :items="this.getChildren(productCategories,0)"
+    :single-expand="singleExpand"
+    :expanded.sync="expanded"
+    item-key="name"
+    show-expand
+    hide-default-footer
+  >
+    <template v-slot:expanded-item="{ headers }">
+      <td :colspan="headers.length">Peek-a-boo!</td>
+    </template>
+  </v-data-table> -->
+
+    <!-- <v-card>
+      <v-list dense> -->
+
         <!-- <div v-for="(pc, i) in productCategories" :key="i">
           <v-list-item v-if="pc.parent == 0" style="border-bottom: 1px solid #eee;">
             <v-list-item-title >{{pc.product_category_title}}</v-list-item-title>
@@ -10,15 +41,17 @@
 
         
 
-          <v-list-item v-for="(pc, i) in this.mainCategories" :key="i">
+          <!-- <v-list-item v-for="(pc, i) in this.getChildren(productCategories,0)" :key="i">
             <v-list-item-title >{{pc.product_category_title}}</v-list-item-title>
-          </v-list-item>
+          </v-list-item> -->
           <!-- <v-list-item v-if="productCategories.parent == 0">
             <v-list-item-title >{{pc.product_category_title}}</v-list-item-title>
           </v-list-item>
           -->
-      </v-list>
-    </v-card>
+
+      <!-- </v-list>
+    </v-card> -->
+
     <snack-bar :snackbar-type="sbType" :snackbar-text="sbText" :snackbar-status="sbStatus"></snack-bar>
   </div>
 </template>
@@ -33,14 +66,103 @@
       this.getProductCategories(1);
     },
     computed: {
-      mainCategories: function(){
-        return this.productCategories.filter(function(u) {
-          return u.parent == 0;
-        })
-      }
+      // mainCategories: function(){
+      //   return this.productCategories.filter(function(u) {
+      //     return u.parent == 0;
+      //   })
+      // },
     },
     data: () => ({
-      // All Product Categories
+      //
+      items: [
+        {
+          id: 'id',
+          title: 'product_category_title',
+          slug: 'product_category_slug',
+          parent: 'parent',
+        }
+      ],
+
+
+      // Tree
+      tree: [
+          {
+            id: 1,
+            name: 'Applications :',
+            children: [
+                { id: 2, name: 'Calendar : app' },
+                { id: 3, name: 'Chrome : app' },
+                { id: 4, name: 'Webstorm : app' },
+            ],
+          },
+          {
+          id: 5,
+          name: 'Documents :',
+          children: [
+              {
+              id: 6,
+              name: 'vuetify :',
+              children: [
+                  {
+                  id: 7,
+                  name: 'src :',
+                  children: [
+                      { id: 8, name: 'index : ts' },
+                      { id: 9, name: 'bootstrap : ts' },
+                  ],
+                  },
+              ],
+              },
+              {
+              id: 10,
+              name: 'material2 :',
+              children: [
+                  {
+                  id: 11,
+                  name: 'src :',
+                  children: [
+                      { id: 12, name: 'v-btn : ts' },
+                      { id: 13, name: 'v-card : ts' },
+                      { id: 14, name: 'v-window : ts' },
+                  ],
+                  },
+              ],
+              },
+          ],
+          },
+          {
+          id: 15,
+          name: 'Downloads :',
+          children: [
+              { id: 16, name: 'October : pdf' },
+              { id: 17, name: 'November : pdf' },
+              { id: 18, name: 'Tutorial : html' },
+          ],
+          },
+          {
+          id: 19,
+          name: 'Videos :',
+          children: [
+              {
+              id: 20,
+              name: 'Tutorials :',
+              children: [
+                  { id: 21, name: 'Basic layouts : mp4' },
+                  { id: 22, name: 'Advanced techniques : mp4' },
+                  { id: 23, name: 'All about app : dir' },
+              ],
+              },
+              { id: 24, name: 'Intro : mov' },
+              { id: 25, name: 'Conference introduction : avi' },
+          ],
+          },
+      ],
+
+      // items: [
+      //   {
+      //     name: 'product_category_title',
+      //   },
+      // ],
 
       // Delete a Category
       toDelete : [],
@@ -91,13 +213,17 @@
       page: 1,
       pageCount: 0,
 
+
+      expanded: [],
+      singleExpand: false,
       headers: [
-        { text: 'Title', value: 'product_category_title', sortable: false, width: '40%', align: 'left' },
-        { text: 'Slug', value: 'product_category_slug', sortable: false, width: '40%', align: 'left' },
-        { text: 'Actions', value: 'action', sortable: false, width: '20%', align: 'right' },
+        { text: 'Title', value: 'product_category_title', sortable: false, width: 'auto', align: 'left' },
+        { text: 'Slug', value: 'product_category_slug', sortable: false, width: '30%', align: 'left' },
+        { text: 'Parent', value: 'parent', sortable: false, width: '10%', align: 'left' },
+        { text: 'Actions', value: 'action', sortable: false, width: '10%', align: 'right' },
       ],
       productCategories : [],
-      groupedProductCategories : [],
+      parentCategories : [],
       originalItem: {
         product_category_slug: '',
         product_category_title: ''
@@ -114,6 +240,11 @@
       formTitle : '',
     }),
     methods: {
+      getChildren(obj, p){
+        return obj.filter(function(o) {
+          return o.parent == p;
+        })
+      },
       clearAlert(){
           this.sbStatus = false; // SnackBar
           this.keyError = false;
@@ -137,14 +268,53 @@
             // this.page = response.data.current_page;
             // this.pageCount = response.data.last_page;
 
-            // let result = [];
-            
+
+            // let parents = [];
+            // let o1 = { a: 1 };
+            // let obj = [];
+            // // dataModels[0] = {
+            // // };
+            // const numbers = [ 1, 2 ]
+            // const objects = [{f: 'a'}, {f: 'b'}]
+            // let matrix = []
+            // // this.productCategories.forEach((object) => {
+            // //   numbers.forEach((number) => {
+            // //     matrix.push({...object, number})
+            // //   })
+            // // })
+            // this.productCategories.forEach((object) => {
+            //   numbers.forEach((number) => {
+            //     matrix.push({...object, number})
+            //   })
+            // })
+            // console.log(matrix);
+
             // this.productCategories.forEach((pc) => {
             //   if(pc.parent == 0){
-            //     result.push(pc);
+            //     parents.push(pc);
+            //     // obj = Object.assign({}, parents, o1);
             //   }
             // });
-            // console.log(result);
+
+            // // console.log(obj);
+            // console.log(parents);
+            // parents.forEach((i) => {
+            //   obj = Object.assign({}, i[i], o1);
+            // });
+            // console.log(obj)
+
+        
+            // const o2 = { [Symbol('foo')]: 2 };
+
+
+            // console.log(obj); // { a : 1, [Symbol("foo")]: 2 } (cf. bug 1207182 on Firefox)
+            // Object.getOwnPropertySymbols(obj); // [Symbol(foo)]
+
+            // this.parentCategories
+
+
+
+
             
             // array.push(element1, ..., elementN);  
 

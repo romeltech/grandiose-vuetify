@@ -31,9 +31,20 @@ class ProductCategoriesController extends Controller
     }
     public function productCategoriesAPI()
     {
+        // Working
+        // $productCategories = Product_categories::all();
+        // return collect($productCategories);
+        $p = [];
         $productCategories = Product_categories::all();
-        return collect($productCategories);
-        
+        // return collect($productCategories);
+        foreach ($productCategories as $v) {
+            if($v->parent == 0){
+                array_push($p, $v);
+            }
+        }
+
+        return $p;
+
         // return Product_categories::all()->groupBy('parent');
         // $productfields = Product_categories::orderBy('id', 'DESC')->paginate(10);
         // $productfields = Product_categories::orderBy('id', 'DESC')->all();
