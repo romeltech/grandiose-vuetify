@@ -264,9 +264,55 @@
           .then(response => {
             // this.productCategories = response.data.data;
             this.productCategories = response.data;
-            console.log(this.productCategories);
+            // console.log(this.productCategories);
             // this.page = response.data.current_page;
             // this.pageCount = response.data.last_page;
+
+            let parents = [];
+            this.productCategories.forEach((pc) => {
+              if(pc.parent == 0){
+                parents.push(pc);
+                // obj = Object.assign({}, parents, o1);
+              }
+            });
+
+            // let children = [];
+            parents.forEach(function(e) { 
+              
+              // // check parent value and id if equal
+              // this.productCategories.forEach((child) => {
+
+              //   console.log('meh');
+              //   // if(e.id === child.parent){
+              //   //   e.children = [child];
+              //   // }
+              // });
+              if(e.id == 1){
+                // Add to children property
+                e.children = ['meh'];
+              }
+
+            
+            });
+
+            console.log(parents);
+
+            // Add a property
+            // const numbers = [ 1, 2 ];
+            // this.productCategories.forEach(function(e) { e.c = parents});
+
+
+            // console.log(this.productCategories);
+            // console.log(this.productCategories);
+
+            // let matrix = [];
+            // this.productCategories.forEach((object) => {
+            //   object.forEach((o) => {
+            //     matrix = Object.assign({}, this.productCategories, { lastName: "w" });
+            //   });
+            //   // matrix.push({...object, numbers})
+            // });
+            // console.log(matrix);
 
 
             // let parents = [];

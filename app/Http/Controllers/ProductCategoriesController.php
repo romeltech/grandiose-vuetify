@@ -32,18 +32,28 @@ class ProductCategoriesController extends Controller
     public function productCategoriesAPI()
     {
         // Working
-        // $productCategories = Product_categories::all();
-        // return collect($productCategories);
-        $p = [];
         $productCategories = Product_categories::all();
-        // return collect($productCategories);
-        foreach ($productCategories as $v) {
-            if($v->parent == 0){
-                array_push($p, $v);
-            }
-        }
+        return collect($productCategories);
+        // $insert = array('id' => 1,'title' => 'meh');
+        // $inserted = [];
+        // $npc = [];
+        // $productCategories = Product_categories::all();
+        // // return collect($productCategories);
+        // foreach ($productCategories as $k => $v) {
+        //     if($v->parent == 0){
+        //         $v['child'] = $insert['title'];
+        //         array_push($npc, $v);
+        //     }
+        // }
 
-        return $p;
+        // return $npc;
+        // foreach ($npc as $k => $o) {
+        //     foreach ($o as $t) {
+        //         array_push($inserted, $t);
+        //     }
+        // }
+        // return $inserted;
+
 
         // return Product_categories::all()->groupBy('parent');
         // $productfields = Product_categories::orderBy('id', 'DESC')->paginate(10);
