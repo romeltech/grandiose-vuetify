@@ -31,49 +31,28 @@ class ProductCategoriesController extends Controller
     }
     public function productCategoriesAPI()
     {
-        // Working
         $productCategories = Product_categories::all();
-        return collect($productCategories);
-        // $insert = array('id' => 1,'title' => 'meh');
-        // $inserted = [];
-        // $npc = [];
-        // $productCategories = Product_categories::all();
-        // // return collect($productCategories);
-        // foreach ($productCategories as $k => $v) {
-        //     if($v->parent == 0){
-        //         $v['child'] = $insert['title'];
-        //         array_push($npc, $v);
-        //     }
-        // }
-
-        // return $npc;
-        // foreach ($npc as $k => $o) {
-        //     foreach ($o as $t) {
-        //         array_push($inserted, $t);
-        //     }
-        // }
-        // return $inserted;
-
-
-        // return Product_categories::all()->groupBy('parent');
-        // $productfields = Product_categories::orderBy('id', 'DESC')->paginate(10);
-        // $productfields = Product_categories::orderBy('id', 'DESC')->all();
-        // $grouped = [];
-        // foreach ($productCategories as $pc) {
-        //     if($pc->parent === 0){
-        //         return 'meh';
-        //     }
-        // }
-        
-
-        // return collect($productCategories)->groupBy('parent');
+        // $productCategories->toArray();
         // return collect($productCategories);
-        // return $productfields;
-        // $productCategories = collect($productCategories);
-        // $productCategories = collect($productCategories)->map(function ($item) {
-        //     return (object) $item;
-        // });
 
+        function recurse_uls($array, $parent)
+        {
+            $return = array();
+            foreach ($array as $c => $p)  {
+                if ($p['parent'] != $parent) continue;
+                $return[] = $p;
+                $data = recurse_uls ($array, $p['id']);
+                if($data) {
+                    $length = count($return);
+                    $return[$length - 1]['children'] = $data;
+                }
+            }
+            return empty($return) ? null : $return;
+        }
+        
+        $data = recurse_uls ($productCategories, 0);
+
+        return $data;
     }    
 
     /**
