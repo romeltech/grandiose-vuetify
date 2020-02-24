@@ -2876,6 +2876,37 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2893,6 +2924,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      // Dialog
+      mainAction: '',
       // Delete a Category
       toDelete: [],
       // Add a Category
@@ -2984,6 +3017,17 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    create: function create() {
+      this.mainAction = 'create';
+      this.dialog = true;
+      this.formTitle = 'Create new';
+    },
+    edit: function edit(i) {
+      this.mainAction = 'edit';
+      this.dialog = true;
+      this.formTitle = 'Edit ' + i.product_category_title;
+      console.log(i);
+    },
     getChildren: function getChildren(obj, p) {
       return obj.filter(function (o) {
         return o.parent == p;
@@ -3005,8 +3049,8 @@ __webpack_require__.r(__webpack_exports__);
       // axios.get('/api/product/categories?page='+thecurrentpage)
       axios.get('/api/product/categories').then(function (response) {
         // this.productCategories = response.data.data;
-        _this.productCategories = response.data;
-        console.log(_this.productCategories); // this.page = response.data.current_page;
+        _this.productCategories = response.data; // console.log(this.productCategories);
+        // this.page = response.data.current_page;
         // this.pageCount = response.data.last_page;
       })["catch"](function (error) {
         console.log(error.response);
@@ -37097,44 +37141,183 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
+    { staticClass: "row" },
     [
       _c(
-        "v-card",
-        { staticClass: "mx-0" },
+        "div",
+        { staticClass: "col-12 col-md-8" },
         [
-          _c("v-treeview", {
+          _c(
+            "v-card",
+            { staticClass: "mx-0" },
+            [
+              _c(
+                "v-toolbar",
+                { attrs: { flat: "", color: "white" } },
+                [
+                  _c("v-toolbar-title", [_vm._v("Product Categories")]),
+                  _vm._v(" "),
+                  _c("v-spacer"),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    { staticClass: "primary", on: { click: _vm.create } },
+                    [_vm._v("new")]
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("v-treeview", {
+                staticClass: "pb-3",
+                attrs: {
+                  hoverable: "",
+                  "selected-color": "primary",
+                  items: _vm.productCategories
+                },
+                scopedSlots: _vm._u([
+                  {
+                    key: "label",
+                    fn: function(props) {
+                      return [
+                        _c(
+                          "div",
+                          { staticClass: "d-flex px-3" },
+                          [
+                            _c("span", [
+                              _vm._v(
+                                "\n              " +
+                                  _vm._s(props.item.product_category_title) +
+                                  "\n            "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "v-icon",
+                              {
+                                staticClass: "ml-auto",
+                                attrs: { small: "" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.edit(props.item)
+                                  }
+                                }
+                              },
+                              [_vm._v("mdi-pencil")]
+                            )
+                          ],
+                          1
+                        )
+                      ]
+                    }
+                  }
+                ])
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("snack-bar", {
             attrs: {
-              dense: "",
-              "selected-color": "primary",
-              items: _vm.productCategories,
-              "open-on-click": ""
-            },
-            scopedSlots: _vm._u([
-              {
-                key: "label",
-                fn: function(props) {
-                  return [
-                    _vm._v(
-                      "\n          " +
-                        _vm._s(props.item.product_category_title) +
-                        "\n          "
-                    )
-                  ]
-                }
-              }
-            ])
+              "snackbar-type": _vm.sbType,
+              "snackbar-text": _vm.sbText,
+              "snackbar-status": _vm.sbStatus
+            }
           })
         ],
         1
       ),
       _vm._v(" "),
-      _c("snack-bar", {
-        attrs: {
-          "snackbar-type": _vm.sbType,
-          "snackbar-text": _vm.sbText,
-          "snackbar-status": _vm.sbStatus
-        }
-      })
+      _c(
+        "v-dialog",
+        {
+          attrs: { "max-width": "500px" },
+          model: {
+            value: _vm.dialog,
+            callback: function($$v) {
+              _vm.dialog = $$v
+            },
+            expression: "dialog"
+          }
+        },
+        [
+          _c(
+            "v-card",
+            { attrs: { loading: _vm.loading } },
+            [
+              _c(
+                "v-form",
+                {
+                  ref: "form",
+                  attrs: { method: "POST", "lazy-validation": "" },
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.save(_vm.dialogItem)
+                    }
+                  },
+                  model: {
+                    value: _vm.valid,
+                    callback: function($$v) {
+                      _vm.valid = $$v
+                    },
+                    expression: "valid"
+                  }
+                },
+                [
+                  _c("v-card-title", [
+                    _c("span", { staticClass: "headline" }, [
+                      _vm._v(_vm._s(_vm.formTitle))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _vm.mainAction == "delete"
+                    ? _c("v-card-text", [
+                        _vm._v("\n        Are you sure you want to delete "),
+                        _c("strong", [_vm._v(_vm._s(_vm.toDeleteTitle))]),
+                        _vm._v("?\n      ")
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-actions",
+                    [
+                      _c("v-spacer"),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "blue darken-1", text: "" },
+                          on: { click: _vm.close }
+                        },
+                        [_vm._v("Cancel")]
+                      ),
+                      _vm._v(" "),
+                      (_vm.dialogAction = 1)
+                        ? _c(
+                            "v-btn",
+                            {
+                              attrs: {
+                                color: "primary",
+                                text: "",
+                                type: "submit"
+                              }
+                            },
+                            [_vm._v(_vm._s(_vm.mainAction))]
+                          )
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
     ],
     1
   )

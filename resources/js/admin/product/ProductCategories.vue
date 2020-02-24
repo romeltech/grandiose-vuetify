@@ -1,58 +1,89 @@
 <template>
-  <div>
-    <!-- selection-type="independent"
-    selectable -->
-    <v-card class="mx-0">
-      <v-treeview
-        dense
-        selected-color="primary"
-        :items="productCategories"
-        open-on-click
-        >
-        <template slot="label" slot-scope="props">
-            {{props.item.product_category_title}}
-            <!-- {{item.id}} -->
-               <!-- {{ item.product_category_title }} -->
-        </template>
-      </v-treeview>
-    </v-card>
-  <!-- <v-data-table
-    :headers="headers"
-    :items="this.getChildren(productCategories,0)"
-    :single-expand="singleExpand"
-    :expanded.sync="expanded"
-    item-key="name"
-    show-expand
-    hide-default-footer
-  >
-    <template v-slot:expanded-item="{ headers }">
-      <td :colspan="headers.length">Peek-a-boo!</td>
-    </template>
-  </v-data-table> -->
+  <div class="row">
+    <div class="col-12 col-md-8">
+      <v-card class="mx-0">
+        <v-toolbar flat color="white">
+            <v-toolbar-title>Product Categories</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn class="primary" @click="create">new</v-btn>
+        </v-toolbar>
+        <v-treeview
+          hoverable
+          selected-color="primary"
+          :items="productCategories" class="pb-3"
+          >
+          <template slot="label" slot-scope="props">
+            <div class="d-flex px-3">
+              <span>
+                {{props.item.product_category_title}}
+              </span>
+              <v-icon small @click="edit(props.item)" class="ml-auto">mdi-pencil</v-icon>
+            </div>
+          </template>
+        </v-treeview>
+      </v-card>
+      <snack-bar :snackbar-type="sbType" :snackbar-text="sbText" :snackbar-status="sbStatus"></snack-bar>
+    </div>
 
-    <!-- <v-card>
-      <v-list dense> -->
+  
+    <v-dialog v-model="dialog" max-width="500px">
+      <v-card :loading="loading">
+      <v-form
+        method="POST"
+        ref="form"
+        v-model="valid"
+        @submit.prevent="save(dialogItem)"
+        lazy-validation>
+        <v-card-title>
+          <span class="headline">{{ formTitle }}</span>
+        </v-card-title>
+        <v-card-text v-if="mainAction == 'delete'">
+          Are you sure you want to delete <strong>{{toDeleteTitle}}</strong>?
+        </v-card-text>
+        <!-- <v-card-text v-if="mainAction != 'delete'">
+          <v-container>
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-text-field 
+                v-model="dialogItem.category_field_title"
+                label="Title"
+                :rules="titleRule"
+                :error="titleError"
+                :error-messages="titleErrorMessage"
+                @change="clearAlert"
+                >
+              </v-text-field>
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-text-field 
+                  v-model="dialogItem.category_field_slug"
+                  label="Slug"
+                  :rules="slugRule"
+                  :error="slugError"
+                  :error-messages="slugErrorMessage"
+                  @change="clearAlert"
+                  >
+                </v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text> -->
 
-        <!-- <div v-for="(pc, i) in productCategories" :key="i">
-          <v-list-item v-if="pc.parent == 0" style="border-bottom: 1px solid #eee;">
-            <v-list-item-title >{{pc.product_category_title}}</v-list-item-title>
-          </v-list-item>
-        </div> -->
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+          <v-btn
+            v-if="dialogAction = 1"
+            color="primary"
+            text
+            type="submit"
+          >{{mainAction}}</v-btn>
+        </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-dialog>
 
-        
-
-          <!-- <v-list-item v-for="(pc, i) in this.getChildren(productCategories,0)" :key="i">
-            <v-list-item-title >{{pc.product_category_title}}</v-list-item-title>
-          </v-list-item> -->
-          <!-- <v-list-item v-if="productCategories.parent == 0">
-            <v-list-item-title >{{pc.product_category_title}}</v-list-item-title>
-          </v-list-item>
-          -->
-
-      <!-- </v-list>
-    </v-card> -->
-
-    <snack-bar :snackbar-type="sbType" :snackbar-text="sbText" :snackbar-status="sbStatus"></snack-bar>
+    
   </div>
 </template>
 <script>
@@ -73,6 +104,9 @@
       // },
     },
     data: () => ({
+      // Dialog
+      mainAction : '',
+
 
       // Delete a Category
       toDelete : [],
@@ -150,6 +184,17 @@
       formTitle : '',
     }),
     methods: {
+      create(){
+        this.mainAction = 'create';
+        this.dialog = true;
+        this.formTitle = 'Create new';
+      },
+      edit(i){
+        this.mainAction = 'edit';
+        this.dialog = true;
+        this.formTitle = 'Edit '+i.product_category_title;
+        console.log(i);
+      },
       getChildren(obj, p){
         return obj.filter(function(o) {
           return o.parent == p;
@@ -174,7 +219,7 @@
           .then(response => {
             // this.productCategories = response.data.data;
             this.productCategories = response.data;
-            console.log(this.productCategories);
+            // console.log(this.productCategories);
             // this.page = response.data.current_page;
             // this.pageCount = response.data.last_page;
           })
