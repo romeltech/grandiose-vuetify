@@ -2907,6 +2907,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -37186,9 +37190,9 @@ var render = function() {
                           [
                             _c("span", [
                               _vm._v(
-                                "\n              " +
+                                "\n                " +
                                   _vm._s(props.item.product_category_title) +
-                                  "\n            "
+                                  "\n              "
                               )
                             ]),
                             _vm._v(" "),
@@ -37240,7 +37244,168 @@ var render = function() {
             expression: "dialog"
           }
         },
-        [_c("v-card", { attrs: { loading: _vm.loading } })],
+        [
+          _c(
+            "v-card",
+            { attrs: { loading: _vm.loading } },
+            [
+              _c(
+                "v-form",
+                {
+                  ref: "form",
+                  attrs: { method: "POST", "lazy-validation": "" },
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.save(_vm.dialogItem)
+                    }
+                  },
+                  model: {
+                    value: _vm.valid,
+                    callback: function($$v) {
+                      _vm.valid = $$v
+                    },
+                    expression: "valid"
+                  }
+                },
+                [
+                  _c("v-card-title", [
+                    _c("span", { staticClass: "headline" }, [
+                      _vm._v(_vm._s(_vm.formTitle))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _vm.mainAction == "delete"
+                    ? _c("v-card-text", [
+                        _vm._v("\n          Are you sure you want to delete "),
+                        _c("strong", [_vm._v(_vm._s(_vm.toDeleteTitle))]),
+                        _vm._v("?\n        ")
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.mainAction != "delete"
+                    ? _c(
+                        "v-card-text",
+                        [
+                          _c(
+                            "v-container",
+                            [
+                              _c(
+                                "v-row",
+                                [
+                                  _c(
+                                    "v-col",
+                                    { attrs: { cols: "12", md: "6" } },
+                                    [
+                                      _c("v-text-field", {
+                                        attrs: {
+                                          label: "Title",
+                                          rules: _vm.titleRule,
+                                          error: _vm.titleError,
+                                          "error-messages":
+                                            _vm.titleErrorMessage
+                                        },
+                                        on: { change: _vm.clearAlert },
+                                        model: {
+                                          value:
+                                            _vm.dialogItem.category_field_title,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.dialogItem,
+                                              "category_field_title",
+                                              $$v
+                                            )
+                                          },
+                                          expression:
+                                            "dialogItem.category_field_title"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-col",
+                                    { attrs: { cols: "12", md: "6" } },
+                                    [
+                                      _c("v-text-field", {
+                                        attrs: {
+                                          label: "Slug",
+                                          rules: _vm.slugRule,
+                                          error: _vm.slugError,
+                                          "error-messages": _vm.slugErrorMessage
+                                        },
+                                        on: { change: _vm.clearAlert },
+                                        model: {
+                                          value:
+                                            _vm.dialogItem.category_field_slug,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.dialogItem,
+                                              "category_field_slug",
+                                              $$v
+                                            )
+                                          },
+                                          expression:
+                                            "dialogItem.category_field_slug"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-actions",
+                    [
+                      _c("v-spacer"),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "blue darken-1", text: "" },
+                          on: { click: _vm.close }
+                        },
+                        [_vm._v("Cancel")]
+                      ),
+                      _vm._v(" "),
+                      (_vm.dialogAction = 1)
+                        ? _c(
+                            "v-btn",
+                            {
+                              attrs: {
+                                color: "primary",
+                                text: "",
+                                type: "submit"
+                              }
+                            },
+                            [_vm._v(_vm._s(_vm.mainAction))]
+                          )
+                        : _vm._e()
+                    ],
+                    1
+                  ),
+                  _vm._v("\n<<<<<<< HEAD\n        ")
+                ],
+                1
+              ),
+              _vm._v(" -->\n=======\n        "),
+              _vm._v(
+                "\n>>>>>>> c0d1d916e48eabd829659a00d88bac0423802d7b\n      "
+              )
+            ],
+            1
+          )
+        ],
         1
       )
     ],

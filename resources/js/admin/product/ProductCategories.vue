@@ -28,7 +28,7 @@
   
     <v-dialog v-model="dialog" max-width="500px">
       <v-card :loading="loading">
-      <!-- <v-form
+      <v-form
         method="POST"
         ref="form"
         v-model="valid"
@@ -79,7 +79,11 @@
             type="submit"
           >{{mainAction}}</v-btn>
         </v-card-actions>
+<<<<<<< HEAD
         </v-form> -->
+=======
+        </v-form>
+>>>>>>> c0d1d916e48eabd829659a00d88bac0423802d7b
       </v-card>
     </v-dialog>
 
