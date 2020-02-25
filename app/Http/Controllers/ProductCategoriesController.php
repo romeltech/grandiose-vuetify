@@ -31,10 +31,28 @@ class ProductCategoriesController extends Controller
     }
     public function productCategoriesAPI()
     {
-        // $productfields = Product_categories::all();
-        $productfields = Product_categories::orderBy('id', 'DESC')->paginate(10);
-        return $productfields;
+        $productCategories = Product_categories::all();
+        // $productCategories->toArray();
+        // return collect($productCategories);
 
+        function recurse_uls($array, $parent)
+        {
+            $return = array();
+            foreach ($array as $c => $p)  {
+                if ($p['parent'] != $parent) continue;
+                $return[] = $p;
+                $data = recurse_uls ($array, $p['id']);
+                if($data) {
+                    $length = count($return);
+                    $return[$length - 1]['children'] = $data;
+                }
+            }
+            return empty($return) ? null : $return;
+        }
+        
+        $data = recurse_uls ($productCategories, 0);
+
+        return $data;
     }    
 
     /**

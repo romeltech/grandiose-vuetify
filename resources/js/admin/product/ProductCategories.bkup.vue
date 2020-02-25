@@ -1,89 +1,133 @@
 <template>
-  <div class="row">
-    <div class="col-12 col-md-8">
-      <v-card class="mx-0">
-        <v-toolbar flat color="white">
-            <v-toolbar-title>Product Categories</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn class="primary" @click="create">new</v-btn>
-        </v-toolbar>
-        <v-treeview
-          hoverable
-          selected-color="primary"
-          :items="productCategories" class="pb-3"
-          >
-          <template slot="label" slot-scope="props">
-            <div class="d-flex px-3">
-              <span>
-                {{props.item.product_category_title}}
-              </span>
-              <v-icon small @click="edit(props.item)" class="ml-auto">mdi-pencil</v-icon>
-            </div>
-          </template>
-        </v-treeview>
-      </v-card>
-      <snack-bar :snackbar-type="sbType" :snackbar-text="sbText" :snackbar-status="sbStatus"></snack-bar>
-    </div>
-
-  
-    <v-dialog v-model="dialog" max-width="500px">
-      <v-card :loading="loading">
-      <!-- <v-form
-        method="POST"
-        ref="form"
-        v-model="valid"
-        @submit.prevent="save(dialogItem)"
-        lazy-validation>
-        <v-card-title>
-          <span class="headline">{{ formTitle }}</span>
-        </v-card-title>
-        <v-card-text v-if="mainAction == 'delete'">
-          Are you sure you want to delete <strong>{{toDeleteTitle}}</strong>?
-        </v-card-text>
-        <v-card-text v-if="mainAction != 'delete'">
-          <v-container>
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-text-field 
-                v-model="dialogItem.category_field_title"
-                label="Title"
-                :rules="titleRule"
-                :error="titleError"
-                :error-messages="titleErrorMessage"
-                @change="clearAlert"
-                >
-              </v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-text-field 
-                  v-model="dialogItem.category_field_slug"
-                  label="Slug"
-                  :rules="slugRule"
-                  :error="slugError"
-                  :error-messages="slugErrorMessage"
+  <div>
+    <v-row>
+      <v-col class="col-12 col-md-3">
+          <v-card
+            flat
+            :loading="loading">
+            <v-form
+                class="pa-5"
+                @submit.prevent="addProductCategory()"
+                v-model="valid"
+                method="POST"
+                ref="form"
+                lazy-validation>
+                <v-text-field
+                  dense
+                  :rules="fieldnamerule"
+                  v-model="fieldname"
+                  outlined
+                  required
+                  id="field"
+                  type="text"
+                  name="field"
+                  label="Title"
+                  :error="keyError"
+                  :error-messages="keyErrorMessage"
                   @change="clearAlert"
                   >
                 </v-text-field>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
+                <v-text-field
+                  dense
+                  :rules="fieldvaluerule"
+                  v-model="fieldvalue"
+                  outlined
+                  required
+                  id="fieldvalue"
+                  type="text"
+                  name="fieldvalue"
+                  label="Slug"
+                  :error="valueError"
+                  :error-messages="valueErrorMessage"
+                  >
+                </v-text-field>
+                <v-btn
+                  @click="clearAlert()"
+                  width="100%"
+                  dense
+                  color="primary"
+                  class="mb-2"
+                  type="submit">
+                  Save
+                </v-btn>
+            </v-form>
+        </v-card>
+      </v-col>
+      <v-col class="col-12 col-md-8">
+        <v-data-table
+          :headers="headers"
+          :items="pf"
+          hide-default-footer
+        >
+          <template v-slot:item.product_category_title="{ item }">
+            <tr>
+              <td style="cursor:pointer;border:0;">
+                <a v-bind:href="'/admin/product/category/field/'+item.product_category_slug">{{ item.product_category_title }}</a>
+              </td>
+            </tr>
+          </template>
+          <template v-slot:top>
+            <v-dialog v-model="dialog" max-width="500px">
+              <v-card :loading="dialogLoading">
+                <v-card-title class="primary white--text">
+                  <span class="headline">{{ formTitle }}</span>
+                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12" sm="6" md="6">
+                        <v-text-field 
+                          :rules="fieldvaluerule"
+                          :error="updateValueError"
+                          :error-messages="updateValueErrMsg"
+                          v-model="editedItem.product_category_title" 
+                          label="Title">
+                        </v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="6">
+                        <v-text-field
+                          :rules="fieldnamerule"
+                          :error="updateKeyError"
+                          :error-messages="updateKeyErrMsg"
+                          v-model="editedItem.product_category_slug" 
+                          :originalItem="editedItem.product_category_slug" 
+                          label="Slug">
+                        </v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-          <v-btn
-            v-if="dialogAction = 1"
-            color="primary"
-            text
-            type="submit"
-          >{{mainAction}}</v-btn>
-        </v-card-actions>
-        </v-form> -->
-      </v-card>
-    </v-dialog>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" text @click="close">Cancel</v-btn>
+                  <v-btn color="success" text @click="save()">Save</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+  
+            <v-dialog v-model="deleteDialog" persistent max-width="400">
+              <v-card :loading="deleteLoading">
+                <v-card-title class="headline">Confirm Deletion</v-card-title>
+                <v-card-text>Do you want to delete the account of <strong>{{formTitle}}</strong>?</v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" text @click="deleteDialog = false">Cancel</v-btn>
+                  <v-btn color="red" text @click="confirmDelete(toDelete)">Delete</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </template>
+          <template v-slot:item.action="{ item }">
+            <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+            <v-icon small @click="toDeleteItem(item)">mdi-trash-can</v-icon>
+          </template>
+        </v-data-table>
 
-    
+        <v-pagination v-if="pageCount > 1" class="mt-3" v-model="page" :length="pageCount" @input="onPageChange"></v-pagination>
+      </v-col>
+    </v-row>
+    <snack-bar :snackbar-type="sbType" :snackbar-text="sbText" :snackbar-status="sbStatus"></snack-bar>
   </div>
 </template>
 <script>
@@ -96,18 +140,7 @@
     mounted (){
       this.getProductCategories(1);
     },
-    computed: {
-      // mainCategories: function(){
-      //   return this.productCategories.filter(function(u) {
-      //     return u.parent == 0;
-      //   })
-      // },
-    },
     data: () => ({
-      // Dialog
-      mainAction : '',
-
-
       // Delete a Category
       toDelete : [],
 
@@ -157,17 +190,12 @@
       page: 1,
       pageCount: 0,
 
-
-      expanded: [],
-      singleExpand: false,
       headers: [
-        { text: 'Title', value: 'product_category_title', sortable: false, width: 'auto', align: 'left' },
-        { text: 'Slug', value: 'product_category_slug', sortable: false, width: '30%', align: 'left' },
-        { text: 'Parent', value: 'parent', sortable: false, width: '10%', align: 'left' },
-        { text: 'Actions', value: 'action', sortable: false, width: '10%', align: 'right' },
+        { text: 'Title', value: 'product_category_title', sortable: false, width: '40%', align: 'left' },
+        { text: 'Slug', value: 'product_category_slug', sortable: false, width: '40%', align: 'left' },
+        { text: 'Actions', value: 'action', sortable: false, width: '20%', align: 'right' },
       ],
-      productCategories : [],
-      parentCategories : [],
+      pf : [],
       originalItem: {
         product_category_slug: '',
         product_category_title: ''
@@ -184,22 +212,6 @@
       formTitle : '',
     }),
     methods: {
-      create(){
-        this.mainAction = 'create';
-        this.dialog = true;
-        this.formTitle = 'Create new';
-      },
-      edit(i){
-        this.mainAction = 'edit';
-        this.dialog = true;
-        this.formTitle = 'Edit '+i.product_category_title;
-        console.log(i);
-      },
-      getChildren(obj, p){
-        return obj.filter(function(o) {
-          return o.parent == p;
-        })
-      },
       clearAlert(){
           this.sbStatus = false; // SnackBar
           this.keyError = false;
@@ -214,14 +226,11 @@
       },
       // Get Product Categories
       getProductCategories (thecurrentpage) {
-        // axios.get('/api/product/categories?page='+thecurrentpage)
-        axios.get('/api/product/categories')
+        axios.get('/api/product/categories?page='+thecurrentpage)
           .then(response => {
-            // this.productCategories = response.data.data;
-            this.productCategories = response.data;
-            // console.log(this.productCategories);
-            // this.page = response.data.current_page;
-            // this.pageCount = response.data.last_page;
+            this.pf = response.data.data;
+            this.page = response.data.current_page;
+            this.pageCount = response.data.last_page;
           })
           .catch(error => {
               console.log(error.response);
