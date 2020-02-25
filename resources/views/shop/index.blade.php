@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <v-container id="products-page" style="max-width:100%;">
+    <v-container id="products-page" style="max-width:1600px;">
         <div class="row">
             <div class="col-12 col-md-3">
                 <side-bar></side-bar>

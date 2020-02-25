@@ -12,7 +12,7 @@ class ProductCategoriesController extends Controller
     public function __construct()
     {
         // $this->middleware('auth');
-        $this->middleware('auth')->except(['productCategoriesAPI']);
+        $this->middleware('auth')->except(['productCategoriesTreeAPI','productCategoriesListAPI']);
         // $this->middleware('auth')->only(['index']);
     }
 
@@ -29,11 +29,17 @@ class ProductCategoriesController extends Controller
         // return view('admin.product.field.index', compact('productfields'));
         return view('admin.product.category.index');
     }
-    public function productCategoriesAPI()
+
+    public function productCategoriesListAPI()
     {
         $productCategories = Product_categories::all();
-        // $productCategories->toArray();
-        // return collect($productCategories);
+
+        return collect($productCategories);
+    }  
+
+    public function productCategoriesTreeAPI()
+    {
+        $productCategories = Product_categories::all();
 
         function recurse_uls($array, $parent)
         {
