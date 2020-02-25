@@ -37279,6 +37279,87 @@ var render = function() {
                       ])
                     : _vm._e(),
                   _vm._v(" "),
+                  _vm.mainAction != "delete"
+                    ? _c(
+                        "v-card-text",
+                        [
+                          _c(
+                            "v-container",
+                            [
+                              _c(
+                                "v-row",
+                                [
+                                  _c(
+                                    "v-col",
+                                    { attrs: { cols: "12", md: "6" } },
+                                    [
+                                      _c("v-text-field", {
+                                        attrs: {
+                                          label: "Title",
+                                          rules: _vm.titleRule,
+                                          error: _vm.titleError,
+                                          "error-messages":
+                                            _vm.titleErrorMessage
+                                        },
+                                        on: { change: _vm.clearAlert },
+                                        model: {
+                                          value:
+                                            _vm.dialogItem.category_field_title,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.dialogItem,
+                                              "category_field_title",
+                                              $$v
+                                            )
+                                          },
+                                          expression:
+                                            "dialogItem.category_field_title"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-col",
+                                    { attrs: { cols: "12", md: "6" } },
+                                    [
+                                      _c("v-text-field", {
+                                        attrs: {
+                                          label: "Slug",
+                                          rules: _vm.slugRule,
+                                          error: _vm.slugError,
+                                          "error-messages": _vm.slugErrorMessage
+                                        },
+                                        on: { change: _vm.clearAlert },
+                                        model: {
+                                          value:
+                                            _vm.dialogItem.category_field_slug,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.dialogItem,
+                                              "category_field_slug",
+                                              $$v
+                                            )
+                                          },
+                                          expression:
+                                            "dialogItem.category_field_slug"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
                   _c(
                     "v-card-actions",
                     [

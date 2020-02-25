@@ -40,7 +40,7 @@
         <v-card-text v-if="mainAction == 'delete'">
           Are you sure you want to delete <strong>{{toDeleteTitle}}</strong>?
         </v-card-text>
-        <!-- <v-card-text v-if="mainAction != 'delete'">
+        <v-card-text v-if="mainAction != 'delete'">
           <v-container>
             <v-row>
               <v-col cols="12" md="6">
@@ -67,7 +67,7 @@
               </v-col>
             </v-row>
           </v-container>
-        </v-card-text> -->
+        </v-card-text>
 
         <v-card-actions>
           <v-spacer></v-spacer>
