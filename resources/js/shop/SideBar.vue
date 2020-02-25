@@ -20,9 +20,9 @@
         active-class=""
       >
         <v-list-item>
-          <template v-slot:default="{ active }">
+          <template v-slot:default="{  }">
             <v-list-item-action>
-              <v-checkbox v-model="active"></v-checkbox>
+              <v-checkbox ></v-checkbox>
             </v-list-item-action>
 
             <v-list-item-content>
@@ -33,9 +33,9 @@
         </v-list-item>
 
         <v-list-item>
-          <template v-slot:default="{ active }">
+          <template v-slot:default="{  }">
             <v-list-item-action>
-              <v-checkbox v-model="active"></v-checkbox>
+              <v-checkbox ></v-checkbox>
             </v-list-item-action>
 
             <v-list-item-content>
@@ -46,9 +46,9 @@
         </v-list-item>
 
         <v-list-item>
-          <template v-slot:default="{ active }">
+          <template v-slot:default="{  }">
             <v-list-item-action>
-              <v-checkbox v-model="active"></v-checkbox>
+              <v-checkbox ></v-checkbox>
             </v-list-item-action>
 
             <v-list-item-content>
@@ -70,6 +70,7 @@
 <script>
   export default {
     data: () => ({
+      active: true,
       admins: [
         ['Management', 'mdi-home'],
         ['Settings', 'mdi-home'],

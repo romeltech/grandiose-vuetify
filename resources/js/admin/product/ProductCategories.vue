@@ -70,12 +70,16 @@
               </v-col>
               <v-col cols="12">
                 <v-combobox
-                  v-model="select"
+                  v-model="selected"
                   :items="productCategoriesDropdown"
+                  item-text="product_category_title"
+                  item-value="id"
                   label="Parent"
                   dense
                 >
-                  <template v-slot:selection="data">
+                  <!-- {{ dialogItem.parent }} -->
+
+                  <!-- <template v-slot:selection="data">
                     <v-chip
                       :key="JSON.stringify(data.item)"
                       v-bind="data.attrs"
@@ -85,8 +89,8 @@
                     > 
                  
                       {{ data.item.product_category_title }}
-                         </v-chip>
-                  </template>
+                    </v-chip>
+                  </template> -->
                  <template v-slot:no-data>
                   <v-list-item>
                     <v-list-item-content>
@@ -184,7 +188,11 @@
       productCategoriesDropdown : [],
       listloaded : false,
 
-      select: 0, 
+      items: {
+        text: "category_field_title",
+        value: "id",
+      },
+      selected: null, 
       dialogItem: {
         product_category_slug: '',
         product_category_title: ''
@@ -214,7 +222,8 @@
           this.getProductCategoriesList();
           this.listloaded = true;
         }
-        // console.log(i);
+        this.selected = i.parent;
+        console.log(this.selected);
       },
       deleteItem(i){
         this.mainAction = 'delete';
