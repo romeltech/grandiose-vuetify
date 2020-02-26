@@ -70,7 +70,7 @@
               <v-col cols="12">
                 <v-combobox
                   persistent-hint
-                  hint="Leave empty to set as main category"
+                  hint="Select Category. Leave empty to set as main category."
                   :disabled="selectDisabled"
                   :loading="selectLoading"
                   v-model="selected"
@@ -157,7 +157,6 @@
       
       // Interface
       loading : false,
-      dialogLoading : false,
       dialog: false,
 
       // SnackBar
@@ -182,7 +181,7 @@
         text: "category_field_title",
         value: "id",
       },
-      selected: 'Select Category', 
+      selected: [], 
       dialogItem: {
         product_category_slug: '',
         product_category_title: '',
@@ -212,15 +211,18 @@
             this.selected = result[0].product_category_title;
           }
         }else{
-          this.selected = 'Select Category';
+          this.selected.id = 0;
+          this.selected.product_category_title = 'meh';
+          // console.log(this.selected);
+          // this.selected = [];
         }
       },
       editItem(i){
         this.dialogItem = Object.assign({}, i);
+        this.defaultItem = Object.assign({}, i);
         this.mainAction = 'update';
         this.dialog = true;
         this.formTitle = 'Edit '+i.product_category_title;
-        console.log(this.dialogItem);
 
         if(this.listLoaded == false){
           this.selectLoading = true;
@@ -241,9 +243,7 @@
           this.titleErrMsg = '';
           this.slugError = false;
           this.slugErrMsg = '';
-          this.dialogItem = [];
           this.errors.clearAll();
-          this.selected = 'Select Category';
       },
       createItem(){
         this.mainAction = 'create';
@@ -358,36 +358,55 @@
         this.dialog = false;
       },
       save () {
+        this.loading = true;
+        let postData = [];
         if(this.mainAction == 'update'){
-          console.log(this.dialogItem);
           let p = 0;
+          console.log(this.defaultItem.parent);
+          console.log(this.selected.id);
           if(this.selected.id){
             p = this.selected.id;
+          }else{
+            p = this.defaultItem.parent;
+            console.log('unset');
           }
-          let postData = {
-            id : this.dialogItem.id,
-            product_category_title : this.dialogItem.product_category_title,
-            product_category_slug : this.dialogItem.product_category_slug,
-            parent : p
+
+          // if(this.defaultItem.parent == this.selected.id){
+          //   p = this.defaultItem.parent;
+          // }else{
+          //   p = (this.selected.id) ? this.selected.id : 0;
+          // }
+
+          if(this.defaultItem.product_category_slug != this.dialogItem.product_category_slug){
+            postData = {
+              id : this.dialogItem.id,
+              product_category_title : this.dialogItem.product_category_title,
+              product_category_slug : this.dialogItem.product_category_slug,
+              parent : p
+            }
+          }else{
+            postData = {
+              id : this.dialogItem.id,
+              product_category_title : this.dialogItem.product_category_title,
+              parent : p
+            }
           }
           console.log(postData);
-
-          // this.$refs.querySelector('[ref="coupon"]').value
           // axios.post('/admin/product/category/update', postData)
           //   .then(response => {
-          //       // SnackBar
+          //     // SnackBar
           //       this.sbStatus = true;
           //       this.sbType = 'success';
           //       this.sbText = response.data.message;
+          //       this.loading = false;
           //       // Update Table
           //       this.getProductCategoriesTree();
-          //       this.dialogLoading = false;    
           //       this.close();
           //       console.log('success');
           //       console.log(response.data);
           //   })
           //   .catch(error => {
-          //     this.dialogLoading = false;    
+          //     this.loading = false;    
           //     if (error.response && error.response.status == 422) {
           //         this.errors.setErrors( error.response.data.errors );
           //         // SnackBar
