@@ -28,7 +28,6 @@
       <snack-bar :snackbar-type="sbType" :snackbar-text="sbText" :snackbar-status="sbStatus"></snack-bar>
     </div>
 
-  
     <v-dialog v-model="dialog" max-width="500px">
       <v-card :loading="loading">
       <v-form
@@ -70,34 +69,20 @@
               </v-col>
               <v-col cols="12">
                 <v-combobox
+                  :loading="selectLoading"
                   v-model="selected"
                   :items="productCategoriesDropdown"
                   item-text="product_category_title"
                   item-value="id"
                   label="Parent"
-                  dense
-                >
-                  <!-- {{ dialogItem.parent }} -->
-
-                  <!-- <template v-slot:selection="data">
-                    <v-chip
-                      :key="JSON.stringify(data.item)"
-                      v-bind="data.attrs"
-                      :input-value="data.selected"
-                      :disabled="data.disabled"
-                      @click:close="data.parent.selectItem(data.item)"
-                    > 
-                 
-                      {{ data.item.product_category_title }}
-                    </v-chip>
-                  </template> -->
-                 <template v-slot:no-data>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <v-list-item-title>No result found</v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                </template>
+                  dense>
+                  <template v-slot:no-data>
+                    <v-list-item>
+                      <v-list-item-content>
+                        <v-list-item-title>No result found</v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </template>
                 </v-combobox>
               </v-col>
             </v-row>
@@ -111,7 +96,7 @@
             v-if="dialogAction = 1"
             color="primary"
             text
-            type="submit"
+            @click="save"
           >{{mainAction}}</v-btn>
         </v-card-actions>
         </v-form>
@@ -145,7 +130,6 @@
       // Dialog
       mainAction : '',
 
-
       // Delete a Category
       toDelete : [],
 
@@ -158,12 +142,12 @@
       titleRule : [
           value => !!value || 'Required',
           value => (value && value.length < 50)  || 'Max 50 characters',
-          value => (value && value.length > 3)  || 'Min 3 characters',
+          value => (value && value.length > 1)  || 'Min 3 characters',
       ],
       slugRule :  [
         value => !!value || 'Required',
         value => (value && value.length < 50)  || 'Max 50 characters',
-        value => (value && value.length > 3)  || 'Min 3 characters',
+        value => (value && value.length > 1)  || 'Min 3 characters',
       ],
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       
@@ -186,13 +170,14 @@
 
       productCategories : [],
       productCategoriesDropdown : [],
-      listloaded : false,
+      selectLoading : false,
+      listLoaded: false,
 
       items: {
         text: "category_field_title",
         value: "id",
       },
-      selected: null, 
+      selected: 'Select Category', 
       dialogItem: {
         product_category_slug: '',
         product_category_title: ''
@@ -213,23 +198,35 @@
       formTitle : '',
     }),
     methods: {
+      getParetTitle(pID){
+        if(pID > 0){
+          let result = this.productCategoriesDropdown.filter(obj => {
+            return obj.id === pID;
+          });
+          if(result){
+            this.selected = result[0].product_category_title;
+          }
+        }else{
+          this.selected = 'Select Category';
+        }
+      },
       editItem(i){
         this.mainAction = 'update';
         this.dialog = true;
         this.formTitle = 'Edit '+i.product_category_title;
         this.dialogItem = i;
-        if(this.listloaded == false){
-          this.getProductCategoriesList();
-          this.listloaded = true;
+        if(this.listLoaded == false){
+          this.selectLoading = true;
+          this.listLoaded = true;
+          this.getProductCategoriesList(i.parent);
+        }else{
+          this.getParetTitle(i.parent);
         }
-        this.selected = i.parent;
-        console.log(this.selected);
       },
       deleteItem(i){
         this.mainAction = 'delete';
         this.dialog = true;
         this.formTitle = 'Delete '+i.product_category_title;
-        // console.log(i);
       },
       clearAlert(){
           this.sbStatus = false; // SnackBar
@@ -239,6 +236,7 @@
           this.slugErrMsg = '';
           this.dialogItem = [];
           this.errors.clearAll();
+          this.selected = 'Select Category';
       },
       createItem(){
         this.mainAction = 'create';
@@ -257,10 +255,13 @@
           });
       },
       // Get Product Categories List
-      getProductCategoriesList () {
+      getProductCategoriesList (pID) {
         axios.get('/api/product/category/list')
           .then(response => {
             this.productCategoriesDropdown = response.data;
+            this.selectLoading = false;
+            this.getParetTitle(pID);
+            // console.log('list has loaded');
           })
           .catch(error => {
               console.log(error.response);
@@ -347,59 +348,56 @@
       },
       close () {
         this.dialog = false;
-        // setTimeout(() => {
-        //   this.editedItem = Object.assign({}, this.defaultItem)
-        //   this.editedIndex = -1
-        // }, 300)
       },
-
       save () {
-        this.dialogLoading = 'secondary';
-        let pfdata = [];
-        if(this.originalItem.product_category_slug === this.editedItem.product_category_slug){
-          pfdata = {
-            id : this.editedItem.id,
-            product_category_title : this.editedItem.product_category_title            
-          }
-        }else{
-          pfdata = {
-            id : this.editedItem.id,
-            product_category_slug : this.editedItem.product_category_slug,
-            product_category_title : this.editedItem.product_category_title
-          };
-        }
-        axios.post('/admin/product/category/update', pfdata)
-        .then(response => {
-            // SnackBar
-            this.sbStatus = true;
-            this.sbType = 'success';
-            this.sbText = response.data.message;
-            // Update Table
-            this.getProductCategoriesTree();
-            this.dialogLoading = false;    
-            this.close();
-            console.log('success');
-            console.log(response.data);
-        })
-        .catch(error => {
-          this.dialogLoading = false;    
-          if (error.response && error.response.status == 422) {
-              this.errors.setErrors( error.response.data.errors );
-              // SnackBar
-              this.sbStatus = true;
-              this.sbType = 'error';
-              this.sbText = 'Error adding product category';
-              // Input error messages
-              if(this.errors.hasError('product_category_slug') ){
-                  this.updateKeyError = true;
-                  this.updateKeyErrMsg = this.errors.first('product_category_slug');
-              }
-              if(this.errors.hasError('product_category_title') ){
-                  this.updateValueError = true;
-                  this.updateValueErrMsg = this.errors.first('product_category_title');
-              }
-          }
-        });
+        console.log(this.mainAction);
+        console.log(this.dialogItem);
+        // this.dialogLoading = 'secondary';
+        // let pfdata = [];
+        // if(this.originalItem.product_category_slug === this.editedItem.product_category_slug){
+        //   pfdata = {
+        //     id : this.editedItem.id,
+        //     product_category_title : this.editedItem.product_category_title            
+        //   }
+        // }else{
+        //   pfdata = {
+        //     id : this.editedItem.id,
+        //     product_category_slug : this.editedItem.product_category_slug,
+        //     product_category_title : this.editedItem.product_category_title
+        //   };
+        // }
+        // axios.post('/admin/product/category/update', pfdata)
+        // .then(response => {
+        //     // SnackBar
+        //     this.sbStatus = true;
+        //     this.sbType = 'success';
+        //     this.sbText = response.data.message;
+        //     // Update Table
+        //     this.getProductCategoriesTree();
+        //     this.dialogLoading = false;    
+        //     this.close();
+        //     console.log('success');
+        //     console.log(response.data);
+        // })
+        // .catch(error => {
+        //   this.dialogLoading = false;    
+        //   if (error.response && error.response.status == 422) {
+        //       this.errors.setErrors( error.response.data.errors );
+        //       // SnackBar
+        //       this.sbStatus = true;
+        //       this.sbType = 'error';
+        //       this.sbText = 'Error adding product category';
+        //       // Input error messages
+        //       if(this.errors.hasError('product_category_slug') ){
+        //           this.updateKeyError = true;
+        //           this.updateKeyErrMsg = this.errors.first('product_category_slug');
+        //       }
+        //       if(this.errors.hasError('product_category_title') ){
+        //           this.updateValueError = true;
+        //           this.updateValueErrMsg = this.errors.first('product_category_title');
+        //       }
+        //   }
+        // });
       }
     },
   }
