@@ -2928,6 +2928,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2988,6 +2991,7 @@ __webpack_require__.r(__webpack_exports__);
       slugErrMsg: '',
       productCategories: [],
       productCategoriesDropdown: [],
+      selectDisabled: true,
       selectLoading: false,
       listLoaded: false,
       items: {
@@ -2997,21 +3001,20 @@ __webpack_require__.r(__webpack_exports__);
       selected: 'Select Category',
       dialogItem: {
         product_category_slug: '',
-        product_category_title: ''
+        product_category_title: '',
+        parent: ''
       },
-      originalItem: {
+      defaultItem: {
         product_category_slug: '',
-        product_category_title: ''
+        product_category_title: '',
+        parent: ''
       },
       editedIndex: -1,
       editedItem: {
         product_category_slug: '',
         product_category_title: ''
       },
-      defaultItem: {
-        product_category_slug: '',
-        product_category_title: ''
-      },
+      // this.originalItem = Object.assign({}, item)
       formTitle: ''
     };
   },
@@ -3030,10 +3033,11 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     editItem: function editItem(i) {
+      this.dialogItem = Object.assign({}, i);
       this.mainAction = 'update';
       this.dialog = true;
       this.formTitle = 'Edit ' + i.product_category_title;
-      this.dialogItem = i;
+      console.log(this.dialogItem);
 
       if (this.listLoaded == false) {
         this.selectLoading = true;
@@ -3083,8 +3087,9 @@ __webpack_require__.r(__webpack_exports__);
         _this2.productCategoriesDropdown = response.data;
         _this2.selectLoading = false;
 
-        _this2.getParetTitle(pID); // console.log('list has loaded');
+        _this2.getParetTitle(pID);
 
+        _this2.selectDisabled = false; // console.log('list has loaded');
       })["catch"](function (error) {
         console.log(error.response);
         console.log('error');
@@ -3175,8 +3180,54 @@ __webpack_require__.r(__webpack_exports__);
       this.dialog = false;
     },
     save: function save() {
-      console.log(this.mainAction);
-      console.log(this.dialogItem); // this.dialogLoading = 'secondary';
+      if (this.mainAction == 'update') {
+        console.log(this.dialogItem);
+        var p = 0;
+
+        if (this.selected.id) {
+          p = this.selected.id;
+        }
+
+        var postData = {
+          id: this.dialogItem.id,
+          product_category_title: this.dialogItem.product_category_title,
+          product_category_slug: this.dialogItem.product_category_slug,
+          parent: p
+        };
+        console.log(postData); // this.$refs.querySelector('[ref="coupon"]').value
+        // axios.post('/admin/product/category/update', postData)
+        //   .then(response => {
+        //       // SnackBar
+        //       this.sbStatus = true;
+        //       this.sbType = 'success';
+        //       this.sbText = response.data.message;
+        //       // Update Table
+        //       this.getProductCategoriesTree();
+        //       this.dialogLoading = false;    
+        //       this.close();
+        //       console.log('success');
+        //       console.log(response.data);
+        //   })
+        //   .catch(error => {
+        //     this.dialogLoading = false;    
+        //     if (error.response && error.response.status == 422) {
+        //         this.errors.setErrors( error.response.data.errors );
+        //         // SnackBar
+        //         this.sbStatus = true;
+        //         this.sbType = 'error';
+        //         this.sbText = 'Error adding product category';
+        //         // Input error messages
+        //         if(this.errors.hasError('product_category_slug') ){
+        //             this.updateKeyError = true;
+        //             this.updateKeyErrMsg = this.errors.first('product_category_slug');
+        //         }
+        //         if(this.errors.hasError('product_category_title') ){
+        //             this.updateValueError = true;
+        //             this.updateValueErrMsg = this.errors.first('product_category_title');
+        //         }
+        //     }
+        //   });
+      } // this.dialogLoading = 'secondary';
       // let pfdata = [];
       // if(this.originalItem.product_category_slug === this.editedItem.product_category_slug){
       //   pfdata = {
@@ -3190,38 +3241,7 @@ __webpack_require__.r(__webpack_exports__);
       //     product_category_title : this.editedItem.product_category_title
       //   };
       // }
-      // axios.post('/admin/product/category/update', pfdata)
-      // .then(response => {
-      //     // SnackBar
-      //     this.sbStatus = true;
-      //     this.sbType = 'success';
-      //     this.sbText = response.data.message;
-      //     // Update Table
-      //     this.getProductCategoriesTree();
-      //     this.dialogLoading = false;    
-      //     this.close();
-      //     console.log('success');
-      //     console.log(response.data);
-      // })
-      // .catch(error => {
-      //   this.dialogLoading = false;    
-      //   if (error.response && error.response.status == 422) {
-      //       this.errors.setErrors( error.response.data.errors );
-      //       // SnackBar
-      //       this.sbStatus = true;
-      //       this.sbType = 'error';
-      //       this.sbText = 'Error adding product category';
-      //       // Input error messages
-      //       if(this.errors.hasError('product_category_slug') ){
-      //           this.updateKeyError = true;
-      //           this.updateKeyErrMsg = this.errors.first('product_category_slug');
-      //       }
-      //       if(this.errors.hasError('product_category_title') ){
-      //           this.updateValueError = true;
-      //           this.updateValueErrMsg = this.errors.first('product_category_title');
-      //       }
-      //   }
-      // });
+
     }
   }
 });
@@ -37470,6 +37490,10 @@ var render = function() {
                                     [
                                       _c("v-combobox", {
                                         attrs: {
+                                          "persistent-hint": "",
+                                          hint:
+                                            "Leave empty to set as main category",
+                                          disabled: _vm.selectDisabled,
                                           loading: _vm.selectLoading,
                                           items: _vm.productCategoriesDropdown,
                                           "item-text": "product_category_title",
@@ -37548,20 +37572,22 @@ var render = function() {
                         [_vm._v("Cancel")]
                       ),
                       _vm._v(" "),
-                      (_vm.dialogAction = 1)
-                        ? _c(
-                            "v-btn",
-                            {
-                              attrs: {
-                                color: "primary",
-                                text: "",
-                                type: "submit"
-                              },
-                              on: { click: _vm.save }
-                            },
-                            [_vm._v(_vm._s(_vm.mainAction))]
-                          )
-                        : _vm._e()
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: {
+                            color: "primary",
+                            text: "",
+                            disabled: _vm.selectDisabled
+                          },
+                          on: {
+                            click: function($event) {
+                              return _vm.save()
+                            }
+                          }
+                        },
+                        [_vm._v(_vm._s(_vm.mainAction))]
+                      )
                     ],
                     1
                   )

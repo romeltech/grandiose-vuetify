@@ -157,8 +157,9 @@ class ProductCategoriesController extends Controller
     public function validateRequest()
     {
         return request()->validate([
-            'product_category_slug' => ['min:3', 'max:50', 'string', 'alpha_dash', 'unique:product_categories'],
-            'product_category_title' => ['required', 'min:3', 'max:50', 'string']
+            'product_category_slug' => ['min:1', 'max:50', 'string', 'alpha_dash', 'unique:product_categories'],
+            'product_category_title' => ['required', 'min:1', 'max:50', 'string'],
+            'parent' => ['required', 'numeric'],
         ]);
 
     }

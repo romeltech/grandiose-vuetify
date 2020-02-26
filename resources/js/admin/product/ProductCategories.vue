@@ -57,7 +57,7 @@
               </v-text-field>
               </v-col>
               <v-col cols="12" md="6">
-                <v-text-field 
+                <v-text-field
                   v-model="dialogItem.product_category_slug"
                   label="Slug"
                   :rules="slugRule"
@@ -69,6 +69,9 @@
               </v-col>
               <v-col cols="12">
                 <v-combobox
+                  persistent-hint
+                  hint="Leave empty to set as main category"
+                  :disabled="selectDisabled"
                   :loading="selectLoading"
                   v-model="selected"
                   :items="productCategoriesDropdown"
@@ -92,12 +95,12 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+          <!-- type='submit' -->
           <v-btn
-            v-if="dialogAction = 1"
             color="primary"
             text
-            type='submit'
-            @click="save"
+            @click="save()"
+            :disabled="selectDisabled"
           >{{mainAction}}</v-btn>
         </v-card-actions>
         </v-form>
@@ -171,6 +174,7 @@
 
       productCategories : [],
       productCategoriesDropdown : [],
+      selectDisabled : true,
       selectLoading : false,
       listLoaded: false,
 
@@ -181,21 +185,21 @@
       selected: 'Select Category', 
       dialogItem: {
         product_category_slug: '',
-        product_category_title: ''
+        product_category_title: '',
+        parent: ''
       },
-      originalItem: {
+      defaultItem: {
         product_category_slug: '',
-        product_category_title: ''
+        product_category_title: '',
+        parent: ''
       },
       editedIndex: -1,
       editedItem: {
         product_category_slug: '',
         product_category_title: '',
       },
-      defaultItem: {
-        product_category_slug: '',
-        product_category_title: '',
-      },
+
+      // this.originalItem = Object.assign({}, item)
       formTitle : '',
     }),
     methods: {
@@ -212,10 +216,12 @@
         }
       },
       editItem(i){
+        this.dialogItem = Object.assign({}, i);
         this.mainAction = 'update';
         this.dialog = true;
         this.formTitle = 'Edit '+i.product_category_title;
-        this.dialogItem = i;
+        console.log(this.dialogItem);
+
         if(this.listLoaded == false){
           this.selectLoading = true;
           this.listLoaded = true;
@@ -262,6 +268,7 @@
             this.productCategoriesDropdown = response.data;
             this.selectLoading = false;
             this.getParetTitle(pID);
+            this.selectDisabled = false;
             // console.log('list has loaded');
           })
           .catch(error => {
@@ -351,8 +358,55 @@
         this.dialog = false;
       },
       save () {
-        console.log(this.mainAction);
-        console.log(this.dialogItem);
+        if(this.mainAction == 'update'){
+          console.log(this.dialogItem);
+          let p = 0;
+          if(this.selected.id){
+            p = this.selected.id;
+          }
+          let postData = {
+            id : this.dialogItem.id,
+            product_category_title : this.dialogItem.product_category_title,
+            product_category_slug : this.dialogItem.product_category_slug,
+            parent : p
+          }
+          console.log(postData);
+
+          // this.$refs.querySelector('[ref="coupon"]').value
+          // axios.post('/admin/product/category/update', postData)
+          //   .then(response => {
+          //       // SnackBar
+          //       this.sbStatus = true;
+          //       this.sbType = 'success';
+          //       this.sbText = response.data.message;
+          //       // Update Table
+          //       this.getProductCategoriesTree();
+          //       this.dialogLoading = false;    
+          //       this.close();
+          //       console.log('success');
+          //       console.log(response.data);
+          //   })
+          //   .catch(error => {
+          //     this.dialogLoading = false;    
+          //     if (error.response && error.response.status == 422) {
+          //         this.errors.setErrors( error.response.data.errors );
+          //         // SnackBar
+          //         this.sbStatus = true;
+          //         this.sbType = 'error';
+          //         this.sbText = 'Error adding product category';
+          //         // Input error messages
+          //         if(this.errors.hasError('product_category_slug') ){
+          //             this.updateKeyError = true;
+          //             this.updateKeyErrMsg = this.errors.first('product_category_slug');
+          //         }
+          //         if(this.errors.hasError('product_category_title') ){
+          //             this.updateValueError = true;
+          //             this.updateValueErrMsg = this.errors.first('product_category_title');
+          //         }
+          //     }
+          //   });
+
+        }
         // this.dialogLoading = 'secondary';
         // let pfdata = [];
         // if(this.originalItem.product_category_slug === this.editedItem.product_category_slug){
@@ -367,38 +421,7 @@
         //     product_category_title : this.editedItem.product_category_title
         //   };
         // }
-        // axios.post('/admin/product/category/update', pfdata)
-        // .then(response => {
-        //     // SnackBar
-        //     this.sbStatus = true;
-        //     this.sbType = 'success';
-        //     this.sbText = response.data.message;
-        //     // Update Table
-        //     this.getProductCategoriesTree();
-        //     this.dialogLoading = false;    
-        //     this.close();
-        //     console.log('success');
-        //     console.log(response.data);
-        // })
-        // .catch(error => {
-        //   this.dialogLoading = false;    
-        //   if (error.response && error.response.status == 422) {
-        //       this.errors.setErrors( error.response.data.errors );
-        //       // SnackBar
-        //       this.sbStatus = true;
-        //       this.sbType = 'error';
-        //       this.sbText = 'Error adding product category';
-        //       // Input error messages
-        //       if(this.errors.hasError('product_category_slug') ){
-        //           this.updateKeyError = true;
-        //           this.updateKeyErrMsg = this.errors.first('product_category_slug');
-        //       }
-        //       if(this.errors.hasError('product_category_title') ){
-        //           this.updateValueError = true;
-        //           this.updateValueErrMsg = this.errors.first('product_category_title');
-        //       }
-        //   }
-        // });
+  
       }
     },
   }
