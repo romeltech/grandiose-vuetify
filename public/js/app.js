@@ -2927,6 +2927,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -37551,7 +37552,11 @@ var render = function() {
                         ? _c(
                             "v-btn",
                             {
-                              attrs: { color: "primary", text: "" },
+                              attrs: {
+                                color: "primary",
+                                text: "",
+                                type: "submit"
+                              },
                               on: { click: _vm.save }
                             },
                             [_vm._v(_vm._s(_vm.mainAction))]

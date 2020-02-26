@@ -96,6 +96,7 @@
             v-if="dialogAction = 1"
             color="primary"
             text
+            type='submit'
             @click="save"
           >{{mainAction}}</v-btn>
         </v-card-actions>
