@@ -78,3 +78,6 @@ ul.pagination{
 .product-desc::-webkit-scrollbar-thumb:hover {
     opacity: .75; 
 }
+
+/* Transition speed */
+*{ transition-duration: .2s !important;}

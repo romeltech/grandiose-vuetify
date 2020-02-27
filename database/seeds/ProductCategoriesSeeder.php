@@ -176,8 +176,8 @@ class ProductCategoriesSeeder extends Seeder
         $pc->save();
         $pc = new \App\Product_categories([
             'id'                        => 21,
-            'product_category_title'    => 'Conditionaire',
-            'product_category_slug'     => 'conditionaire',
+            'product_category_title'    => 'Conditionare',
+            'product_category_slug'     => 'conditionare',
             'product_id'                => 4,
             'parent'                    => 19
         ]);

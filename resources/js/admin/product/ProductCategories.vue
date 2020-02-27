@@ -74,11 +74,13 @@
                   :disabled="selectDisabled"
                   :loading="selectLoading"
                   v-model="selected"
-                  :items="productCategoriesDropdown"
+                  :items="categoryList"
                   item-text="product_category_title"
                   item-value="id"
                   label="Parent"
-                  dense>
+                  dense
+                  @click="setCategoryList()"
+                  >
                   <template v-slot:no-data>
                     <v-list-item>
                       <v-list-item-content>
@@ -127,6 +129,7 @@
         if(val == false){
           this.clearAlert();
           this.$refs.form.reset();
+          this.categoryList = this.allCategories;
         }
       }
     },
@@ -172,7 +175,8 @@
       slugErrMsg : '',
 
       productCategories : [],
-      productCategoriesDropdown : [],
+      allCategories : [],
+      categoryList : [],
       selectDisabled : true,
       selectLoading : false,
       listLoaded: false,
@@ -204,18 +208,32 @@
     methods: {
       getParetTitle(pID){
         if(pID > 0){
-          let result = this.productCategoriesDropdown.filter(obj => {
+          let result = this.allCategories.filter(obj => {
             return obj.id === pID;
           });
-          if(result){
-            this.selected = result[0].product_category_title;
-          }
+          // Assign result to selected
+          this.selected = result && result[0];
         }else{
-          this.selected.id = 0;
-          this.selected.product_category_title = 'meh';
-          // console.log(this.selected);
-          // this.selected = [];
+          this.selected = {
+            id: 0,
+            product_category_title: 'Select Category'
+          }
         }
+      },
+      setCategoryList(){
+        // get all the IDs of selected and children from the selected item
+        let excludeIDs = [];
+        JSON.stringify(this.dialogItem, (key, value) => {
+          if (key === 'id') excludeIDs.push(value);
+          return value;
+        });
+        let tempList = [];
+        this.allCategories.map(function(item) { 
+          if(!excludeIDs.includes(item.id)){
+            tempList.push(item); 
+          }
+        });
+        this.categoryList = tempList;        
       },
       editItem(i){
         this.dialogItem = Object.assign({}, i);
@@ -265,7 +283,8 @@
       getProductCategoriesList (pID) {
         axios.get('/api/product/category/list')
           .then(response => {
-            this.productCategoriesDropdown = response.data;
+            this.allCategories = response.data;
+            this.categoryList = response.data;
             this.selectLoading = false;
             this.getParetTitle(pID);
             this.selectDisabled = false;
@@ -361,22 +380,7 @@
         this.loading = true;
         let postData = [];
         if(this.mainAction == 'update'){
-          let p = 0;
-          console.log(this.defaultItem.parent);
-          console.log(this.selected.id);
-          if(this.selected.id){
-            p = this.selected.id;
-          }else{
-            p = this.defaultItem.parent;
-            console.log('unset');
-          }
-
-          // if(this.defaultItem.parent == this.selected.id){
-          //   p = this.defaultItem.parent;
-          // }else{
-          //   p = (this.selected.id) ? this.selected.id : 0;
-          // }
-
+          let p = this.selected.id ? this.selected.id : 0;
           if(this.defaultItem.product_category_slug != this.dialogItem.product_category_slug){
             postData = {
               id : this.dialogItem.id,
@@ -392,55 +396,40 @@
             }
           }
           console.log(postData);
-          // axios.post('/admin/product/category/update', postData)
-          //   .then(response => {
-          //     // SnackBar
-          //       this.sbStatus = true;
-          //       this.sbType = 'success';
-          //       this.sbText = response.data.message;
-          //       this.loading = false;
-          //       // Update Table
-          //       this.getProductCategoriesTree();
-          //       this.close();
-          //       console.log('success');
-          //       console.log(response.data);
-          //   })
-          //   .catch(error => {
-          //     this.loading = false;    
-          //     if (error.response && error.response.status == 422) {
-          //         this.errors.setErrors( error.response.data.errors );
-          //         // SnackBar
-          //         this.sbStatus = true;
-          //         this.sbType = 'error';
-          //         this.sbText = 'Error adding product category';
-          //         // Input error messages
-          //         if(this.errors.hasError('product_category_slug') ){
-          //             this.updateKeyError = true;
-          //             this.updateKeyErrMsg = this.errors.first('product_category_slug');
-          //         }
-          //         if(this.errors.hasError('product_category_title') ){
-          //             this.updateValueError = true;
-          //             this.updateValueErrMsg = this.errors.first('product_category_title');
-          //         }
-          //     }
-          //   });
+          axios.post('/admin/product/category/update', postData)
+          .then(response => {
+            // SnackBar
+              this.sbStatus = true;
+              this.sbType = 'success';
+              this.sbText = response.data.message;
+              this.loading = false;
+              // Update Table
+              this.getProductCategoriesTree();
+              this.close();
+              console.log('success');
+              console.log(response.data);
+          })
+          .catch(error => {
+            this.loading = false;    
+            if (error.response && error.response.status == 422) {
+                this.errors.setErrors( error.response.data.errors );
+                // SnackBar
+                this.sbStatus = true;
+                this.sbType = 'error';
+                this.sbText = 'Error adding product category';
+                // Input error messages
+                if(this.errors.hasError('product_category_slug') ){
+                    this.updateKeyError = true;
+                    this.updateKeyErrMsg = this.errors.first('product_category_slug');
+                }
+                if(this.errors.hasError('product_category_title') ){
+                    this.updateValueError = true;
+                    this.updateValueErrMsg = this.errors.first('product_category_title');
+                }
+            }
+          });
 
         }
-        // this.dialogLoading = 'secondary';
-        // let pfdata = [];
-        // if(this.originalItem.product_category_slug === this.editedItem.product_category_slug){
-        //   pfdata = {
-        //     id : this.editedItem.id,
-        //     product_category_title : this.editedItem.product_category_title            
-        //   }
-        // }else{
-        //   pfdata = {
-        //     id : this.editedItem.id,
-        //     product_category_slug : this.editedItem.product_category_slug,
-        //     product_category_title : this.editedItem.product_category_title
-        //   };
-        // }
-  
       }
     },
   }

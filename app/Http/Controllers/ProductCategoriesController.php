@@ -124,14 +124,16 @@ class ProductCategoriesController extends Controller
     {
         // Check Requested Data if Exist
         // $productField = Product_categories::find($request->id);
-        $productField = Product_categories::where('id', '=', $request->id)->firstOrFail();
+        $productCategories = Product_categories::where('id', '=', $request->id)->firstOrFail();
         
+        $requestChildren = Product_categories::where('parent', '=', $request->id)->get();
         // Validate and Update Request
-        $productField->update($this->validateRequest());
+        $productCategories->update($this->validateRequest());
 
         // Return Response
         return response()->json([
-            'message' => 'Product Category has been updated'
+            'message'   => 'Product Category has been updated',
+            'children'  => $requestChildren
         ], 200);
     }
 
