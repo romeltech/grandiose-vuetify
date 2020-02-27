@@ -47,15 +47,22 @@
 
                             <v-expansion-panels accordion multiple focusable>
                                 <v-expansion-panel>
-                                    <v-expansion-panel-header style="min-height:40px;">Caregories</v-expansion-panel-header>
+                                    <v-expansion-panel-header style="min-height:40px;" @click="loadProductCategories()">Caregories</v-expansion-panel-header>
                                     <v-expansion-panel-content>
                                         <div class="row pt-3">
+                                            <v-progress-circular v-if="treeLoaded == false" class="mx-auto" indeterminate color="primary" :width="2" :size="20"></v-progress-circular>
+                                            <!-- selection-type="independent" -->
                                             <v-treeview
+                                                v-if="treeLoaded == true"
                                                 dense
-                                                selection-type="independent"
                                                 selectable
                                                 selected-color="primary"
-                                                :items="productCategories">
+                                                :items="productCategoriesTree">
+                                                <template slot="label" slot-scope="props">
+                                                    <span>
+                                                        {{props.item.product_category_title}}
+                                                    </span>
+                                                </template>
                                             </v-treeview>
                                         </div>
                                     </v-expansion-panel-content>
@@ -110,82 +117,9 @@ export default {
             img: this.products.imagepath,
             featuredImg: window.location.origin+'/'+this.products.imagepath,
 
-            // Categories
-            // loop and check if parent is 0
-            // Check if parent = 0,
-            // if !0 display then check the child if parent = 0 
-            productCategories: [
-                {
-                id: 1,
-                name: 'Applications :',
-                children: [
-                    { id: 2, name: 'Calendar : app' },
-                    { id: 3, name: 'Chrome : app' },
-                    { id: 4, name: 'Webstorm : app' },
-                ],
-                },
-                {
-                id: 5,
-                name: 'Documents :',
-                children: [
-                    {
-                    id: 6,
-                    name: 'vuetify :',
-                    children: [
-                        {
-                        id: 7,
-                        name: 'src :',
-                        children: [
-                            { id: 8, name: 'index : ts' },
-                            { id: 9, name: 'bootstrap : ts' },
-                        ],
-                        },
-                    ],
-                    },
-                    {
-                    id: 10,
-                    name: 'material2 :',
-                    children: [
-                        {
-                        id: 11,
-                        name: 'src :',
-                        children: [
-                            { id: 12, name: 'v-btn : ts' },
-                            { id: 13, name: 'v-card : ts' },
-                            { id: 14, name: 'v-window : ts' },
-                        ],
-                        },
-                    ],
-                    },
-                ],
-                },
-                {
-                id: 15,
-                name: 'Downloads :',
-                children: [
-                    { id: 16, name: 'October : pdf' },
-                    { id: 17, name: 'November : pdf' },
-                    { id: 18, name: 'Tutorial : html' },
-                ],
-                },
-                {
-                id: 19,
-                name: 'Videos :',
-                children: [
-                    {
-                    id: 20,
-                    name: 'Tutorials :',
-                    children: [
-                        { id: 21, name: 'Basic layouts : mp4' },
-                        { id: 22, name: 'Advanced techniques : mp4' },
-                        { id: 23, name: 'All about app : dir' },
-                    ],
-                    },
-                    { id: 24, name: 'Intro : mov' },
-                    { id: 25, name: 'Conference introduction : avi' },
-                ],
-                },
-            ],
+            // Product Categories Tree
+            productCategoriesTree: [],
+            treeLoaded: false,
         }
     },
     methods: {
@@ -196,9 +130,24 @@ export default {
             }, 2000);
         },
         pageHeight(){
+            // Set page height
             const height = document.querySelector('header.v-app-bar').offsetHeight + document.querySelector('.secondary-header').offsetHeight;
             document.querySelector('.page-content').style.height = "calc(100vh - "+height+"px - 24px)";
-            console.log(height);
+        },
+        loadProductCategories(){
+            this.getProductCategoriesTree();    
+        },
+        getProductCategoriesTree () {
+            // Get Product Categories Tree
+            axios.get('/api/product/category/tree')
+            .then(response => {
+                this.productCategoriesTree = response.data;
+                this.treeLoaded = true;
+            })
+            .catch(error => {
+                console.log(error.response);
+                console.log('error');
+            });
         },
         update(){
             this.pageLoading();
