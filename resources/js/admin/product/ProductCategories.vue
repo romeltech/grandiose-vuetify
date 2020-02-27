@@ -88,7 +88,19 @@
                       </v-list-item-content>
                     </v-list-item>
                   </template>
+                  <template v-slot:append-outer>
+                    <v-tooltip top color="primary" max-width="200px">
+                      <template v-slot:activator="{ on }">
+                        <v-btn icon v-on="on">
+                          <v-icon small color="seconday">mdi-help-circle-outline</v-icon>
+                        </v-btn>
+                      </template>
+                      <small>Select Category. Leave empty to set as main category.</small>
+                    </v-tooltip>
+                  </template>
                 </v-combobox>
+             
+
               </v-col>
             </v-row>
           </v-container>
@@ -108,8 +120,6 @@
         </v-form>
       </v-card>
     </v-dialog>
-
-    
   </div>
 </template>
 <script>

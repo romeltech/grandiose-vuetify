@@ -2933,6 +2933,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -37551,11 +37561,82 @@ var render = function() {
                                                 ]
                                               },
                                               proxy: true
+                                            },
+                                            {
+                                              key: "append-outer",
+                                              fn: function() {
+                                                return [
+                                                  _c(
+                                                    "v-tooltip",
+                                                    {
+                                                      attrs: {
+                                                        top: "",
+                                                        color: "primary",
+                                                        "max-width": "200px"
+                                                      },
+                                                      scopedSlots: _vm._u(
+                                                        [
+                                                          {
+                                                            key: "activator",
+                                                            fn: function(ref) {
+                                                              var on = ref.on
+                                                              return [
+                                                                _c(
+                                                                  "v-btn",
+                                                                  _vm._g(
+                                                                    {
+                                                                      attrs: {
+                                                                        icon: ""
+                                                                      }
+                                                                    },
+                                                                    on
+                                                                  ),
+                                                                  [
+                                                                    _c(
+                                                                      "v-icon",
+                                                                      {
+                                                                        attrs: {
+                                                                          small:
+                                                                            "",
+                                                                          color:
+                                                                            "seconday"
+                                                                        }
+                                                                      },
+                                                                      [
+                                                                        _vm._v(
+                                                                          "mdi-help-circle-outline"
+                                                                        )
+                                                                      ]
+                                                                    )
+                                                                  ],
+                                                                  1
+                                                                )
+                                                              ]
+                                                            }
+                                                          }
+                                                        ],
+                                                        null,
+                                                        false,
+                                                        921247668
+                                                      )
+                                                    },
+                                                    [
+                                                      _vm._v(" "),
+                                                      _c("small", [
+                                                        _vm._v(
+                                                          "Select Category. Leave empty to set as main category."
+                                                        )
+                                                      ])
+                                                    ]
+                                                  )
+                                                ]
+                                              },
+                                              proxy: true
                                             }
                                           ],
                                           null,
                                           false,
-                                          3477519872
+                                          660099556
                                         ),
                                         model: {
                                           value: _vm.selected,
