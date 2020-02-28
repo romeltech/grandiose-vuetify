@@ -64,13 +64,15 @@
                   :error="slugError"
                   :error-messages="slugErrMsg"
                   @change="clearAlert"
+                  @mousedown="generateSlug"
+                  @focus="generateSlug"
                   >
                 </v-text-field>
               </v-col>
               <v-col cols="12">
                 <v-combobox
                   persistent-hint
-                  hint="Select Category. Leave empty to set as main category."
+                  hint="Select a category to set as parent. Leave empty to set as main category."
                   :disabled="selectDisabled"
                   :loading="selectLoading"
                   v-model="selected"
@@ -95,7 +97,7 @@
                           <v-icon small color="seconday">mdi-help-circle-outline</v-icon>
                         </v-btn>
                       </template>
-                      <small>Select Category. Leave empty to set as main category.</small>
+                      <span>Select a category to set as parent. Leave empty to set as main category.</span>
                     </v-tooltip>
                   </template>
                 </v-combobox>
@@ -149,10 +151,6 @@
 
       // Delete a Category
       toDelete : [],
-
-      // Add a Category
-      fieldname: '',
-      fieldvalue: '',
       
       // rules
       valid : true,
@@ -199,7 +197,7 @@
       dialogItem: {
         product_category_slug: '',
         product_category_title: '',
-        parent: ''
+        parent: 0
       },
       defaultItem: {
         product_category_slug: '',
@@ -216,6 +214,9 @@
       formTitle : '',
     }),
     methods: {
+      generateSlug(){
+        this.dialogItem.product_category_slug = slugify(this.dialogItem.product_category_title);
+      },
       getParetTitle(pID){
         if(pID > 0){
           let result = this.allCategories.filter(obj => {
@@ -277,6 +278,7 @@
         this.mainAction = 'create';
         this.dialog = true;
         this.formTitle = 'Create new';
+        this.getProductCategoriesList(0);
       },
       // Get Product Categories Tree
       getProductCategoriesTree () {
@@ -305,52 +307,6 @@
               console.log('error');
           });
       },
-      // Add Products
-      addProductCategory(){
-        this.loading = true;
-        axios.post('/admin/product/category/store', {
-            product_category_slug : this.fieldname,
-            product_category_title : this.fieldvalue
-        })
-        .then(response => {
-            // SnackBar
-            this.sbStatus = true;
-            this.sbType = 'success';
-            this.sbText = response.data.message;
-            this.loading = false;
-            
-            this.getProductCategoriesTree();
-            this.$refs.form.reset();
-
-        })
-        .catch(error => {
-            this.loading = false;
-            if(error.response.status == 403){
-              // SnackBar
-              this.sbStatus = true;
-              this.sbType = 'error';
-              this.sbText = error.response.data.errorMessage;
-              console.log(error.response.data.errorMessage);
-            }
-            if (error.response && error.response.status == 422) {
-                this.errors.setErrors( error.response.data.errors );
-                // SnackBar
-                this.sbStatus = true;
-                this.sbType = 'error';
-                this.sbText = 'Error adding product category';
-                // Input error messages
-                if(this.errors.hasError('product_category_slug') ){
-                    this.keyError = true;
-                    this.keyErrorMessage = this.errors.first('product_category_slug');
-                }
-                if(this.errors.hasError('product_category_title') ){
-                    this.valueError = true;
-                    this.valueErrorMessage = this.errors.first('product_category_title');
-                }
-            }
-        });
-      },
-
       toDeleteItem (item) {
         this.toDelete = item;
         this.deleteDialog = true;
@@ -389,6 +345,7 @@
       save () {
         this.loading = true;
         let postData = [];
+        // Update
         if(this.mainAction == 'update'){
           let p = this.selected.id ? this.selected.id : 0;
           if(this.defaultItem.product_category_slug != this.dialogItem.product_category_slug){
@@ -438,6 +395,55 @@
                 }
             }
           });
+        }else if(this.mainAction == 'create'){
+          // Create
+          this.loading = true;
+          let title = this.dialogItem.product_category_title.trim();
+          console.log(this.dialogItem);
+          // axios.post('/admin/product/category/store', {
+          //     product_category_slug : slug,
+          //     product_category_title : title,
+          //     parent : 0
+          // })
+          // .then(response => {
+          //     // SnackBar
+          //     this.sbStatus = true;
+          //     this.sbType = 'success';
+          //     this.sbText = response.data.message;
+          //     this.loading = false;
+              
+          //     this.getProductCategoriesTree();
+          //     this.$refs.form.reset();
+
+          // })
+          // .catch(error => {
+          //     this.loading = false;
+          //     if(error.response.status == 403){
+          //       // SnackBar
+          //       this.sbStatus = true;
+          //       this.sbType = 'error';
+          //       this.sbText = error.response.data.errorMessage;
+          //       console.log(error.response.data.errorMessage);
+          //     }
+          //     if (error.response && error.response.status == 422) {
+          //         this.errors.setErrors( error.response.data.errors );
+          //         // SnackBar
+          //         this.sbStatus = true;
+          //         this.sbType = 'error';
+          //         this.sbText = 'Error adding product category';
+          //         // Input error messages
+          //         if(this.errors.hasError('product_category_slug') ){
+          //             this.keyError = true;
+          //             this.keyErrorMessage = this.errors.first('product_category_slug');
+          //         }
+          //         if(this.errors.hasError('product_category_title') ){
+          //             this.valueError = true;
+          //             this.valueErrorMessage = this.errors.first('product_category_title');
+          //         }
+          //     }
+          // });
+
+
 
         }
       }
