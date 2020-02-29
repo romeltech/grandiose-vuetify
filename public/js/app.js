@@ -3835,6 +3835,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3844,22 +3858,31 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     this.getProductCategoriesTree();
   },
-  computed: {},
+  computed: {//  filter () {
+    //   return this.caseSensitive
+    //     ? (item, search, textKey) => item[textKey].indexOf(search) > -1
+    //     : undefined
+    // },
+  },
   watch: {
     dialog: function dialog(val) {
       if (val == false) {
         this.clearAlert();
         this.$refs.form.reset();
         this.categoryList = this.allCategories;
+        this.dialogItem.product_category_title = '';
+        this.dialogItem.product_category_slug = '';
+        this.dialogItem.parent = 0;
       }
     }
   },
   data: function data() {
     return {
+      caseSensitive: false,
+      openSearh: false,
+      search: '',
       // Dialog
       mainAction: '',
-      // Delete a Category
-      toDelete: [],
       // rules
       valid: true,
       titleRule: [function (value) {
@@ -3867,14 +3890,14 @@ __webpack_require__.r(__webpack_exports__);
       }, function (value) {
         return value && value.length < 50 || 'Max 50 characters';
       }, function (value) {
-        return value && value.length > 1 || 'Min 3 characters';
+        return value && value.length > 1 || 'Min 1 characters';
       }],
       slugRule: [function (value) {
         return !!value || 'Required';
       }, function (value) {
         return value && value.length < 50 || 'Max 50 characters';
       }, function (value) {
-        return value && value.length > 1 || 'Min 3 characters';
+        return value && value.length > 1 || 'Min 1 characters';
       }],
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       // Interface
@@ -3890,16 +3913,13 @@ __webpack_require__.r(__webpack_exports__);
       titleErrMsg: '',
       slugError: false,
       slugErrMsg: '',
+      // Tree
       productCategories: [],
       allCategories: [],
       categoryList: [],
       selectDisabled: true,
       selectLoading: false,
       listLoaded: false,
-      items: {
-        text: "category_field_title",
-        value: "id"
-      },
       selected: [],
       dialogItem: {
         product_category_slug: '',
@@ -3909,20 +3929,16 @@ __webpack_require__.r(__webpack_exports__);
       defaultItem: {
         product_category_slug: '',
         product_category_title: '',
-        parent: ''
+        parent: 0
       },
-      editedIndex: -1,
-      editedItem: {
-        product_category_slug: '',
-        product_category_title: ''
-      },
-      // this.originalItem = Object.assign({}, item)
-      formTitle: ''
+      formTitle: '',
+      // Delete a Category
+      deleteID: 0
     };
   },
   methods: {
     generateSlug: function generateSlug() {
-      this.dialogItem.product_category_slug = slugify(this.dialogItem.product_category_title);
+      this.dialogItem.product_category_slug = this.dialogItem.product_category_title && slugify(this.dialogItem.product_category_title);
     },
     getParetTitle: function getParetTitle(pID) {
       if (pID > 0) {
@@ -3972,6 +3988,20 @@ __webpack_require__.r(__webpack_exports__);
       this.mainAction = 'delete';
       this.dialog = true;
       this.formTitle = 'Delete ' + i.product_category_title;
+      this.deleteID = i.id;
+    },
+    successUI: function successUI(msg) {
+      var _this = this;
+
+      // Dialog
+      this.dialog = false;
+      this.loading = false; // SnackBar
+
+      setTimeout(function () {
+        _this.sbStatus = true;
+        _this.sbType = 'success';
+        _this.sbText = msg;
+      }, 100);
     },
     clearAlert: function clearAlert() {
       this.sbStatus = false; // SnackBar
@@ -3983,6 +4013,7 @@ __webpack_require__.r(__webpack_exports__);
       this.errors.clearAll();
     },
     createItem: function createItem() {
+      console.log(this.dialogItem);
       this.mainAction = 'create';
       this.dialog = true;
       this.formTitle = 'Create new';
@@ -3990,10 +4021,10 @@ __webpack_require__.r(__webpack_exports__);
     },
     // Get Product Categories Tree
     getProductCategoriesTree: function getProductCategoriesTree() {
-      var _this = this;
+      var _this2 = this;
 
       axios.get('/api/product/category/tree').then(function (response) {
-        _this.productCategories = response.data;
+        _this2.productCategories = response.data;
       })["catch"](function (error) {
         console.log(error.response);
         console.log('error');
@@ -4001,63 +4032,29 @@ __webpack_require__.r(__webpack_exports__);
     },
     // Get Product Categories List
     getProductCategoriesList: function getProductCategoriesList(pID) {
-      var _this2 = this;
+      var _this3 = this;
 
       axios.get('/api/product/category/list').then(function (response) {
-        _this2.allCategories = response.data;
-        _this2.categoryList = response.data;
-        _this2.selectLoading = false;
+        _this3.allCategories = response.data;
+        _this3.categoryList = response.data;
+        _this3.selectLoading = false;
 
-        _this2.getParetTitle(pID);
+        _this3.getParetTitle(pID);
 
-        _this2.selectDisabled = false; // console.log('list has loaded');
+        _this3.selectDisabled = false; // console.log('list has loaded');
       })["catch"](function (error) {
         console.log(error.response);
         console.log('error');
       });
     },
-    toDeleteItem: function toDeleteItem(item) {
-      this.toDelete = item;
-      this.deleteDialog = true;
-      this.formTitle = item.product_category_slug;
-    },
-    confirmDelete: function confirmDelete(toDelete) {
-      var _this3 = this;
-
-      this.deleteLoading = true, console.log(this.toDelete);
-      axios["delete"]('/admin/product/category/destroy/' + toDelete.id).then(function (response) {
-        _this3.deleteLoading = false, // SnackBar
-        _this3.sbStatus = true;
-        _this3.sbType = 'success';
-        _this3.sbText = response.data.message;
-        _this3.deleteDialog = false;
-
-        _this3.getProductCategoriesTree();
-      })["catch"](function (error) {
-        _this3.deleteLoading = false;
-        _this3.deleteDialog = false;
-        _this3.sbStatus = true;
-        _this3.sbType = 'error';
-
-        if (error.response && error.response.status == 422) {
-          _this3.errors.setErrors(error.response.data.errors);
-
-          _this3.sbText = 'Response Error';
-        } else {
-          _this3.sbText = 'Error adding product category';
-        }
-      });
-    },
-    close: function close() {
-      this.dialog = false;
-    },
     save: function save() {
       var _this4 = this;
 
-      this.loading = true;
-      var postData = []; // Update
+      this.valid = false;
+      this.loading = true; // Update
 
       if (this.mainAction == 'update') {
+        var postData = [];
         var p = this.selected.id ? this.selected.id : 0;
 
         if (this.defaultItem.product_category_slug != this.dialogItem.product_category_slug) {
@@ -4075,20 +4072,11 @@ __webpack_require__.r(__webpack_exports__);
           };
         }
 
-        console.log(postData);
         axios.post('/admin/product/category/update', postData).then(function (response) {
-          // SnackBar
-          _this4.sbStatus = true;
-          _this4.sbType = 'success';
-          _this4.sbText = response.data.message;
-          _this4.loading = false; // Update Table
-
+          // Update Table
           _this4.getProductCategoriesTree();
 
-          _this4.close();
-
-          console.log('success');
-          console.log(response.data);
+          _this4.successUI(response.data.message);
         })["catch"](function (error) {
           _this4.loading = false;
 
@@ -4114,47 +4102,67 @@ __webpack_require__.r(__webpack_exports__);
       } else if (this.mainAction == 'create') {
         // Create
         this.loading = true;
-        var title = this.dialogItem.product_category_title.trim();
-        console.log(this.dialogItem); // axios.post('/admin/product/category/store', {
-        //     product_category_slug : slug,
-        //     product_category_title : title,
-        //     parent : 0
-        // })
-        // .then(response => {
-        //     // SnackBar
-        //     this.sbStatus = true;
-        //     this.sbType = 'success';
-        //     this.sbText = response.data.message;
-        //     this.loading = false;
-        //     this.getProductCategoriesTree();
-        //     this.$refs.form.reset();
-        // })
-        // .catch(error => {
-        //     this.loading = false;
-        //     if(error.response.status == 403){
-        //       // SnackBar
-        //       this.sbStatus = true;
-        //       this.sbType = 'error';
-        //       this.sbText = error.response.data.errorMessage;
-        //       console.log(error.response.data.errorMessage);
-        //     }
-        //     if (error.response && error.response.status == 422) {
-        //         this.errors.setErrors( error.response.data.errors );
-        //         // SnackBar
-        //         this.sbStatus = true;
-        //         this.sbType = 'error';
-        //         this.sbText = 'Error adding product category';
-        //         // Input error messages
-        //         if(this.errors.hasError('product_category_slug') ){
-        //             this.keyError = true;
-        //             this.keyErrorMessage = this.errors.first('product_category_slug');
-        //         }
-        //         if(this.errors.hasError('product_category_title') ){
-        //             this.valueError = true;
-        //             this.valueErrorMessage = this.errors.first('product_category_title');
-        //         }
-        //     }
-        // });
+        var title = this.dialogItem.product_category_title && this.dialogItem.product_category_title.trim();
+        axios.post('/admin/product/category/store', {
+          product_category_slug: this.dialogItem.product_category_slug,
+          product_category_title: title,
+          parent: this.selected.id
+        }).then(function (response) {
+          _this4.getProductCategoriesTree();
+
+          _this4.successUI(response.data.message);
+        })["catch"](function (error) {
+          _this4.loading = false; // if(error.response.status == 403){
+
+          if (error.response.status == 403) {
+            // SnackBar
+            _this4.sbStatus = true;
+            _this4.sbType = 'error';
+            _this4.sbText = error;
+            console.log(error);
+          }
+
+          if (error.response && error.response.status == 422) {
+            _this4.errors.setErrors(error.response.data.errors); // SnackBar
+
+
+            _this4.sbStatus = true;
+            _this4.sbType = 'error';
+            _this4.sbText = 'Error adding product category'; // Input error messages
+
+            if (_this4.errors.hasError('product_category_slug')) {
+              _this4.slugError = true;
+              _this4.slugErrMsg = _this4.errors.first('product_category_slug');
+            }
+
+            if (_this4.errors.hasError('product_category_title')) {
+              _this4.titleError = true;
+              _this4.titleErrMsg = _this4.errors.first('product_category_title');
+            }
+          }
+        });
+      } else if (this.mainAction == 'delete') {
+        axios["delete"]('/admin/product/category/destroy/' + this.deleteID).then(function (response) {
+          _this4.successUI(response.data.message);
+
+          _this4.getProductCategoriesTree();
+        })["catch"](function (error) {
+          _this4.loading = false;
+          _this4.dialog = false; // SnackBar
+
+          setTimeout(function () {
+            _this4.sbStatus = true;
+            _this4.sbType = 'error';
+
+            if (error.response && error.response.status == 422) {
+              _this4.errors.setErrors(error.response.data.errors);
+
+              _this4.sbText = error.response.data.message;
+            } else {
+              _this4.sbText = 'Error deleting product category';
+            }
+          }, 100);
+        });
       }
     }
   }
@@ -38493,7 +38501,7 @@ var render = function() {
         [
           _c(
             "v-card",
-            { staticClass: "mx-0" },
+            { staticClass: "mx-0 py-2" },
             [
               _c(
                 "v-toolbar",
@@ -38502,6 +38510,54 @@ var render = function() {
                   _c("v-toolbar-title", [_vm._v("Product Categories")]),
                   _vm._v(" "),
                   _c("v-spacer"),
+                  _vm._v(" "),
+                  _vm.openSearh == true
+                    ? _c("v-text-field", {
+                        staticClass: "pa-2",
+                        staticStyle: { width: "300px" },
+                        attrs: {
+                          label: "Search a category",
+                          clearable: "",
+                          "clear-icon": "mdi-broom",
+                          "hide-details": "",
+                          dense: "",
+                          transition: "slide-x-reverse-transition"
+                        },
+                        model: {
+                          value: _vm.search,
+                          callback: function($$v) {
+                            _vm.search = $$v
+                          },
+                          expression: "search"
+                        }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.openSearh == false
+                    ? _c(
+                        "v-icon",
+                        {
+                          staticClass: "pr-3",
+                          on: {
+                            click: function($event) {
+                              _vm.openSearh = true
+                            }
+                          }
+                        },
+                        [_vm._v("mdi-magnify")]
+                      )
+                    : _c(
+                        "v-icon",
+                        {
+                          staticClass: "pr-3",
+                          on: {
+                            click: function($event) {
+                              _vm.openSearh = false
+                            }
+                          }
+                        },
+                        [_vm._v("mdi-close")]
+                      ),
                   _vm._v(" "),
                   _c(
                     "v-btn",
@@ -38513,11 +38569,11 @@ var render = function() {
               ),
               _vm._v(" "),
               _c("v-treeview", {
-                staticClass: "pb-3",
                 attrs: {
                   hoverable: "",
                   "selected-color": "primary",
-                  items: _vm.productCategories
+                  items: _vm.productCategories,
+                  search: _vm.search
                 },
                 scopedSlots: _vm._u([
                   {
@@ -38555,7 +38611,12 @@ var render = function() {
                                 "v-icon",
                                 {
                                   staticClass: "ml-3",
-                                  attrs: { small: "" },
+                                  attrs: {
+                                    disabled: props.item.children
+                                      ? true
+                                      : false,
+                                    small: ""
+                                  },
                                   on: {
                                     click: function($event) {
                                       return _vm.deleteItem(props.item)
@@ -38723,7 +38784,7 @@ var render = function() {
                                         attrs: {
                                           "persistent-hint": "",
                                           hint:
-                                            "Select a category to set as parent. Leave empty to set as main category.",
+                                            "Select a parent category. Leave empty to set as main category.",
                                           disabled: _vm.selectDisabled,
                                           loading: _vm.selectLoading,
                                           items: _vm.categoryList,
@@ -38829,7 +38890,7 @@ var render = function() {
                                                       _vm._v(" "),
                                                       _c("span", [
                                                         _vm._v(
-                                                          "Select a category to set as parent. Leave empty to set as main category."
+                                                          "Set a parent category by clicking on the dropdown selection. Leave empty to set as main category."
                                                         )
                                                       ])
                                                     ]
@@ -38841,7 +38902,7 @@ var render = function() {
                                           ],
                                           null,
                                           false,
-                                          130738273
+                                          2290267158
                                         ),
                                         model: {
                                           value: _vm.selected,
@@ -38874,7 +38935,11 @@ var render = function() {
                         "v-btn",
                         {
                           attrs: { color: "blue darken-1", text: "" },
-                          on: { click: _vm.close }
+                          on: {
+                            click: function($event) {
+                              _vm.dialog = false
+                            }
+                          }
                         },
                         [_vm._v("Cancel")]
                       ),
@@ -38885,7 +38950,7 @@ var render = function() {
                           attrs: {
                             color: "primary",
                             text: "",
-                            disabled: _vm.selectDisabled
+                            disabled: !_vm.valid
                           },
                           on: {
                             click: function($event) {
@@ -94513,8 +94578,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! c:\xampp7.2.21\htdocs\grandiose-vuetify\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! c:\xampp7.2.21\htdocs\grandiose-vuetify\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! c:\xampp7.2.26\htdocs\grandiosevuetify\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! c:\xampp7.2.26\htdocs\grandiosevuetify\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

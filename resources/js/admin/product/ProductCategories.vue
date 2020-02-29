@@ -1,16 +1,30 @@
 <template>
   <div class="row">
     <div class="col-12 col-md-8">
-      <v-card class="mx-0">
+      <v-card class="mx-0 py-2">
         <v-toolbar flat color="white">
-            <v-toolbar-title>Product Categories</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn class="primary" @click="createItem">new</v-btn>
+          <v-toolbar-title>Product Categories</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-text-field v-if="openSearh == true"
+            v-model="search"
+            label="Search a category"
+            clearable
+            clear-icon="mdi-broom"
+            hide-details
+            dense
+            class="pa-2"
+            style="width:300px;"
+            transition="slide-x-reverse-transition"
+          ></v-text-field>
+            <v-icon v-if="openSearh == false" @click="openSearh = true" class="pr-3">mdi-magnify</v-icon>
+            <v-icon v-else @click="openSearh = false" class="pr-3">mdi-close</v-icon>
+          <v-btn class="primary" @click="createItem">new</v-btn>
         </v-toolbar>
         <v-treeview
           hoverable
           selected-color="primary"
-          :items="productCategories" class="pb-3"
+          :items="productCategories"
+          :search="search"
           >
           <template slot="label" slot-scope="props">
             <div class="d-flex px-3">
@@ -19,7 +33,7 @@
               </span>
               <div class="ml-auto">
                 <v-icon small @click="editItem(props.item)" class="ml-3">mdi-pencil</v-icon>
-                <v-icon small @click="deleteItem(props.item)" class="ml-3">mdi-trash-can</v-icon>
+                <v-icon v-bind:disabled="props.item.children? true : false" small @click="deleteItem(props.item)" class="ml-3">mdi-trash-can</v-icon>
               </div>
             </div>
           </template>
@@ -72,7 +86,7 @@
               <v-col cols="12">
                 <v-combobox
                   persistent-hint
-                  hint="Select a category to set as parent. Leave empty to set as main category."
+                  hint="Select a parent category. Leave empty to set as main category."
                   :disabled="selectDisabled"
                   :loading="selectLoading"
                   v-model="selected"
@@ -97,11 +111,10 @@
                           <v-icon small color="seconday">mdi-help-circle-outline</v-icon>
                         </v-btn>
                       </template>
-                      <span>Select a category to set as parent. Leave empty to set as main category.</span>
+                      <span>Set a parent category by clicking on the dropdown selection. Leave empty to set as main category.</span>
                     </v-tooltip>
                   </template>
                 </v-combobox>
-             
 
               </v-col>
             </v-row>
@@ -110,14 +123,15 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+          <v-btn color="blue darken-1" text @click="dialog = false">Cancel</v-btn>
           <!-- type='submit' -->
           <v-btn
             color="primary"
             text
             @click="save()"
-            :disabled="selectDisabled"
+            :disabled="!valid"
           >{{mainAction}}</v-btn>
+            <!-- :disabled="selectDisabled" -->
         </v-card-actions>
         </v-form>
       </v-card>
@@ -135,6 +149,11 @@
       this.getProductCategoriesTree();
     },
     computed: {
+      //  filter () {
+      //   return this.caseSensitive
+      //     ? (item, search, textKey) => item[textKey].indexOf(search) > -1
+      //     : undefined
+      // },
     },
     watch: {
       dialog : function(val){
@@ -142,27 +161,31 @@
           this.clearAlert();
           this.$refs.form.reset();
           this.categoryList = this.allCategories;
+          this.dialogItem.product_category_title = '';
+          this.dialogItem.product_category_slug = '';
+          this.dialogItem.parent = 0;
         }
       }
     },
     data: () => ({
+      caseSensitive: false,
+      openSearh : false,
+      search: '',
+
       // Dialog
       mainAction : '',
 
-      // Delete a Category
-      toDelete : [],
-      
       // rules
       valid : true,
       titleRule : [
-          value => !!value || 'Required',
-          value => (value && value.length < 50)  || 'Max 50 characters',
-          value => (value && value.length > 1)  || 'Min 3 characters',
+        value => !!value || 'Required',
+        value => (value && value.length < 50)  || 'Max 50 characters',
+        value => (value && value.length > 1)  || 'Min 1 characters',
       ],
       slugRule :  [
         value => !!value || 'Required',
         value => (value && value.length < 50)  || 'Max 50 characters',
-        value => (value && value.length > 1)  || 'Min 3 characters',
+        value => (value && value.length > 1)  || 'Min 1 characters',
       ],
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       
@@ -182,18 +205,15 @@
       slugError : false,
       slugErrMsg : '',
 
+      // Tree
       productCategories : [],
       allCategories : [],
       categoryList : [],
       selectDisabled : true,
       selectLoading : false,
       listLoaded: false,
-
-      items: {
-        text: "category_field_title",
-        value: "id",
-      },
       selected: [], 
+
       dialogItem: {
         product_category_slug: '',
         product_category_title: '',
@@ -202,20 +222,15 @@
       defaultItem: {
         product_category_slug: '',
         product_category_title: '',
-        parent: ''
+        parent: 0
       },
-      editedIndex: -1,
-      editedItem: {
-        product_category_slug: '',
-        product_category_title: '',
-      },
-
-      // this.originalItem = Object.assign({}, item)
       formTitle : '',
+      // Delete a Category
+      deleteID : 0,
     }),
     methods: {
       generateSlug(){
-        this.dialogItem.product_category_slug = slugify(this.dialogItem.product_category_title);
+        this.dialogItem.product_category_slug = this.dialogItem.product_category_title && slugify(this.dialogItem.product_category_title);
       },
       getParetTitle(pID){
         if(pID > 0){
@@ -265,16 +280,29 @@
         this.mainAction = 'delete';
         this.dialog = true;
         this.formTitle = 'Delete '+i.product_category_title;
+        this.deleteID = i.id;
+      },
+      successUI(msg){
+        // Dialog
+        this.dialog = false;
+        this.loading = false;
+        // SnackBar
+        setTimeout(() => {
+          this.sbStatus = true;
+          this.sbType = 'success';
+          this.sbText = msg;
+        }, 100);
       },
       clearAlert(){
-          this.sbStatus = false; // SnackBar
-          this.titleError = false;
-          this.titleErrMsg = '';
-          this.slugError = false;
-          this.slugErrMsg = '';
-          this.errors.clearAll();
+        this.sbStatus = false; // SnackBar
+        this.titleError = false;
+        this.titleErrMsg = '';
+        this.slugError = false;
+        this.slugErrMsg = '';
+        this.errors.clearAll();
       },
       createItem(){
+        console.log(this.dialogItem);
         this.mainAction = 'create';
         this.dialog = true;
         this.formTitle = 'Create new';
@@ -307,46 +335,12 @@
               console.log('error');
           });
       },
-      toDeleteItem (item) {
-        this.toDelete = item;
-        this.deleteDialog = true;
-        this.formTitle = item.product_category_slug;
-      },
-      confirmDelete(toDelete){
-        this.deleteLoading = true,
-        console.log(this.toDelete);
-        
-        axios.delete('/admin/product/category/destroy/'+toDelete.id)
-        .then(response => {
-            this.deleteLoading = false,
-            // SnackBar
-            this.sbStatus = true;
-            this.sbType = 'success';
-            this.sbText = response.data.message;
-            this.deleteDialog = false;
-            this.getProductCategoriesTree();
-        })
-        .catch(error => {
-          this.deleteLoading = false;
-          this.deleteDialog = false;  
-          this.sbStatus = true;
-          this.sbType = 'error';
-          if (error.response && error.response.status == 422) {
-            this.errors.setErrors( error.response.data.errors );
-            this.sbText = 'Response Error';
-          }else{
-            this.sbText = 'Error adding product category';
-          }
-        });
-      },
-      close () {
-        this.dialog = false;
-      },
       save () {
+        this.valid = false;
         this.loading = true;
-        let postData = [];
         // Update
         if(this.mainAction == 'update'){
+          let postData = [];
           let p = this.selected.id ? this.selected.id : 0;
           if(this.defaultItem.product_category_slug != this.dialogItem.product_category_slug){
             postData = {
@@ -362,90 +356,94 @@
               parent : p
             }
           }
-          console.log(postData);
           axios.post('/admin/product/category/update', postData)
           .then(response => {
-            // SnackBar
-              this.sbStatus = true;
-              this.sbType = 'success';
-              this.sbText = response.data.message;
-              this.loading = false;
-              // Update Table
-              this.getProductCategoriesTree();
-              this.close();
-              console.log('success');
-              console.log(response.data);
+            // Update Table
+            this.getProductCategoriesTree();
+            this.successUI(response.data.message);
           })
           .catch(error => {
             this.loading = false;    
             if (error.response && error.response.status == 422) {
-                this.errors.setErrors( error.response.data.errors );
-                // SnackBar
-                this.sbStatus = true;
-                this.sbType = 'error';
-                this.sbText = 'Error adding product category';
-                // Input error messages
-                if(this.errors.hasError('product_category_slug') ){
-                    this.updateKeyError = true;
-                    this.updateKeyErrMsg = this.errors.first('product_category_slug');
-                }
-                if(this.errors.hasError('product_category_title') ){
-                    this.updateValueError = true;
-                    this.updateValueErrMsg = this.errors.first('product_category_title');
-                }
+              this.errors.setErrors( error.response.data.errors );
+              // SnackBar
+              this.sbStatus = true;
+              this.sbType = 'error';
+              this.sbText = 'Error adding product category';
+              // Input error messages
+              if(this.errors.hasError('product_category_slug') ){
+                this.updateKeyError = true;
+                this.updateKeyErrMsg = this.errors.first('product_category_slug');
+              }
+              if(this.errors.hasError('product_category_title') ){
+                this.updateValueError = true;
+                this.updateValueErrMsg = this.errors.first('product_category_title');
+              }
             }
           });
         }else if(this.mainAction == 'create'){
           // Create
           this.loading = true;
-          let title = this.dialogItem.product_category_title.trim();
-          console.log(this.dialogItem);
-          // axios.post('/admin/product/category/store', {
-          //     product_category_slug : slug,
-          //     product_category_title : title,
-          //     parent : 0
-          // })
-          // .then(response => {
-          //     // SnackBar
-          //     this.sbStatus = true;
-          //     this.sbType = 'success';
-          //     this.sbText = response.data.message;
-          //     this.loading = false;
-              
-          //     this.getProductCategoriesTree();
-          //     this.$refs.form.reset();
-
-          // })
-          // .catch(error => {
-          //     this.loading = false;
-          //     if(error.response.status == 403){
-          //       // SnackBar
-          //       this.sbStatus = true;
-          //       this.sbType = 'error';
-          //       this.sbText = error.response.data.errorMessage;
-          //       console.log(error.response.data.errorMessage);
-          //     }
-          //     if (error.response && error.response.status == 422) {
-          //         this.errors.setErrors( error.response.data.errors );
-          //         // SnackBar
-          //         this.sbStatus = true;
-          //         this.sbType = 'error';
-          //         this.sbText = 'Error adding product category';
-          //         // Input error messages
-          //         if(this.errors.hasError('product_category_slug') ){
-          //             this.keyError = true;
-          //             this.keyErrorMessage = this.errors.first('product_category_slug');
-          //         }
-          //         if(this.errors.hasError('product_category_title') ){
-          //             this.valueError = true;
-          //             this.valueErrorMessage = this.errors.first('product_category_title');
-          //         }
-          //     }
-          // });
-
-
-
+          let title = this.dialogItem.product_category_title && this.dialogItem.product_category_title.trim();
+          axios.post('/admin/product/category/store', {
+            product_category_slug : this.dialogItem.product_category_slug,
+            product_category_title : title,
+            parent : this.selected.id
+          })
+          .then(response => {
+            this.getProductCategoriesTree();
+            this.successUI(response.data.message);
+          })
+          .catch(error => {
+            this.loading = false;
+            // if(error.response.status == 403){
+            if(error.response.status == 403){
+              // SnackBar
+              this.sbStatus = true;
+              this.sbType = 'error';
+              this.sbText = error;
+              console.log(error);
+            }
+            if (error.response && error.response.status == 422) {
+              this.errors.setErrors( error.response.data.errors );
+              // SnackBar
+              this.sbStatus = true;
+              this.sbType = 'error';
+              this.sbText = 'Error adding product category';
+              // Input error messages
+              if(this.errors.hasError('product_category_slug') ){
+                this.slugError = true;
+                this.slugErrMsg = this.errors.first('product_category_slug');
+              }
+              if(this.errors.hasError('product_category_title') ){
+                this.titleError = true;
+                this.titleErrMsg = this.errors.first('product_category_title');
+              }
+            }
+          });
+        }else if(this.mainAction == 'delete'){
+          axios.delete('/admin/product/category/destroy/'+this.deleteID)
+          .then(response => {
+            this.successUI(response.data.message);
+            this.getProductCategoriesTree();
+          })
+          .catch(error => {
+            this.loading = false;  
+            this.dialog = false;
+            // SnackBar
+            setTimeout(() => {
+              this.sbStatus = true;
+              this.sbType = 'error';
+              if (error.response && error.response.status == 422) {
+                this.errors.setErrors( error.response.data.errors );
+                this.sbText = error.response.data.message;
+              }else{
+                this.sbText = 'Error deleting product category';
+              }
+            }, 100);
+          });
         }
+
       }
     },
   }

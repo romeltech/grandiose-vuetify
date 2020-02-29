@@ -93,13 +93,13 @@ class ProductCategoriesController extends Controller
         // ]);
         /* Automatic Slug */
 
-        $pf = Product_categories::create($this->validateRequest()); // Working
+        $productCategories = Product_categories::create($this->validateRequest()); // Working
 
         // return request
         return response()->json([
-            'slug' => $request->product_category_slug,
-            'message' => 'Product field has been added'
-          ], 200);
+            // 'slug' => $request->product_category_slug,
+            'message' => 'Product category has been added'
+        ], 200);
     }
 
     /**
@@ -145,12 +145,20 @@ class ProductCategoriesController extends Controller
      */
     public function destroy($id)
     {
-        $productfields = Product_categories::where('id', '=', $id)->firstOrFail();
-        $productfields->delete();
+        $parentCheck = Product_categories::where('parent', '=', $id)->doesntExist();
+        $responseMsg = '';
+        $responseCode = 0;
+        if($parentCheck){
+            Product_categories::where('id', '=', $id)->firstOrFail()->delete();
+            $responseMsg = 'Product category has been Deleted';
+            $responseCode = 200;
+        }else{
+            $responseMsg = 'Unable to delete category with children associated';
+            $responseCode = 422;
+        }
         return response()->json([
-            'requestData' => $productfields,
-            'message' => 'Product field has been Deleted'
-        ], 200);
+            'message' => $responseMsg
+        ], $responseCode);
     }
 
     /**
