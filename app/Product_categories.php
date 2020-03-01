@@ -11,9 +11,9 @@ class Product_categories extends Model
     protected $guarded = [];
 
     // Relationship to Products
-    public function product()
+    public function products()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsToMany(Product::class);
     }
 
     // Relationship to Product Field Meta

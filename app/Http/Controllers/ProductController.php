@@ -69,7 +69,14 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $product = Product::find(1);
+        $product->product_categories()->sync($request->categories);
+
+        return response()->json([
+            'product' => $product,
+            'request' => $request->categories,
+            'message' => 'Product has been updated'
+        ], 200);
     }
 
     /**

@@ -15,7 +15,7 @@ class Product extends Model
     // Relationship to Product Categories
     public function product_categories()
     {
-        return $this->hasMany(Product_categories::class);
+        return $this->belongsToMany(Product_categories::class);
     }
 }
 

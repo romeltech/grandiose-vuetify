@@ -3505,6 +3505,18 @@ __webpack_require__.r(__webpack_exports__);
         console.log('error');
       });
     },
+    submit: function submit() {
+      var _this3 = this;
+
+      console.log(this.selection);
+      axios.post('/admin/product/store', {
+        categories: this.selection
+      }).then(function (response) {
+        console.log(response.data); // this.successUI(response.data.message);
+      })["catch"](function (error) {
+        _this3.loading = false;
+      });
+    },
     update: function update() {
       this.pageLoading();
       console.log(this.selection);
@@ -38083,7 +38095,7 @@ var render = function() {
                         attrs: { small: "", color: "primary ml-2" },
                         on: {
                           click: function($event) {
-                            return _vm.update()
+                            return _vm.submit()
                           }
                         }
                       },

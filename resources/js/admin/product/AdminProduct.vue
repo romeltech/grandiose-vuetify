@@ -11,7 +11,7 @@
                         <v-spacer></v-spacer>
                         <v-btn small text class="info--text" @click="draft()">Save as Draft</v-btn>
                         <v-btn small class="ml-2" :href="productURL" target="_blank">Preview</v-btn>
-                        <v-btn small color="primary ml-2" @click="update()">Update</v-btn>
+                        <v-btn small color="primary ml-2" @click="submit()">Update</v-btn>
                     </v-toolbar>
                 </div>
                 <div class="page-content col-12 pb-0 px-3" style="overflow-y:scroll;">
@@ -153,6 +153,19 @@ export default {
             .catch(error => {
                 console.log(error.response);
                 console.log('error');
+            });
+        },
+        submit(){
+            console.log(this.selection);
+            axios.post('/admin/product/store', {
+                categories : this.selection
+            })
+            .then(response => {
+                console.log(response.data)
+                // this.successUI(response.data.message);
+            })
+            .catch(error => {
+                this.loading = false;
             });
         },
         update(){
