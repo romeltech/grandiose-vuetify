@@ -1,30 +1,42 @@
 <template>
   <div class="row">
-    <div class="col-12 col-md-8">
+    <div class="col-12">
       <v-card class="mx-0 py-2">
         <v-toolbar flat color="white">
-          <v-toolbar-title>Product Categories</v-toolbar-title>
+          <v-toolbar-title class="d-none d-md-block d-lg-block">Product Categories</v-toolbar-title>
+          <v-icon class="d-none d-sm-block d-md-none">mdi-basket</v-icon>
           <v-spacer></v-spacer>
-          <v-text-field v-if="openSearh == true"
-            v-model="search"
+          <v-autocomplete  v-if="searchStatus == true"
+            :items="allCategories"
+            :filter="customFilter"
             label="Search a category"
-            clearable
-            clear-icon="mdi-broom"
+            item-text="product_category_title"
             hide-details
             dense
             class="pa-2"
             style="width:300px;"
-            transition="slide-x-reverse-transition"
-          ></v-text-field>
-            <v-icon v-if="openSearh == false" @click="openSearh = true" class="pr-3">mdi-magnify</v-icon>
-            <v-icon v-else @click="openSearh = false" class="pr-3">mdi-close</v-icon>
+            clearable
+            clear-icon="mdi-broom"
+          >
+           <template v-slot:item="{ item }">
+              <v-list-item-content>
+                <v-list-item-title v-text="item.product_category_title"></v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-action>
+                <span>
+                  <v-icon small @click="editItem(item)">mdi-pencil</v-icon>
+                  <v-icon small @click="deleteItem(item)">mdi-trash-can</v-icon>
+                </span>
+              </v-list-item-action>
+          </template>
+          </v-autocomplete>
+            <v-icon :searchStatus="false" @click="openSearch" class="pr-3">{{ searchIcon }}</v-icon>
           <v-btn class="primary" @click="createItem">new</v-btn>
         </v-toolbar>
         <v-treeview
           hoverable
           selected-color="primary"
           :items="productCategories"
-          :search="search"
           >
           <template slot="label" slot-scope="props">
             <div class="d-flex px-3">
@@ -48,7 +60,6 @@
         method="POST"
         ref="form"
         v-model="valid"
-        @submit.prevent="save(dialogItem)"
         lazy-validation>
         <v-card-title>
           <span class="headline">{{ formTitle }}</span>
@@ -149,11 +160,6 @@
       this.getProductCategoriesTree();
     },
     computed: {
-      //  filter () {
-      //   return this.caseSensitive
-      //     ? (item, search, textKey) => item[textKey].indexOf(search) > -1
-      //     : undefined
-      // },
     },
     watch: {
       dialog : function(val){
@@ -168,8 +174,9 @@
       }
     },
     data: () => ({
-      caseSensitive: false,
-      openSearh : false,
+      allCategoriesLoded: false,
+      searchStatus : false,
+      searchIcon : 'mdi-magnify',
       search: '',
 
       // Dialog
@@ -229,6 +236,30 @@
       deleteID : 0,
     }),
     methods: {
+      customFilter (item, queryText, itemText) {
+        const textOne = item.product_category_title.toLowerCase()
+        const textTwo = item.product_category_title.toLowerCase()
+        const searchText = queryText.toLowerCase()
+
+        return textOne.indexOf(searchText) > -1 ||
+          textTwo.indexOf(searchText) > -1
+      },
+      openSearch(){
+        if(this.searchStatus == true){
+          this.searchStatus = false;
+          this.searchIcon = 'mdi-magnify';
+        }else{
+          this.searchStatus = true;
+          this.searchIcon = 'mdi-close';
+        }
+        if(this.allCategoriesLoded == false){
+          this.getProductCategoriesList(0);
+        }else{
+          console.log(this.allCategories);
+        }
+        console.log(this.productCategories);
+        console.log(this.searchStatus);
+      },
       generateSlug(){
         this.dialogItem.product_category_slug = this.dialogItem.product_category_title && slugify(this.dialogItem.product_category_title);
       },
@@ -328,6 +359,7 @@
             this.selectLoading = false;
             this.getParetTitle(pID);
             this.selectDisabled = false;
+            this.allCategoriesLoded = true;
             // console.log('list has loaded');
           })
           .catch(error => {
@@ -360,6 +392,7 @@
           .then(response => {
             // Update Table
             this.getProductCategoriesTree();
+            this.getProductCategoriesList(0);
             this.successUI(response.data.message);
           })
           .catch(error => {
@@ -392,6 +425,7 @@
           })
           .then(response => {
             this.getProductCategoriesTree();
+            this.getProductCategoriesList(0);
             this.successUI(response.data.message);
           })
           .catch(error => {
@@ -425,6 +459,7 @@
           axios.delete('/admin/product/category/destroy/'+this.deleteID)
           .then(response => {
             this.successUI(response.data.message);
+            this.getProductCategoriesList(0);
             this.getProductCategoriesTree();
           })
           .catch(error => {

@@ -3849,6 +3849,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3858,12 +3869,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     this.getProductCategoriesTree();
   },
-  computed: {//  filter () {
-    //   return this.caseSensitive
-    //     ? (item, search, textKey) => item[textKey].indexOf(search) > -1
-    //     : undefined
-    // },
-  },
+  computed: {},
   watch: {
     dialog: function dialog(val) {
       if (val == false) {
@@ -3878,8 +3884,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      caseSensitive: false,
-      openSearh: false,
+      allCategoriesLoded: false,
+      searchStatus: false,
+      searchIcon: 'mdi-magnify',
       search: '',
       // Dialog
       mainAction: '',
@@ -3937,6 +3944,30 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    customFilter: function customFilter(item, queryText, itemText) {
+      var textOne = item.product_category_title.toLowerCase();
+      var textTwo = item.product_category_title.toLowerCase();
+      var searchText = queryText.toLowerCase();
+      return textOne.indexOf(searchText) > -1 || textTwo.indexOf(searchText) > -1;
+    },
+    openSearch: function openSearch() {
+      if (this.searchStatus == true) {
+        this.searchStatus = false;
+        this.searchIcon = 'mdi-magnify';
+      } else {
+        this.searchStatus = true;
+        this.searchIcon = 'mdi-close';
+      }
+
+      if (this.allCategoriesLoded == false) {
+        this.getProductCategoriesList(0);
+      } else {
+        console.log(this.allCategories);
+      }
+
+      console.log(this.productCategories);
+      console.log(this.searchStatus);
+    },
     generateSlug: function generateSlug() {
       this.dialogItem.product_category_slug = this.dialogItem.product_category_title && slugify(this.dialogItem.product_category_title);
     },
@@ -4041,7 +4072,8 @@ __webpack_require__.r(__webpack_exports__);
 
         _this3.getParetTitle(pID);
 
-        _this3.selectDisabled = false; // console.log('list has loaded');
+        _this3.selectDisabled = false;
+        _this3.allCategoriesLoded = true; // console.log('list has loaded');
       })["catch"](function (error) {
         console.log(error.response);
         console.log('error');
@@ -4075,6 +4107,8 @@ __webpack_require__.r(__webpack_exports__);
         axios.post('/admin/product/category/update', postData).then(function (response) {
           // Update Table
           _this4.getProductCategoriesTree();
+
+          _this4.getProductCategoriesList(0);
 
           _this4.successUI(response.data.message);
         })["catch"](function (error) {
@@ -4110,6 +4144,8 @@ __webpack_require__.r(__webpack_exports__);
         }).then(function (response) {
           _this4.getProductCategoriesTree();
 
+          _this4.getProductCategoriesList(0);
+
           _this4.successUI(response.data.message);
         })["catch"](function (error) {
           _this4.loading = false; // if(error.response.status == 403){
@@ -4144,6 +4180,8 @@ __webpack_require__.r(__webpack_exports__);
       } else if (this.mainAction == 'delete') {
         axios["delete"]('/admin/product/category/destroy/' + this.deleteID).then(function (response) {
           _this4.successUI(response.data.message);
+
+          _this4.getProductCategoriesList(0);
 
           _this4.getProductCategoriesTree();
         })["catch"](function (error) {
@@ -38497,7 +38535,7 @@ var render = function() {
     [
       _c(
         "div",
-        { staticClass: "col-12 col-md-8" },
+        { staticClass: "col-12" },
         [
           _c(
             "v-card",
@@ -38507,57 +38545,106 @@ var render = function() {
                 "v-toolbar",
                 { attrs: { flat: "", color: "white" } },
                 [
-                  _c("v-toolbar-title", [_vm._v("Product Categories")]),
+                  _c(
+                    "v-toolbar-title",
+                    { staticClass: "d-none d-md-block d-lg-block" },
+                    [_vm._v("Product Categories")]
+                  ),
+                  _vm._v(" "),
+                  _c("v-icon", { staticClass: "d-none d-sm-block d-md-none" }, [
+                    _vm._v("mdi-basket")
+                  ]),
                   _vm._v(" "),
                   _c("v-spacer"),
                   _vm._v(" "),
-                  _vm.openSearh == true
-                    ? _c("v-text-field", {
+                  _vm.searchStatus == true
+                    ? _c("v-autocomplete", {
                         staticClass: "pa-2",
                         staticStyle: { width: "300px" },
                         attrs: {
+                          items: _vm.allCategories,
+                          filter: _vm.customFilter,
                           label: "Search a category",
-                          clearable: "",
-                          "clear-icon": "mdi-broom",
+                          "item-text": "product_category_title",
                           "hide-details": "",
                           dense: "",
-                          transition: "slide-x-reverse-transition"
+                          clearable: "",
+                          "clear-icon": "mdi-broom"
                         },
-                        model: {
-                          value: _vm.search,
-                          callback: function($$v) {
-                            _vm.search = $$v
-                          },
-                          expression: "search"
-                        }
+                        scopedSlots: _vm._u(
+                          [
+                            {
+                              key: "item",
+                              fn: function(ref) {
+                                var item = ref.item
+                                return [
+                                  _c(
+                                    "v-list-item-content",
+                                    [
+                                      _c("v-list-item-title", {
+                                        domProps: {
+                                          textContent: _vm._s(
+                                            item.product_category_title
+                                          )
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c("v-list-item-action", [
+                                    _c(
+                                      "span",
+                                      [
+                                        _c(
+                                          "v-icon",
+                                          {
+                                            attrs: { small: "" },
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.editItem(item)
+                                              }
+                                            }
+                                          },
+                                          [_vm._v("mdi-pencil")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "v-icon",
+                                          {
+                                            attrs: { small: "" },
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.deleteItem(item)
+                                              }
+                                            }
+                                          },
+                                          [_vm._v("mdi-trash-can")]
+                                        )
+                                      ],
+                                      1
+                                    )
+                                  ])
+                                ]
+                              }
+                            }
+                          ],
+                          null,
+                          false,
+                          3263806074
+                        )
                       })
                     : _vm._e(),
                   _vm._v(" "),
-                  _vm.openSearh == false
-                    ? _c(
-                        "v-icon",
-                        {
-                          staticClass: "pr-3",
-                          on: {
-                            click: function($event) {
-                              _vm.openSearh = true
-                            }
-                          }
-                        },
-                        [_vm._v("mdi-magnify")]
-                      )
-                    : _c(
-                        "v-icon",
-                        {
-                          staticClass: "pr-3",
-                          on: {
-                            click: function($event) {
-                              _vm.openSearh = false
-                            }
-                          }
-                        },
-                        [_vm._v("mdi-close")]
-                      ),
+                  _c(
+                    "v-icon",
+                    {
+                      staticClass: "pr-3",
+                      attrs: { searchStatus: false },
+                      on: { click: _vm.openSearch }
+                    },
+                    [_vm._v(_vm._s(_vm.searchIcon))]
+                  ),
                   _vm._v(" "),
                   _c(
                     "v-btn",
@@ -38572,8 +38659,7 @@ var render = function() {
                 attrs: {
                   hoverable: "",
                   "selected-color": "primary",
-                  items: _vm.productCategories,
-                  search: _vm.search
+                  items: _vm.productCategories
                 },
                 scopedSlots: _vm._u([
                   {
@@ -38671,12 +38757,6 @@ var render = function() {
                 {
                   ref: "form",
                   attrs: { method: "POST", "lazy-validation": "" },
-                  on: {
-                    submit: function($event) {
-                      $event.preventDefault()
-                      return _vm.save(_vm.dialogItem)
-                    }
-                  },
                   model: {
                     value: _vm.valid,
                     callback: function($$v) {
