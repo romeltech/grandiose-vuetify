@@ -41,7 +41,6 @@
                                     ></v-textarea>
                                 </v-card-text>
                             </v-card>
-                           
                         </div>
                         <div class="col-md-4 col-12">
 
@@ -51,16 +50,17 @@
                                     <v-expansion-panel-content>
                                         <div class="row pt-3">
                                             <v-progress-circular v-if="treeLoaded == false" class="mx-auto" indeterminate color="primary" :width="2" :size="20"></v-progress-circular>
-                                            <!-- selection-type="independent" -->
                                             <v-treeview
+                                                v-model="selection"
                                                 v-if="treeLoaded == true"
+                                                selection-type="independent"
                                                 dense
                                                 selectable
                                                 selected-color="primary"
                                                 :items="productCategoriesTree">
                                                 <template slot="label" slot-scope="props">
                                                     <span>
-                                                        {{props.item.product_category_title}}
+                                                        {{props.item.id}} - {{props.item.product_category_title}}
                                                     </span>
                                                 </template>
                                             </v-treeview>
@@ -120,7 +120,13 @@ export default {
             // Product Categories Tree
             productCategoriesTree: [],
             treeLoaded: false,
+            selection: [],
         }
+    },
+     watch: {
+    //   selection : function(val){
+    //    console.log(val);
+    //   }
     },
     methods: {
         pageLoading(){
@@ -151,6 +157,7 @@ export default {
         },
         update(){
             this.pageLoading();
+            console.log(this.selection)
         },
         draft(){
             this.pageLoading();
@@ -158,6 +165,7 @@ export default {
     },
     mounted(){
         this.pageHeight();
+        console.log(this.selection);
     }
 }
 </script>

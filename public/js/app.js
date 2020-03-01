@@ -3468,8 +3468,13 @@ __webpack_require__.r(__webpack_exports__);
       featuredImg: window.location.origin + '/' + this.products.imagepath,
       // Product Categories Tree
       productCategoriesTree: [],
-      treeLoaded: false
+      treeLoaded: false,
+      selection: []
     };
+  },
+  watch: {//   selection : function(val){
+    //    console.log(val);
+    //   }
   },
   methods: {
     pageLoading: function pageLoading() {
@@ -3502,6 +3507,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     update: function update() {
       this.pageLoading();
+      console.log(this.selection);
     },
     draft: function draft() {
       this.pageLoading();
@@ -3509,6 +3515,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     this.pageHeight();
+    console.log(this.selection);
   }
 });
 
@@ -38210,6 +38217,7 @@ var render = function() {
                                     _vm.treeLoaded == true
                                       ? _c("v-treeview", {
                                           attrs: {
+                                            "selection-type": "independent",
                                             dense: "",
                                             selectable: "",
                                             "selected-color": "primary",
@@ -38225,6 +38233,10 @@ var render = function() {
                                                       _vm._v(
                                                         "\n                                                    " +
                                                           _vm._s(
+                                                            props.item.id
+                                                          ) +
+                                                          " - " +
+                                                          _vm._s(
                                                             props.item
                                                               .product_category_title
                                                           ) +
@@ -38237,8 +38249,15 @@ var render = function() {
                                             ],
                                             null,
                                             false,
-                                            3042914607
-                                          )
+                                            2055619321
+                                          ),
+                                          model: {
+                                            value: _vm.selection,
+                                            callback: function($$v) {
+                                              _vm.selection = $$v
+                                            },
+                                            expression: "selection"
+                                          }
                                         })
                                       : _vm._e()
                                   ],
