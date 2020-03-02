@@ -80,9 +80,9 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($slug)
+    public function show($id)
     {
-        $product = Product::where('slug', '=', $slug)->firstOrFail();
+        $product = Product::where('id', '=', $id)->firstOrFail();
         // dd($product);
         // dd(compact('product'));
         // dd($product->categories);
@@ -111,12 +111,17 @@ class ProductController extends Controller
     public function update(Request $request)
     {
         $product = Product::find($request->id);
-        $category = Category::find($request->categories);
+        $product->title = $request->title;
+        $product->slug = $request->slug;
+        $product->description = $request->description;
+        $product->save();
 
-        $product->categories()->sync($category);
+        if($request->categories){
+            $category = Category::find($request->categories);
+            $product->categories()->sync($category);
+        }
         return response()->json([
             'product' => $product,
-            'request_categories' => $request->categories,
             'message' => 'Product has been updated'
         ], 200);
     }
@@ -140,5 +145,18 @@ class ProductController extends Controller
     {
         // return view('shop.checkout', ['products' => $products]);
         return view('shop.checkout');
+    }
+
+    /**
+     * Form Validation
+     */
+    public function validateRequest()
+    {
+        return request()->validate([
+            'slug' => ['min:1', 'max:50', 'string', 'alpha_dash'], //, 'unique:product_categories'
+            'title' => ['required', 'min:1', 'max:50', 'string'],
+            'description' => [''],
+        ]);
+
     }
 }

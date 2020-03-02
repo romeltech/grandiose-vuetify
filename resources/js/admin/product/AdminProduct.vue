@@ -11,7 +11,7 @@
                         <v-spacer></v-spacer>
                         <v-btn small text class="info--text" @click="draft()">Save as Draft</v-btn>
                         <v-btn small class="ml-2" :href="productURL" target="_blank">Preview</v-btn>
-                        <v-btn small color="primary ml-2" @click="update()">Update</v-btn>
+                        <v-btn small color="primary" class="ml-2" :disabled="!valid" @click="update()">Update</v-btn>
                     </v-toolbar>
                 </div>
                 <div class="page-content col-12 pb-0 px-3" style="overflow-y:scroll;">
@@ -96,16 +96,27 @@
                 </div><!-- page-content -->
             </form>
         </v-card>
+        <snack-bar :snackbar-type="sbType" :snackbar-text="sbText" :snackbar-status="sbStatus"></snack-bar>
     </div>
 </template>
 
 <script>
+import SnackBar from '../../components/SnackBar.vue';
+import ErrorBag from "../../actions/errorBag.js";
 export default {
+    components: {
+      SnackBar
+    },
     props: ["product","categories"],
     data() {
         return {
             // ui
             loading: false,
+            valid: true,
+            // Snack Bar
+            sbStatus : false,
+            sbType : '',
+            sbText : '',
 
             // Base URL to be changed in vuex
             baseURL : window.location.origin,
@@ -120,6 +131,8 @@ export default {
             featuredImg: window.location.origin+'/'+this.product.imagepath,
             productCategories: this.categories,
 
+            csrf: document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+
             // Product Categories Tree
             allCategories: [],
             productCategoriesTree: [],
@@ -128,6 +141,16 @@ export default {
         }
     },
     methods: {
+        successUI(msg){
+            this.loading = false;
+            this.valid = true;
+            // SnackBar
+            setTimeout(() => {
+                this.sbStatus = true;
+                this.sbType = 'success';
+                this.sbText = msg;
+            }, 100);
+        },
         pageHeight(){
             // Set page height
             const height = document.querySelector('header.v-app-bar').offsetHeight + document.querySelector('.secondary-header').offsetHeight;
@@ -163,14 +186,29 @@ export default {
             });
         },
         update(){
+            this.valid = false;
             this.loading = true;
-            axios.post('/admin/product/update', {
-                id : this.id,
-                categories : this.selection,
-            })
+            let productData = [];
+            if(this.treeLoaded == true){
+                productData = {
+                    id : this.id,
+                    title : this.title,
+                    slug : this.slug,
+                    description : this.desc,
+                    categories : this.selection,
+                };                
+            }else{
+                productData = {
+                    id : this.id,
+                    title : this.title,
+                    slug : this.slug,
+                    description : this.desc
+                };
+            }
+            axios.post('/admin/product/update', productData)
             .then(response => {
-                // this.successUI(response.data.message);
-                this.loading = false;
+                this.successUI(response.data.message);
+                console.log(response.data);
             })
             .catch(error => {
                 this.loading = false;

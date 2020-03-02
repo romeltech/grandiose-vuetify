@@ -39,8 +39,6 @@ class CategoriesTableSeeder extends Seeder
             'parent'   => 0
         ]);
         $pc->save();
-
-
         $pc = new \App\Category([
             'id'       => 5,
             'title'    => 'Fruits and Vegetables',

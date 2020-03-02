@@ -3351,6 +3351,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_SnackBar_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/SnackBar.vue */ "./resources/js/components/SnackBar.vue");
+/* harmony import */ var _actions_errorBag_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../actions/errorBag.js */ "./resources/js/actions/errorBag.js");
 //
 //
 //
@@ -3452,12 +3454,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    SnackBar: _components_SnackBar_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   props: ["product", "categories"],
   data: function data() {
     return {
       // ui
       loading: false,
+      valid: true,
+      // Snack Bar
+      sbStatus: false,
+      sbType: '',
+      sbText: '',
       // Base URL to be changed in vuex
       baseURL: window.location.origin,
       productURL: window.location.origin + '/product/' + this.product.slug,
@@ -3469,6 +3482,7 @@ __webpack_require__.r(__webpack_exports__);
       img: this.product.imagepath,
       featuredImg: window.location.origin + '/' + this.product.imagepath,
       productCategories: this.categories,
+      csrf: document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
       // Product Categories Tree
       allCategories: [],
       productCategoriesTree: [],
@@ -3477,6 +3491,18 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    successUI: function successUI(msg) {
+      var _this = this;
+
+      this.loading = false;
+      this.valid = true; // SnackBar
+
+      setTimeout(function () {
+        _this.sbStatus = true;
+        _this.sbType = 'success';
+        _this.sbText = msg;
+      }, 100);
+    },
     pageHeight: function pageHeight() {
       // Set page height
       var height = document.querySelector('header.v-app-bar').offsetHeight + document.querySelector('.secondary-header').offsetHeight;
@@ -3486,42 +3512,60 @@ __webpack_require__.r(__webpack_exports__);
       this.getProductCategoriesTree();
     },
     getProductCategoriesTree: function getProductCategoriesTree() {
-      var _this = this;
+      var _this2 = this;
 
       // Get Product Categories Tree
       axios.get('/api/product/category/tree').then(function (response) {
-        _this.productCategoriesTree = response.data;
-        _this.selection = _this.categories.map(function (cat) {
+        _this2.productCategoriesTree = response.data;
+        _this2.selection = _this2.categories.map(function (cat) {
           return cat.id;
         });
-        _this.treeLoaded = true; // console.log(this.productCategoriesTree);
+        _this2.treeLoaded = true; // console.log(this.productCategoriesTree);
       })["catch"](function (error) {
         console.log(error.response);
         console.log('Error fetching data');
       });
     },
     getProductCategoriesList: function getProductCategoriesList() {
-      var _this2 = this;
+      var _this3 = this;
 
       axios.get('/api/product/category/list').then(function (response) {
-        _this2.allCategories = response.data;
+        _this3.allCategories = response.data;
       })["catch"](function (error) {
         console.log(error.response);
         console.log('error');
       });
     },
     update: function update() {
-      var _this3 = this;
+      var _this4 = this;
 
+      this.valid = false;
       this.loading = true;
-      axios.post('/admin/product/update', {
-        id: this.id,
-        categories: this.selection
-      }).then(function (response) {
-        // this.successUI(response.data.message);
-        _this3.loading = false;
+      var productData = [];
+
+      if (this.treeLoaded == true) {
+        productData = {
+          id: this.id,
+          title: this.title,
+          slug: this.slug,
+          description: this.desc,
+          categories: this.selection
+        };
+      } else {
+        productData = {
+          id: this.id,
+          title: this.title,
+          slug: this.slug,
+          description: this.desc
+        };
+      }
+
+      axios.post('/admin/product/update', productData).then(function (response) {
+        _this4.successUI(response.data.message);
+
+        console.log(response.data);
       })["catch"](function (error) {
-        _this3.loading = false;
+        _this4.loading = false;
       });
     },
     getParents: function getParents() {
@@ -38106,7 +38150,12 @@ var render = function() {
                     _c(
                       "v-btn",
                       {
-                        attrs: { small: "", color: "primary ml-2" },
+                        staticClass: "ml-2",
+                        attrs: {
+                          small: "",
+                          color: "primary",
+                          disabled: !_vm.valid
+                        },
                         on: {
                           click: function($event) {
                             return _vm.update()
@@ -38383,7 +38432,15 @@ var render = function() {
             )
           ])
         ]
-      )
+      ),
+      _vm._v(" "),
+      _c("snack-bar", {
+        attrs: {
+          "snackbar-type": _vm.sbType,
+          "snackbar-text": _vm.sbText,
+          "snackbar-status": _vm.sbStatus
+        }
+      })
     ],
     1
   )
@@ -94701,8 +94758,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! c:\xampp7.2.26\htdocs\grandiosevuetify\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! c:\xampp7.2.26\htdocs\grandiosevuetify\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! c:\xampp7.2.21\htdocs\grandiose-vuetify\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! c:\xampp7.2.21\htdocs\grandiose-vuetify\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
