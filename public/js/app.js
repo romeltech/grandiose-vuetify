@@ -3451,8 +3451,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["product"],
+  props: ["product", "categories"],
   data: function data() {
     return {
       // ui
@@ -3467,25 +3468,15 @@ __webpack_require__.r(__webpack_exports__);
       desc: this.product.description,
       img: this.product.imagepath,
       featuredImg: window.location.origin + '/' + this.product.imagepath,
+      productCategories: this.categories,
       // Product Categories Tree
+      allCategories: [],
       productCategoriesTree: [],
       treeLoaded: false,
       selection: []
     };
   },
-  watch: {//   selection : function(val){
-    //    console.log(val);
-    //   }
-  },
   methods: {
-    pageLoading: function pageLoading() {
-      var _this = this;
-
-      this.loading = true;
-      setTimeout(function () {
-        _this.loading = false;
-      }, 2000);
-    },
     pageHeight: function pageHeight() {
       // Set page height
       var height = document.querySelector('header.v-app-bar').offsetHeight + document.querySelector('.secondary-header').offsetHeight;
@@ -3495,41 +3486,62 @@ __webpack_require__.r(__webpack_exports__);
       this.getProductCategoriesTree();
     },
     getProductCategoriesTree: function getProductCategoriesTree() {
-      var _this2 = this;
+      var _this = this;
 
       // Get Product Categories Tree
       axios.get('/api/product/category/tree').then(function (response) {
-        _this2.productCategoriesTree = response.data;
-        _this2.treeLoaded = true;
+        _this.productCategoriesTree = response.data;
+        _this.selection = _this.categories.map(function (cat) {
+          return cat.id;
+        });
+        _this.treeLoaded = true; // console.log(this.productCategoriesTree);
       })["catch"](function (error) {
         console.log(error.response);
         console.log('Error fetching data');
       });
     },
-    submit: function submit() {
+    getProductCategoriesList: function getProductCategoriesList() {
+      var _this2 = this;
+
+      axios.get('/api/product/category/list').then(function (response) {
+        _this2.allCategories = response.data;
+      })["catch"](function (error) {
+        console.log(error.response);
+        console.log('error');
+      });
+    },
+    update: function update() {
       var _this3 = this;
 
-      console.log(this.selection);
+      this.loading = true;
       axios.post('/admin/product/update', {
         id: this.id,
         categories: this.selection
       }).then(function (response) {
-        console.log(response.data); // this.successUI(response.data.message);
+        // this.successUI(response.data.message);
+        _this3.loading = false;
       })["catch"](function (error) {
         _this3.loading = false;
       });
     },
-    update: function update() {
-      this.pageLoading();
+    getParents: function getParents() {
       console.log(this.selection);
     },
-    draft: function draft() {
-      this.pageLoading();
+    draft: function draft() {// // this.loading = true;
+      // var parent = _.filter(this.productCategoriesTree, function(r){
+      //     for(var i=0; i<r.length; i++){
+      //         console.log(r[i].id);
+      //         if(r[i].id === allChildPosts[index].id){
+      //             return r.id;
+      //         }
+      //     }
+      // });
+      // console.log(this.productCategoriesTree);
     }
   },
   mounted: function mounted() {
     this.pageHeight();
-    console.log(this.selection);
+    this.getProductCategoriesList();
   }
 });
 
@@ -38097,7 +38109,7 @@ var render = function() {
                         attrs: { small: "", color: "primary ml-2" },
                         on: {
                           click: function($event) {
-                            return _vm.submit()
+                            return _vm.update()
                           }
                         }
                       },
@@ -38230,12 +38242,19 @@ var render = function() {
                                     _vm._v(" "),
                                     _vm.treeLoaded == true
                                       ? _c("v-treeview", {
+                                          staticStyle: { width: "100%" },
                                           attrs: {
                                             "selection-type": "independent",
+                                            "open-on-click": "",
                                             dense: "",
                                             selectable: "",
                                             "selected-color": "primary",
                                             items: _vm.productCategoriesTree
+                                          },
+                                          on: {
+                                            input: function($event) {
+                                              return _vm.getParents()
+                                            }
                                           },
                                           scopedSlots: _vm._u(
                                             [

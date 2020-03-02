@@ -11,7 +11,7 @@
                         <v-spacer></v-spacer>
                         <v-btn small text class="info--text" @click="draft()">Save as Draft</v-btn>
                         <v-btn small class="ml-2" :href="productURL" target="_blank">Preview</v-btn>
-                        <v-btn small color="primary ml-2" @click="submit()">Update</v-btn>
+                        <v-btn small color="primary ml-2" @click="update()">Update</v-btn>
                     </v-toolbar>
                 </div>
                 <div class="page-content col-12 pb-0 px-3" style="overflow-y:scroll;">
@@ -43,7 +43,6 @@
                             </v-card>
                         </div>
                         <div class="col-md-4 col-12">
-
                             <v-expansion-panels accordion multiple focusable>
                                 <v-expansion-panel>
                                     <v-expansion-panel-header style="min-height:40px;" @click="loadProductCategories()">Caregories</v-expansion-panel-header>
@@ -54,10 +53,14 @@
                                                 v-model="selection"
                                                 v-if="treeLoaded == true"
                                                 selection-type="independent"
+                                                open-on-click
                                                 dense
                                                 selectable
                                                 selected-color="primary"
-                                                :items="productCategoriesTree">
+                                                :items="productCategoriesTree"
+                                                style="width:100%"
+                                                @input="getParents()"
+                                                >
                                                 <template slot="label" slot-scope="props">
                                                     <span>
                                                         {{props.item.id}} - {{props.item.title}}
@@ -94,13 +97,11 @@
             </form>
         </v-card>
     </div>
-
-
 </template>
 
 <script>
 export default {
-    props: ["product"],
+    props: ["product","categories"],
     data() {
         return {
             // ui
@@ -117,70 +118,86 @@ export default {
             desc: this.product.description,
             img: this.product.imagepath,
             featuredImg: window.location.origin+'/'+this.product.imagepath,
+            productCategories: this.categories,
 
             // Product Categories Tree
+            allCategories: [],
             productCategoriesTree: [],
             treeLoaded: false,
             selection: [],
         }
     },
-    watch: {
-    //   selection : function(val){
-    //    console.log(val);
-    //   }
-    },
     methods: {
-        pageLoading(){
-            this.loading = true;
-            setTimeout(() => {
-                this.loading = false;
-            }, 2000);
-        },
         pageHeight(){
             // Set page height
             const height = document.querySelector('header.v-app-bar').offsetHeight + document.querySelector('.secondary-header').offsetHeight;
             document.querySelector('.page-content').style.height = "calc(100vh - "+height+"px - 24px)";
         },
         loadProductCategories(){
-            this.getProductCategoriesTree();    
+            this.getProductCategoriesTree();
         },
         getProductCategoriesTree () {
             // Get Product Categories Tree
             axios.get('/api/product/category/tree')
             .then(response => {
                 this.productCategoriesTree = response.data;
+                this.selection = this.categories.map(function (cat) {
+                    return cat.id
+                });
                 this.treeLoaded = true;
+                // console.log(this.productCategoriesTree);
             })
             .catch(error => {
                 console.log(error.response);
                 console.log('Error fetching data');
             });
         },
-        submit(){
-            console.log(this.selection);
+        getProductCategoriesList () {
+            axios.get('/api/product/category/list')
+            .then(response => {
+                this.allCategories = response.data;
+            })
+            .catch(error => {
+                console.log(error.response);
+                console.log('error');
+            });
+        },
+        update(){
+            this.loading = true;
             axios.post('/admin/product/update', {
                 id : this.id,
                 categories : this.selection,
             })
             .then(response => {
-                console.log(response.data)
                 // this.successUI(response.data.message);
+                this.loading = false;
             })
             .catch(error => {
                 this.loading = false;
             });
         },
-        update(){
-            this.pageLoading();
-            console.log(this.selection)
+        getParents(){
+
+            console.log(this.selection);
         },
         draft(){
-            this.pageLoading();
+            
+            // // this.loading = true;
+            // var parent = _.filter(this.productCategoriesTree, function(r){
+            //     for(var i=0; i<r.length; i++){
+            //         console.log(r[i].id);
+            //         if(r[i].id === allChildPosts[index].id){
+            //             return r.id;
+            //         }
+            //     }
+            // });
+            // console.log(this.productCategoriesTree);
+
         }
     },
     mounted(){
         this.pageHeight();
-        console.log(this.selection);
+        this.getProductCategoriesList();
     }
 }
 </script>

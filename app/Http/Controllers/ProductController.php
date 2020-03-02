@@ -80,10 +80,14 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
     {
-        $product = Product::where('slug', '=', $id)->get();
+        $product = Product::where('slug', '=', $slug)->firstOrFail();
+        // dd($product);
+        // dd(compact('product'));
+        // dd($product->categories);
         return view('admin.product.show', compact('product'));
+        // return view('admin.product.show', compact('product'));
     }
 
     /**
@@ -107,17 +111,12 @@ class ProductController extends Controller
     public function update(Request $request)
     {
         $product = Product::find($request->id);
-        // $product->update();
-        // $category = Category::all();
         $category = Category::find($request->categories);
-        // $category = Product_categories::find([1,2]);
-        // $product->product_categories()->sync($category);
+
         $product->categories()->sync($category);
         return response()->json([
             'product' => $product,
-            'category' => $category,
             'request_categories' => $request->categories,
-            'id' => $product->id,
             'message' => 'Product has been updated'
         ], 200);
     }
