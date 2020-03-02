@@ -58,11 +58,18 @@ Route::group(['prefix'=>'admin','as'=>'admin.'], function(){
     Route::get('/users/edit/{user}', 'UserController@edit')->name('edituser');
     Route::delete('/user/destroy/{user}', 'UserController@destroy')->name('user.destroy');
 
+    // Categories
+    Route::get('/product/categories', 'CategoryController@index')->name('p.categories');
+    Route::post('/product/category/store', 'CategoryController@store')->name('p.addcategory');
+    Route::post('/product/category/update', 'CategoryController@update')->name('p.updatecategory');
+    Route::delete('/product/category/destroy/{id}', 'CategoryController@destroy')->name('p.destroycategory');
+
     // Product Category Routes
-    Route::get('/product/categories', 'ProductCategoriesController@index')->name('p.categories');
-    Route::post('/product/category/store', 'ProductCategoriesController@store')->name('p.addcategory');
-    Route::post('/product/category/update', 'ProductCategoriesController@update')->name('p.updatecategory');
-    Route::delete('/product/category/destroy/{id}', 'ProductCategoriesController@destroy')->name('p.destroycategory');
+    // Route::get('/product/categories', 'ProductCategoriesController@index')->name('p.categories');
+    // Route::post('/product/category/store', 'ProductCategoriesController@store')->name('p.addcategory');
+    // Route::post('/product/category/update', 'ProductCategoriesController@update')->name('p.updatecategory');
+    // Route::delete('/product/category/destroy/{id}', 'ProductCategoriesController@destroy')->name('p.destroycategory');
+
     // Product Category Fields Routes
     Route::get('/product/category/field/{key}', 'ProductCategoryFieldsController@show')->name('p.showcategoryfields');
     Route::post('/product/category/field/store', 'ProductCategoryFieldsController@store')->name('p.addcategoryfields');

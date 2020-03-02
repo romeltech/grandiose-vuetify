@@ -3,14 +3,14 @@
     <div class="col-12">
       <v-card class="mx-0 py-2">
         <v-toolbar flat color="white">
-          <v-toolbar-title class="d-none d-md-block d-lg-block">Product Categories</v-toolbar-title>
+          <v-toolbar-title class="d-none d-md-block d-lg-block">Categories</v-toolbar-title>
           <v-icon class="d-none d-sm-block d-md-none">mdi-basket</v-icon>
           <v-spacer></v-spacer>
           <v-autocomplete  v-if="searchStatus == true"
             :items="allCategories"
             :filter="customFilter"
             label="Search a category"
-            item-text="product_category_title"
+            item-text="title"
             hide-details
             dense
             class="pa-2"
@@ -20,7 +20,7 @@
           >
            <template v-slot:item="{ item }">
               <v-list-item-content>
-                <v-list-item-title v-text="item.product_category_title"></v-list-item-title>
+                <v-list-item-title v-text="item.title"></v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
                 <span>
@@ -41,7 +41,7 @@
           <template slot="label" slot-scope="props">
             <div class="d-flex px-3">
               <span>
-                {{props.item.product_category_title}}
+                {{props.item.title}}
               </span>
               <div class="ml-auto">
                 <v-icon small @click="editItem(props.item)" class="ml-3">mdi-pencil</v-icon>
@@ -72,7 +72,7 @@
             <v-row>
               <v-col cols="12" md="6">
                 <v-text-field 
-                v-model="dialogItem.product_category_title"
+                v-model="dialogItem.title"
                 label="Title"
                 :rules="titleRule"
                 :error="titleError"
@@ -83,7 +83,7 @@
               </v-col>
               <v-col cols="12" md="6">
                 <v-text-field
-                  v-model="dialogItem.product_category_slug"
+                  v-model="dialogItem.slug"
                   label="Slug"
                   :rules="slugRule"
                   :error="slugError"
@@ -102,7 +102,7 @@
                   :loading="selectLoading"
                   v-model="selected"
                   :items="categoryList"
-                  item-text="product_category_title"
+                  item-text="title"
                   item-value="id"
                   label="Parent"
                   dense
@@ -167,8 +167,8 @@
           this.clearAlert();
           this.$refs.form.reset();
           this.categoryList = this.allCategories;
-          this.dialogItem.product_category_title = '';
-          this.dialogItem.product_category_slug = '';
+          this.dialogItem.title = '';
+          this.dialogItem.slug = '';
           this.dialogItem.parent = 0;
         }
       }
@@ -222,13 +222,13 @@
       selected: [], 
 
       dialogItem: {
-        product_category_slug: '',
-        product_category_title: '',
+        slug: '',
+        title: '',
         parent: 0
       },
       defaultItem: {
-        product_category_slug: '',
-        product_category_title: '',
+        slug: '',
+        title: '',
         parent: 0
       },
       formTitle : '',
@@ -237,8 +237,8 @@
     }),
     methods: {
       customFilter (item, queryText, itemText) {
-        const textOne = item.product_category_title.toLowerCase()
-        const textTwo = item.product_category_title.toLowerCase()
+        const textOne = item.title.toLowerCase()
+        const textTwo = item.title.toLowerCase()
         const searchText = queryText.toLowerCase()
 
         return textOne.indexOf(searchText) > -1 ||
@@ -261,7 +261,7 @@
         console.log(this.searchStatus);
       },
       generateSlug(){
-        this.dialogItem.product_category_slug = this.dialogItem.product_category_title && slugify(this.dialogItem.product_category_title);
+        this.dialogItem.slug = this.dialogItem.title && slugify(this.dialogItem.title);
       },
       getParetTitle(pID){
         if(pID > 0){
@@ -273,7 +273,7 @@
         }else{
           this.selected = {
             id: 0,
-            product_category_title: 'Select Category'
+            title: 'Select Category'
           }
         }
       },
@@ -297,7 +297,7 @@
         this.defaultItem = Object.assign({}, i);
         this.mainAction = 'update';
         this.dialog = true;
-        this.formTitle = 'Edit '+i.product_category_title;
+        this.formTitle = 'Edit '+i.title;
 
         if(this.listLoaded == false){
           this.selectLoading = true;
@@ -310,7 +310,7 @@
       deleteItem(i){
         this.mainAction = 'delete';
         this.dialog = true;
-        this.formTitle = 'Delete '+i.product_category_title;
+        this.formTitle = 'Delete '+i.title;
         this.deleteID = i.id;
       },
       successUI(msg){
@@ -374,17 +374,17 @@
         if(this.mainAction == 'update'){
           let postData = [];
           let p = this.selected.id ? this.selected.id : 0;
-          if(this.defaultItem.product_category_slug != this.dialogItem.product_category_slug){
+          if(this.defaultItem.slug != this.dialogItem.slug){
             postData = {
               id : this.dialogItem.id,
-              product_category_title : this.dialogItem.product_category_title,
-              product_category_slug : this.dialogItem.product_category_slug,
+              title : this.dialogItem.title,
+              slug : this.dialogItem.slug,
               parent : p
             }
           }else{
             postData = {
               id : this.dialogItem.id,
-              product_category_title : this.dialogItem.product_category_title,
+              title : this.dialogItem.title,
               parent : p
             }
           }
@@ -404,23 +404,23 @@
               this.sbType = 'error';
               this.sbText = 'Error adding product category';
               // Input error messages
-              if(this.errors.hasError('product_category_slug') ){
+              if(this.errors.hasError('slug') ){
                 this.updateKeyError = true;
-                this.updateKeyErrMsg = this.errors.first('product_category_slug');
+                this.updateKeyErrMsg = this.errors.first('slug');
               }
-              if(this.errors.hasError('product_category_title') ){
+              if(this.errors.hasError('title') ){
                 this.updateValueError = true;
-                this.updateValueErrMsg = this.errors.first('product_category_title');
+                this.updateValueErrMsg = this.errors.first('title');
               }
             }
           });
         }else if(this.mainAction == 'create'){
           // Create
           this.loading = true;
-          let title = this.dialogItem.product_category_title && this.dialogItem.product_category_title.trim();
+          let title = this.dialogItem.title && this.dialogItem.title.trim();
           axios.post('/admin/product/category/store', {
-            product_category_slug : this.dialogItem.product_category_slug,
-            product_category_title : title,
+            slug : this.dialogItem.slug,
+            title : title,
             parent : this.selected.id
           })
           .then(response => {
@@ -445,13 +445,13 @@
               this.sbType = 'error';
               this.sbText = 'Error adding product category';
               // Input error messages
-              if(this.errors.hasError('product_category_slug') ){
+              if(this.errors.hasError('slug') ){
                 this.slugError = true;
-                this.slugErrMsg = this.errors.first('product_category_slug');
+                this.slugErrMsg = this.errors.first('slug');
               }
-              if(this.errors.hasError('product_category_title') ){
+              if(this.errors.hasError('title') ){
                 this.titleError = true;
-                this.titleErrMsg = this.errors.first('product_category_title');
+                this.titleErrMsg = this.errors.first('title');
               }
             }
           });

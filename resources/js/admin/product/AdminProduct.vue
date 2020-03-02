@@ -60,7 +60,7 @@
                                                 :items="productCategoriesTree">
                                                 <template slot="label" slot-scope="props">
                                                     <span>
-                                                        {{props.item.id}} - {{props.item.product_category_title}}
+                                                        {{props.item.id}} - {{props.item.title}}
                                                     </span>
                                                 </template>
                                             </v-treeview>
@@ -153,7 +153,7 @@ export default {
             })
             .catch(error => {
                 console.log(error.response);
-                console.log('error');
+                console.log('Error fetching data');
             });
         },
         submit(){

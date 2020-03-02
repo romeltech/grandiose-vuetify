@@ -24,6 +24,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // });
 
 Route::get('/products', 'ProductController@productListAPI')->name('products');
-Route::get('/product/category/list', 'ProductCategoriesController@productCategoriesListAPI')->name('productcategorieslist');
-Route::get('/product/category/tree', 'ProductCategoriesController@productCategoriesTreeAPI')->name('productcategoriestree');
+Route::get('/product/category/list', 'CategoryController@categoriesListAPI')->name('productcategorieslist');
+Route::get('/product/category/tree', 'CategoryController@categoriesTreeAPI')->name('productcategoriestree');
 Route::get('/product/category/fields/{id}', 'ProductCategoryFieldsController@categoryFieldsAPI')->name('categoriesfields');

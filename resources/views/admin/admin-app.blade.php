@@ -55,7 +55,7 @@ color="grey lighten-4"
         <v-icon small>mdi-layers-outline</v-icon>
       </v-list-item-action>
       <v-list-item-content>
-        <v-list-item-title class="grey--text">Product Categories</v-list-item-title>
+        <v-list-item-title class="grey--text">Categories</v-list-item-title>
       </v-list-item-content>
     </v-list-item>
     <v-list-item @click="">

@@ -3503,7 +3503,7 @@ __webpack_require__.r(__webpack_exports__);
         _this2.treeLoaded = true;
       })["catch"](function (error) {
         console.log(error.response);
-        console.log('error');
+        console.log('Error fetching data');
       });
     },
     submit: function submit() {
@@ -3897,8 +3897,8 @@ __webpack_require__.r(__webpack_exports__);
         this.clearAlert();
         this.$refs.form.reset();
         this.categoryList = this.allCategories;
-        this.dialogItem.product_category_title = '';
-        this.dialogItem.product_category_slug = '';
+        this.dialogItem.title = '';
+        this.dialogItem.slug = '';
         this.dialogItem.parent = 0;
       }
     }
@@ -3950,13 +3950,13 @@ __webpack_require__.r(__webpack_exports__);
       listLoaded: false,
       selected: [],
       dialogItem: {
-        product_category_slug: '',
-        product_category_title: '',
+        slug: '',
+        title: '',
         parent: 0
       },
       defaultItem: {
-        product_category_slug: '',
-        product_category_title: '',
+        slug: '',
+        title: '',
         parent: 0
       },
       formTitle: '',
@@ -3966,8 +3966,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     customFilter: function customFilter(item, queryText, itemText) {
-      var textOne = item.product_category_title.toLowerCase();
-      var textTwo = item.product_category_title.toLowerCase();
+      var textOne = item.title.toLowerCase();
+      var textTwo = item.title.toLowerCase();
       var searchText = queryText.toLowerCase();
       return textOne.indexOf(searchText) > -1 || textTwo.indexOf(searchText) > -1;
     },
@@ -3990,7 +3990,7 @@ __webpack_require__.r(__webpack_exports__);
       console.log(this.searchStatus);
     },
     generateSlug: function generateSlug() {
-      this.dialogItem.product_category_slug = this.dialogItem.product_category_title && slugify(this.dialogItem.product_category_title);
+      this.dialogItem.slug = this.dialogItem.title && slugify(this.dialogItem.title);
     },
     getParetTitle: function getParetTitle(pID) {
       if (pID > 0) {
@@ -4002,7 +4002,7 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         this.selected = {
           id: 0,
-          product_category_title: 'Select Category'
+          title: 'Select Category'
         };
       }
     },
@@ -4026,7 +4026,7 @@ __webpack_require__.r(__webpack_exports__);
       this.defaultItem = Object.assign({}, i);
       this.mainAction = 'update';
       this.dialog = true;
-      this.formTitle = 'Edit ' + i.product_category_title;
+      this.formTitle = 'Edit ' + i.title;
 
       if (this.listLoaded == false) {
         this.selectLoading = true;
@@ -4039,7 +4039,7 @@ __webpack_require__.r(__webpack_exports__);
     deleteItem: function deleteItem(i) {
       this.mainAction = 'delete';
       this.dialog = true;
-      this.formTitle = 'Delete ' + i.product_category_title;
+      this.formTitle = 'Delete ' + i.title;
       this.deleteID = i.id;
     },
     successUI: function successUI(msg) {
@@ -4110,17 +4110,17 @@ __webpack_require__.r(__webpack_exports__);
         var postData = [];
         var p = this.selected.id ? this.selected.id : 0;
 
-        if (this.defaultItem.product_category_slug != this.dialogItem.product_category_slug) {
+        if (this.defaultItem.slug != this.dialogItem.slug) {
           postData = {
             id: this.dialogItem.id,
-            product_category_title: this.dialogItem.product_category_title,
-            product_category_slug: this.dialogItem.product_category_slug,
+            title: this.dialogItem.title,
+            slug: this.dialogItem.slug,
             parent: p
           };
         } else {
           postData = {
             id: this.dialogItem.id,
-            product_category_title: this.dialogItem.product_category_title,
+            title: this.dialogItem.title,
             parent: p
           };
         }
@@ -4143,24 +4143,24 @@ __webpack_require__.r(__webpack_exports__);
             _this4.sbType = 'error';
             _this4.sbText = 'Error adding product category'; // Input error messages
 
-            if (_this4.errors.hasError('product_category_slug')) {
+            if (_this4.errors.hasError('slug')) {
               _this4.updateKeyError = true;
-              _this4.updateKeyErrMsg = _this4.errors.first('product_category_slug');
+              _this4.updateKeyErrMsg = _this4.errors.first('slug');
             }
 
-            if (_this4.errors.hasError('product_category_title')) {
+            if (_this4.errors.hasError('title')) {
               _this4.updateValueError = true;
-              _this4.updateValueErrMsg = _this4.errors.first('product_category_title');
+              _this4.updateValueErrMsg = _this4.errors.first('title');
             }
           }
         });
       } else if (this.mainAction == 'create') {
         // Create
         this.loading = true;
-        var title = this.dialogItem.product_category_title && this.dialogItem.product_category_title.trim();
+        var title = this.dialogItem.title && this.dialogItem.title.trim();
         axios.post('/admin/product/category/store', {
-          product_category_slug: this.dialogItem.product_category_slug,
-          product_category_title: title,
+          slug: this.dialogItem.slug,
+          title: title,
           parent: this.selected.id
         }).then(function (response) {
           _this4.getProductCategoriesTree();
@@ -4187,14 +4187,14 @@ __webpack_require__.r(__webpack_exports__);
             _this4.sbType = 'error';
             _this4.sbText = 'Error adding product category'; // Input error messages
 
-            if (_this4.errors.hasError('product_category_slug')) {
+            if (_this4.errors.hasError('slug')) {
               _this4.slugError = true;
-              _this4.slugErrMsg = _this4.errors.first('product_category_slug');
+              _this4.slugErrMsg = _this4.errors.first('slug');
             }
 
-            if (_this4.errors.hasError('product_category_title')) {
+            if (_this4.errors.hasError('title')) {
               _this4.titleError = true;
-              _this4.titleErrMsg = _this4.errors.first('product_category_title');
+              _this4.titleErrMsg = _this4.errors.first('title');
             }
           }
         });
@@ -38251,8 +38251,7 @@ var render = function() {
                                                           ) +
                                                           " - " +
                                                           _vm._s(
-                                                            props.item
-                                                              .product_category_title
+                                                            props.item.title
                                                           ) +
                                                           "\n                                                "
                                                       )
@@ -38263,7 +38262,7 @@ var render = function() {
                                             ],
                                             null,
                                             false,
-                                            2055619321
+                                            4111804290
                                           ),
                                           model: {
                                             value: _vm.selection,
@@ -38581,7 +38580,7 @@ var render = function() {
                   _c(
                     "v-toolbar-title",
                     { staticClass: "d-none d-md-block d-lg-block" },
-                    [_vm._v("Product Categories")]
+                    [_vm._v("Categories")]
                   ),
                   _vm._v(" "),
                   _c("v-icon", { staticClass: "d-none d-sm-block d-md-none" }, [
@@ -38598,7 +38597,7 @@ var render = function() {
                           items: _vm.allCategories,
                           filter: _vm.customFilter,
                           label: "Search a category",
-                          "item-text": "product_category_title",
+                          "item-text": "title",
                           "hide-details": "",
                           dense: "",
                           clearable: "",
@@ -38616,9 +38615,7 @@ var render = function() {
                                     [
                                       _c("v-list-item-title", {
                                         domProps: {
-                                          textContent: _vm._s(
-                                            item.product_category_title
-                                          )
+                                          textContent: _vm._s(item.title)
                                         }
                                       })
                                     ],
@@ -38664,7 +38661,7 @@ var render = function() {
                           ],
                           null,
                           false,
-                          3263806074
+                          2300463713
                         )
                       })
                     : _vm._e(),
@@ -38703,7 +38700,7 @@ var render = function() {
                           _c("span", [
                             _vm._v(
                               "\n              " +
-                                _vm._s(props.item.product_category_title) +
+                                _vm._s(props.item.title) +
                                 "\n            "
                             )
                           ]),
@@ -38836,18 +38833,15 @@ var render = function() {
                                         },
                                         on: { change: _vm.clearAlert },
                                         model: {
-                                          value:
-                                            _vm.dialogItem
-                                              .product_category_title,
+                                          value: _vm.dialogItem.title,
                                           callback: function($$v) {
                                             _vm.$set(
                                               _vm.dialogItem,
-                                              "product_category_title",
+                                              "title",
                                               $$v
                                             )
                                           },
-                                          expression:
-                                            "dialogItem.product_category_title"
+                                          expression: "dialogItem.title"
                                         }
                                       })
                                     ],
@@ -38871,18 +38865,15 @@ var render = function() {
                                           focus: _vm.generateSlug
                                         },
                                         model: {
-                                          value:
-                                            _vm.dialogItem
-                                              .product_category_slug,
+                                          value: _vm.dialogItem.slug,
                                           callback: function($$v) {
                                             _vm.$set(
                                               _vm.dialogItem,
-                                              "product_category_slug",
+                                              "slug",
                                               $$v
                                             )
                                           },
-                                          expression:
-                                            "dialogItem.product_category_slug"
+                                          expression: "dialogItem.slug"
                                         }
                                       })
                                     ],
@@ -38901,7 +38892,7 @@ var render = function() {
                                           disabled: _vm.selectDisabled,
                                           loading: _vm.selectLoading,
                                           items: _vm.categoryList,
-                                          "item-text": "product_category_title",
+                                          "item-text": "title",
                                           "item-value": "id",
                                           label: "Parent",
                                           dense: ""

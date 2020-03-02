@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Product;
+use App\Category;
 use App\Product_categories;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -107,11 +108,11 @@ class ProductController extends Controller
     {
         $product = Product::find($request->id);
         // $product->update();
-        $category = Product_categories::all();
-        // $category = Product_categories::find($request->categories);
+        // $category = Category::all();
+        $category = Category::find($request->categories);
         // $category = Product_categories::find([1,2]);
         // $product->product_categories()->sync($category);
-        $product->product_categories()->attach($category);
+        $product->categories()->sync($category);
         return response()->json([
             'product' => $product,
             'category' => $category,
