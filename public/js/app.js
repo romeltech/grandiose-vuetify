@@ -3452,20 +3452,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["products"],
+  props: ["product"],
   data: function data() {
     return {
       // ui
       loading: false,
       // Base URL to be changed in vuex
       baseURL: window.location.origin,
-      productURL: window.location.origin + '/product/' + this.products.slug,
+      productURL: window.location.origin + '/product/' + this.product.slug,
       // Product Data
-      title: this.products.title,
-      slug: this.products.slug,
-      desc: this.products.description,
-      img: this.products.imagepath,
-      featuredImg: window.location.origin + '/' + this.products.imagepath,
+      id: this.product.id,
+      title: this.product.title,
+      slug: this.product.slug,
+      desc: this.product.description,
+      img: this.product.imagepath,
+      featuredImg: window.location.origin + '/' + this.product.imagepath,
       // Product Categories Tree
       productCategoriesTree: [],
       treeLoaded: false,
@@ -3509,7 +3510,8 @@ __webpack_require__.r(__webpack_exports__);
       var _this3 = this;
 
       console.log(this.selection);
-      axios.post('/admin/product/store', {
+      axios.post('/admin/product/update', {
+        id: this.id,
         categories: this.selection
       }).then(function (response) {
         console.log(response.data); // this.successUI(response.data.message);

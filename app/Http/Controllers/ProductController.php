@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Product;
+use App\Product_categories;
 
 class ProductController extends Controller
 {
@@ -69,14 +70,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $product = Product::find(1);
-        $product->product_categories()->sync($request->categories);
 
-        return response()->json([
-            'product' => $product,
-            'request' => $request->categories,
-            'message' => 'Product has been updated'
-        ], 200);
     }
 
     /**
@@ -87,8 +81,8 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $products = Product::where('slug', '=', $id)->get();
-        return view('admin.product.show', compact('products'));
+        $product = Product::where('slug', '=', $id)->get();
+        return view('admin.product.show', compact('product'));
     }
 
     /**
@@ -109,9 +103,22 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $product = Product::find($request->id);
+        // $product->update();
+        $category = Product_categories::all();
+        // $category = Product_categories::find($request->categories);
+        // $category = Product_categories::find([1,2]);
+        // $product->product_categories()->sync($category);
+        $product->product_categories()->attach($category);
+        return response()->json([
+            'product' => $product,
+            'category' => $category,
+            'request_categories' => $request->categories,
+            'id' => $product->id,
+            'message' => 'Product has been updated'
+        ], 200);
     }
 
     /**

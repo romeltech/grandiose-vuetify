@@ -100,7 +100,7 @@
 
 <script>
 export default {
-    props: ["products"],
+    props: ["product"],
     data() {
         return {
             // ui
@@ -108,14 +108,15 @@ export default {
 
             // Base URL to be changed in vuex
             baseURL : window.location.origin,
-            productURL : window.location.origin+'/product/'+this.products.slug,
+            productURL : window.location.origin+'/product/'+this.product.slug,
 
             // Product Data
-            title: this.products.title,
-            slug: this.products.slug,
-            desc: this.products.description,
-            img: this.products.imagepath,
-            featuredImg: window.location.origin+'/'+this.products.imagepath,
+            id: this.product.id,
+            title: this.product.title,
+            slug: this.product.slug,
+            desc: this.product.description,
+            img: this.product.imagepath,
+            featuredImg: window.location.origin+'/'+this.product.imagepath,
 
             // Product Categories Tree
             productCategoriesTree: [],
@@ -123,7 +124,7 @@ export default {
             selection: [],
         }
     },
-     watch: {
+    watch: {
     //   selection : function(val){
     //    console.log(val);
     //   }
@@ -157,8 +158,9 @@ export default {
         },
         submit(){
             console.log(this.selection);
-            axios.post('/admin/product/store', {
-                categories : this.selection
+            axios.post('/admin/product/update', {
+                id : this.id,
+                categories : this.selection,
             })
             .then(response => {
                 console.log(response.data)
