@@ -76,7 +76,7 @@
                </v-toolbar>
             </template>
             <template v-slot:item.title="{ item }">
-               <a v-bind:href="'/admin/product/'+item.slug">{{ item.title }}</a>
+               <a v-bind:href="'/admin/product/'+item.id">{{ item.title }}</a>
             </template>
             <template v-slot:item.imagepath="{ item }">
                <v-avatar tile>

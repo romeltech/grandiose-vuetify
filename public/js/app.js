@@ -38527,7 +38527,7 @@ var render = function() {
                       return [
                         _c(
                           "a",
-                          { attrs: { href: "/admin/product/" + item.slug } },
+                          { attrs: { href: "/admin/product/" + item.id } },
                           [_vm._v(_vm._s(item.title))]
                         )
                       ]
@@ -94758,8 +94758,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! c:\xampp7.2.21\htdocs\grandiose-vuetify\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! c:\xampp7.2.21\htdocs\grandiose-vuetify\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! c:\xampp7.2.26\htdocs\grandiosevuetify\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! c:\xampp7.2.26\htdocs\grandiosevuetify\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
